@@ -3,7 +3,9 @@
 **A full-stack app where deterministic risk math is computed in Python, and an LLM
 only _explains_ it — with a guardrail that rejects any number the model invents.**
 
-🔗 **Live demo:** _(deploy in M1 — link goes here)_ · runs with **no signup, no API key**
+🔗 **Live demo:** [frontend-sandy-psi-76.vercel.app](https://frontend-sandy-psi-76.vercel.app) · runs with **no signup, no API key**
+_(M1: frontend is live on Vercel; the private Python risk engine is hosted in M2 — the live
+page shows the architecture + run instructions until then. Run locally now for the full X-Ray.)_
 📊 **Reliability:** _0 hallucinated numbers in final output across N eval cases_ — see [`docs/RELIABILITY.md`](docs/RELIABILITY.md)
 🛡️ **Compliance:** educational risk coaching, never buy/sell advice — see [`COMPLIANCE.md`](COMPLIANCE.md)
 
