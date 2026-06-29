@@ -1,0 +1,56 @@
+/* Swiss / "financial instrument" direction — M1 tokens.
+   Tabular numerals everywhere numbers appear; restrained palette; risk ramp
+   cool->warm used semantically. Full token system + chart restyling land in M2. */
+
+:root {
+  --bg: oklch(98% 0.004 250);
+  --surface: oklch(100% 0 0);
+  --ink: oklch(22% 0.01 260);
+  --ink-soft: oklch(45% 0.01 260);
+  --rule: oklch(90% 0.01 260);
+
+  /* semantic risk ramp: cool (safe) -> warm (high risk) */
+  --risk-low: oklch(62% 0.13 230);
+  --risk-mid: oklch(72% 0.14 70);
+  --risk-high: oklch(58% 0.19 25);
+
+  --space: clamp(1rem, 0.8rem + 1vw, 2rem);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+/* tabular figures for every number in a finance grid */
+.num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.disclaimer {
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--rule);
+  padding-top: 0.75rem;
+}
+
+:focus-visible {
+  outline: 2px solid var(--risk-low);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,37 @@
+# RiskPilot AI — local full stack. `docker compose up` brings both services.
+# Topology: frontend (public) is the ONLY thing exposed; backend is internal.
+# No Postgres in v1 (no write path with no-auth/no-history — see PLAN.md).
+
+services:
+  backend:
+    build: ./backend
+    # NOT published to the host in a way the browser uses directly. The frontend
+    # reaches it over the compose network at http://backend:8000. Port mapped
+    # only for local debugging convenience.
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+    environment:
+      DEMO_MODE: "${DEMO_MODE:-1}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+      OPENAI_MODEL: "${OPENAI_MODEL:-gpt-5.5}"
+      INTERNAL_SHARED_SECRET: "${INTERNAL_SHARED_SECRET:-dev-local-secret-change-me}"
+      BACKEND_PORT: "8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0) if urllib.request.urlopen('http://localhost:8000/health').status==200 else sys.exit(1)"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      BACKEND_INTERNAL_URL: "http://backend:8000"
+      INTERNAL_SHARED_SECRET_FRONTEND: "${INTERNAL_SHARED_SECRET:-dev-local-secret-change-me}"
+    depends_on:
+      backend:
+        condition: service_healthy
