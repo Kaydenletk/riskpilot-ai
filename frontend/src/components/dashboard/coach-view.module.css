@@ -1,0 +1,148 @@
+.coach {
+  max-width: 680px;
+}
+
+/* lead: verdict is the star, gauge is supporting (smaller than Analyst view) */
+.lead {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+  flex-wrap: wrap;
+}
+.gaugeSmall {
+  transform: scale(0.78);
+  transform-origin: left center;
+  margin: -20px 0 -20px -10px;
+  flex-shrink: 0;
+}
+
+.verdict {
+  font-size: clamp(1.6rem, 1.2rem + 2vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 6px 0 12px;
+  max-width: 18ch;
+}
+.why {
+  font-size: var(--text-lg);
+  color: var(--ink-soft);
+  line-height: 1.55;
+  margin: 0;
+  max-width: 52ch;
+}
+
+/* calming takeaway card */
+.takeaway {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--risk-low);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-3);
+}
+.takeaway p {
+  font-size: var(--text-lg);
+  line-height: 1.55;
+  margin: 8px 0 0;
+}
+
+/* jargon translated */
+.stats {
+  display: grid;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: var(--space-3);
+}
+.stat {
+  background: var(--surface);
+  padding: var(--space-2) var(--space-3);
+}
+.statHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.statLabel {
+  font-weight: 600;
+  font-size: var(--text-base);
+}
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.statPlain {
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  margin: 4px 0 0;
+  line-height: 1.5;
+}
+
+/* the discipline prompt — warm, prominent */
+.prompt {
+  display: flex;
+  gap: var(--space-2);
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--risk-mid) 10%, var(--surface)),
+    var(--surface)
+  );
+  border: 1px solid color-mix(in oklch, var(--risk-mid) 30%, var(--rule));
+  border-radius: var(--radius);
+  padding: var(--space-3);
+}
+.promptIcon {
+  color: var(--risk-mid);
+  font-size: 1.2rem;
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+.promptTitle {
+  font-weight: 700;
+  font-size: var(--text-lg);
+  margin-bottom: 10px;
+}
+.questions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.questions li {
+  position: relative;
+  padding-left: 18px;
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: var(--ink);
+}
+.questions li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--risk-mid);
+  font-weight: 700;
+}
+.promptFoot {
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  margin: 14px 0 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+  .lead {
+    gap: var(--space-1);
+  }
+  .gaugeSmall {
+    transform: scale(0.7);
+    margin: -24px auto -24px;
+    transform-origin: center;
+  }
+}

@@ -1,0 +1,58 @@
+/* segmented control — instrument-style, with a sliding thumb */
+.toggle {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  padding: 4px;
+  background: var(--bg-grain);
+  border: 1px solid var(--rule-strong);
+  border-radius: 100px;
+  margin: var(--space-3) 0;
+  isolation: isolate;
+}
+
+.tab {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 8px 22px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 100px;
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  transition: color var(--dur-fast) var(--ease-out-expo);
+  font-family: inherit;
+}
+.tab.active {
+  color: var(--ink);
+}
+
+.tabHint {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  opacity: 0.85;
+}
+
+/* the sliding white thumb behind the active tab */
+.thumb {
+  position: absolute;
+  z-index: 0;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  background: var(--surface);
+  border-radius: 100px;
+  box-shadow: 0 1px 4px oklch(0% 0 0 / 0.08), 0 0 0 1px var(--rule);
+  transition: transform var(--dur-normal) var(--ease-out-expo);
+}
