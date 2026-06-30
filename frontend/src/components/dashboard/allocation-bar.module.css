@@ -1,0 +1,51 @@
+.bar {
+  display: flex;
+  width: 100%;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--rule);
+  box-shadow: inset 0 0 0 1px var(--rule-strong);
+}
+
+.seg {
+  height: 100%;
+  /* hairline separators between sectors */
+  box-shadow: inset -1px 0 0 oklch(100% 0 0 / 0.5);
+  transition: filter var(--dur-fast) var(--ease-out-expo);
+}
+.seg:hover {
+  filter: brightness(1.06);
+}
+
+.legend {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--text-sm);
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.legendSector {
+  color: var(--ink-soft);
+}
+
+.legendPct {
+  color: var(--ink);
+  font-weight: 600;
+}

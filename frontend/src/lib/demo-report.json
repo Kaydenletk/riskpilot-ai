@@ -44,19 +44,19 @@
     "holdings_count": 5
   },
   "explanation": {
-    "summary": "This portfolio looks aggressive (risk score 67/100). Its top 3 holdings make up 73.8% of the total, and Technology is the largest sector at 68.5%. Estimated annualized volatility is 27.3%.",
+    "summary": "This portfolio has an aggressive risk score of 67.0 out of 100, meaning its value could move around a lot. The estimated annualized volatility is 27.3%, and the worst historical decline was -54.0%, so a large drop is a real risk to be prepared for.",
     "top_risk_factors": [
-      "Concentration: top 3 holdings are 73.8% of the portfolio.",
-      "Sector tilt: Technology is 68.5% of holdings.",
-      "Volatility: estimated 27.3% annualized.",
-      "Worst historical decline in the sample: -54%."
+      "High concentration: the top 3 holdings make up 73.8% of the portfolio.",
+      "Sector concentration: Technology is 68.5% of the portfolio, so results depend heavily on that sector.",
+      "Limited diversification: the portfolio has 5 holdings, which can make performance more sensitive to a few positions.",
+      "High volatility: estimated annualized volatility is 27.3%, which suggests bigger ups and downs."
     ],
     "review_checklist": [
-      "Are you comfortable with this level of concentration in your top holdings?",
-      "Is 68.5% in one sector intentional for your goals?",
-      "Does this volatility match your time horizon and risk tolerance?"
+      "Are you comfortable with an aggressive risk score of 67.0 out of 100?",
+      "Would a worst historical decline of -54.0% be acceptable for your financial plan and time horizon?",
+      "Are you comfortable having 68.5% of the portfolio in Technology and 73.8% in the top 3 holdings?"
     ],
-    "source": "demo_fixture"
+    "source": "model"
   },
   "disclaimer": "Educational risk coaching, not financial advice. No buy/sell recommendations. Illustrative sample data."
 }

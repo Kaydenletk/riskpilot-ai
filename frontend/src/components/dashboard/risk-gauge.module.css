@@ -1,0 +1,49 @@
+.wrap {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  flex-shrink: 0;
+}
+
+.svg {
+  display: block;
+  overflow: visible;
+}
+
+/* the one memorable motion moment: the arc sweeps to the value on load */
+.valueArc {
+  transition: stroke-dashoffset var(--dur-slow) var(--ease-out-expo);
+  filter: drop-shadow(0 1px 6px color-mix(in oklch, currentColor 35%, transparent));
+}
+
+.center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.score {
+  font-size: 4.25rem;
+  font-weight: 700;
+  line-height: 0.9;
+}
+
+.band {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .wrap {
+    width: 220px;
+    height: 220px;
+  }
+  .score {
+    font-size: 3.5rem;
+  }
+}

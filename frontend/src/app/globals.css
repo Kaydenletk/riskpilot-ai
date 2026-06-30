@@ -1,20 +1,53 @@
-/* Swiss / "financial instrument" direction — M1 tokens.
-   Tabular numerals everywhere numbers appear; restrained palette; risk ramp
-   cool->warm used semantically. Full token system + chart restyling land in M2. */
+/* RiskPilot AI — "financial instrument" design system.
+   Swiss/editorial discipline: a strict grid, tabular numerals, restrained ink,
+   one expressive element (the risk gauge). Semantic risk ramp cool->warm.
+   Motion is compositor-friendly only (transform/opacity), reduced-motion honored. */
 
 :root {
-  --bg: oklch(98% 0.004 250);
+  /* ── surfaces & ink (near-monochrome, paper-like) ── */
+  --bg: oklch(97.5% 0.004 250);
+  --bg-grain: oklch(96% 0.004 250);
   --surface: oklch(100% 0 0);
-  --ink: oklch(22% 0.01 260);
-  --ink-soft: oklch(45% 0.01 260);
-  --rule: oklch(90% 0.01 260);
+  --surface-raised: oklch(99% 0.003 250);
+  --ink: oklch(20% 0.012 264);
+  --ink-soft: oklch(46% 0.012 264);
+  --ink-faint: oklch(62% 0.01 264);
+  --rule: oklch(91% 0.006 264);
+  --rule-strong: oklch(84% 0.008 264);
 
-  /* semantic risk ramp: cool (safe) -> warm (high risk) */
-  --risk-low: oklch(62% 0.13 230);
-  --risk-mid: oklch(72% 0.14 70);
-  --risk-high: oklch(58% 0.19 25);
+  /* ── semantic risk ramp (the ONLY place these hues appear) ── */
+  --risk-low: oklch(64% 0.13 232);   /* cool blue = diversified / safe */
+  --risk-mid: oklch(74% 0.15 75);    /* amber = elevated */
+  --risk-high: oklch(60% 0.20 25);   /* warm red = concentrated / high */
+  --risk-low-soft: oklch(64% 0.13 232 / 0.12);
+  --risk-high-soft: oklch(60% 0.20 25 / 0.12);
 
-  --space: clamp(1rem, 0.8rem + 1vw, 2rem);
+  /* ── one non-risk accent for chrome (kept distinct from the ramp) ── */
+  --accent: oklch(52% 0.02 264);
+
+  /* ── type scale (fluid, editorial contrast) ── */
+  --text-xs: 0.75rem;
+  --text-sm: 0.85rem;
+  --text-base: 1rem;
+  --text-lg: 1.15rem;
+  --text-xl: clamp(1.3rem, 1.1rem + 0.8vw, 1.6rem);
+  --text-hero: clamp(3.5rem, 2rem + 7vw, 6rem);
+
+  /* ── spacing rhythm ── */
+  --space-1: 0.5rem;
+  --space-2: 0.875rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-section: clamp(2rem, 1.5rem + 3vw, 4rem);
+
+  --radius: 10px;
+  --radius-sm: 6px;
+
+  /* ── motion ── */
+  --dur-fast: 180ms;
+  --dur-normal: 420ms;
+  --dur-slow: 900ms;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 * {
@@ -28,29 +61,94 @@ body {
   color: var(--ink);
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* tabular figures for every number in a finance grid */
+/* atmospheric background: a faint grid + a soft warm/cool wash, very subtle */
+body {
+  background-image:
+    radial-gradient(120% 80% at 85% -10%, var(--risk-high-soft), transparent 55%),
+    radial-gradient(90% 70% at -10% 110%, var(--risk-low-soft), transparent 50%),
+    linear-gradient(var(--rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 64px 64px, 64px 64px;
+  background-position: 0 0, 0 0, -1px -1px, -1px -1px;
+  background-attachment: fixed;
+}
+/* the grid lines barely there */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  opacity: 0.82;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* tabular figures for every number in a finance grid (non-negotiable) */
 .num {
   font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum" 1;
+  font-feature-settings: "tnum" 1, "cv01" 1;
+  letter-spacing: -0.01em;
+}
+
+/* a small monospaced label style for instrument-panel captions */
+.caption {
+  font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
 }
 
 .disclaimer {
-  color: var(--ink-soft);
-  font-size: 0.8rem;
-  border-top: 1px solid var(--rule);
-  padding-top: 0.75rem;
+  color: var(--ink-faint);
+  font-size: var(--text-xs);
+  line-height: 1.6;
+}
+
+a {
+  color: var(--ink);
+  text-underline-offset: 3px;
+  text-decoration-color: var(--rule-strong);
+}
+a:hover {
+  text-decoration-color: var(--ink-soft);
 }
 
 :focus-visible {
   outline: 2px solid var(--risk-low);
   outline-offset: 2px;
+  border-radius: 2px;
 }
 
+/* staged entrance — one directed load sequence, not scattered micro-interactions */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.stage {
+  animation: rise var(--dur-normal) var(--ease-out-expo) both;
+}
+.stage-1 { animation-delay: 60ms; }
+.stage-2 { animation-delay: 160ms; }
+.stage-3 { animation-delay: 260ms; }
+.stage-4 { animation-delay: 360ms; }
+
 @media (prefers-reduced-motion: reduce) {
-  * {
-    animation: none !important;
-    transition: none !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.001ms !important;
   }
 }

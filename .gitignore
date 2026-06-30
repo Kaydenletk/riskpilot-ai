@@ -32,3 +32,7 @@ build/
 
 # Claude Code session state
 .claude/
+
+# Playwright MCP artifacts
+.playwright-mcp/
+*.png

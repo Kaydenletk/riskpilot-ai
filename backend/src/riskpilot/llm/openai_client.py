@@ -32,21 +32,25 @@ class LLMExplanationDraft(BaseModel):
 
 
 def _facts_block(facts: RiskFacts) -> str:
-    """The ONLY numbers the model is allowed to reference, listed explicitly."""
+    """The ONLY numbers the model is allowed to reference, in plain language."""
     return (
-        f"- risk_score: {facts.risk_score} (out of 100)\n"
-        f"- risk_band: {facts.risk_band.value}\n"
-        f"- top_3_concentration_pct: {facts.concentration_pct_top3}\n"
-        f"- annualized_volatility_pct: {facts.volatility_annualized_pct}\n"
-        f"- max_drawdown_pct: {facts.max_drawdown_pct}\n"
-        f"- largest_sector: {facts.largest_sector} at {facts.largest_sector_pct}%\n"
-        f"- holdings_count: {facts.holdings_count}"
+        f"- Risk score: {facts.risk_score} out of 100 ({facts.risk_band.value})\n"
+        f"- The top 3 holdings make up {facts.concentration_pct_top3}% of the portfolio\n"
+        f"- Estimated annualized volatility: {facts.volatility_annualized_pct}%\n"
+        f"- Worst historical decline (max drawdown): {facts.max_drawdown_pct}%\n"
+        f"- Largest sector: {facts.largest_sector}, at {facts.largest_sector_pct}% of the portfolio\n"
+        f"- Number of holdings: {facts.holdings_count}"
     )
 
 
 SYSTEM_PROMPT = (
-    "You are a portfolio RISK COACH. You explain risk; you never give investment "
-    "advice and never recommend buying or selling any security. "
+    "You are a portfolio RISK COACH writing for an everyday retail investor. You "
+    "explain risk in plain, friendly language; you never give investment advice and "
+    "never recommend buying or selling any security.\n"
+    "WRITE NATURALLY: use ordinary words like 'risk score', 'concentration', "
+    "'volatility', 'worst decline'. NEVER write internal field names or code-style "
+    "identifiers (no snake_case like 'risk_score' or 'max_drawdown_pct'). Write "
+    "percentages with a % sign.\n"
     "CRITICAL: use ONLY the numbers provided in the facts. Do not invent, estimate, "
     "or introduce any number that is not in the facts. The review checklist must be "
     "phrased as questions, never as instructions to buy or sell."
