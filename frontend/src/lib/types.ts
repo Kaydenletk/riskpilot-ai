@@ -12,6 +12,7 @@ export interface RiskFacts {
   risk_band: "conservative" | "moderate" | "aggressive";
   concentration_pct_top3: number;
   volatility_annualized_pct: number;
+  max_drawdown_pct: number;
   largest_sector: string;
   largest_sector_pct: number;
   holdings_count: number;

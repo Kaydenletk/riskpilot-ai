@@ -59,6 +59,7 @@ export default async function Home() {
       >
         <Metric label="Top-3 concentration" value={`${facts.concentration_pct_top3}%`} />
         <Metric label="Est. annual volatility" value={`${facts.volatility_annualized_pct}%`} />
+        <Metric label="Worst historical drawdown" value={`${facts.max_drawdown_pct}%`} />
         <Metric label={`Largest sector (${facts.largest_sector})`} value={`${facts.largest_sector_pct}%`} />
         <Metric label="Holdings" value={`${facts.holdings_count}`} />
       </div>

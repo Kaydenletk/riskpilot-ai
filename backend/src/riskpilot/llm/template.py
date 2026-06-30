@@ -23,6 +23,7 @@ def build_template_explanation(facts: RiskFacts) -> RiskExplanation:
         f"Concentration: top 3 holdings are {facts.concentration_pct_top3:g}% of the portfolio.",
         f"Sector tilt: {facts.largest_sector} is {facts.largest_sector_pct:g}% of holdings.",
         f"Volatility: estimated {facts.volatility_annualized_pct:g}% annualized.",
+        f"Worst historical decline in the sample: {facts.max_drawdown_pct:g}%.",
     ]
     checklist = [
         "Are you comfortable with this level of concentration in your top holdings?",

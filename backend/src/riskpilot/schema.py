@@ -32,6 +32,7 @@ class RiskFacts(BaseModel):
     risk_band: RiskBand
     concentration_pct_top3: float = Field(..., ge=0, le=100)
     volatility_annualized_pct: float = Field(..., ge=0)
+    max_drawdown_pct: float = Field(..., le=0, description="worst historical decline, <= 0")
     largest_sector: str
     largest_sector_pct: float = Field(..., ge=0, le=100)
     holdings_count: int = Field(..., ge=0)
