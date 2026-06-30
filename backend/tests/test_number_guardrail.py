@@ -8,6 +8,8 @@ the RED state you implement against.
 
 from __future__ import annotations
 
+import pytest
+
 from riskpilot.llm.number_guardrail import find_ungrounded_numbers
 
 
@@ -41,3 +43,19 @@ def test_flags_wrong_transcription_of_a_real_fact() -> None:
     facts = [78.0, 31.5]
     ungrounded = find_ungrounded_numbers("Your risk score is 87 out of 100.", facts)
     assert any(u.replace("%", "") == "87" for u in ungrounded)
+
+
+@pytest.mark.xfail(reason="Bug: guardrail fails to parse European format correctly and mistakenly grounds a mismatched value due to token splitting")
+def test_european_format_splitting_bug() -> None:
+    # Fact is 5.678 and 90.0; model writes European 5.678,90 (which means 5678.90).
+    # This is an ungrounded hallucination, but the guardrail splits it into
+    # "5.678" and "90" and grounds "5.678" against 5.678 and "90" against 90.0.
+    facts = [5.678, 90.0]
+    assert find_ungrounded_numbers("The cash buffer is €5.678,90.", facts) != []
+
+
+@pytest.mark.xfail(reason="Bug: guardrail fails to flag small fabricated percentages/currency amounts under 12 because they are incorrectly matched against _SAFE_SMALL_INTEGERS")
+def test_small_fabricated_percentage_bug() -> None:
+    facts = [31.5]
+    # We expect 5% to be caught as ungrounded because 5% was never computed.
+    assert find_ungrounded_numbers("Your portfolio fell 5% in the last drawdown.", facts) != []

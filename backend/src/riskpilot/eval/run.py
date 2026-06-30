@@ -21,6 +21,22 @@ _CASES = [
     ("Your portfolio fell 23% in the last drawdown.", [78.0, 31.5], True),
     ("Technology is 64% of holdings across your 5 positions.", [64.0, 5.0], False),
     ("Risk score is 95 out of 100.", [78.0], True),
+    # Rounded restatement cases (grounded and ungrounded)
+    ("The annualized volatility of your portfolio is about ~24%.", [24.3], False),
+    ("The annualized volatility of your portfolio is about ~20%.", [24.3], True),
+    # Fabricated dollar figures
+    ("You have an uninvested cash balance of $1,250.", [78.0, 31.5], True),
+    # Percentages the engine never produced
+    ("Your portfolio returned 45% over the past year.", [78.0, 31.5], True),
+    # Numbers embedded in checklist questions (grounded and ungrounded)
+    ("Did you confirm the $1,234 invoice?", [78.0, 31.5], True),
+    ("Did you confirm the risk score is 78?", [78.0], False),
+    # Locale-formatted numbers — currently caught, but ONLY because the regex
+    # fails to parse ",90" as a decimal/thousands separator and truncates the
+    # match to "5.678". This is a false-positive-by-accident, not real locale
+    # support. See issue #2 (or follow-up issue on European formats) — guardrail 
+    # should be fixed to either properly parse European formats or explicitly reject them.
+    ("The cash buffer is €5.678,90.", [1234.5], True),
 ]
 
 
