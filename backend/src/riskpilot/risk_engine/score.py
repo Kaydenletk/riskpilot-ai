@@ -74,3 +74,31 @@ def band_for_score(score: float) -> str:
     if score >= 33:
         return "moderate"
     return "conservative"
+
+
+# ── single-ticker score ──────────────────────────────────────────────────────
+# Concentration is meaningless for one instrument, so the single-ticker score
+# weights what DOES apply: volatility, drawdown, and market sensitivity (beta).
+W_TICKER_VOL = 0.45
+W_TICKER_DD = 0.25
+W_TICKER_BETA = 0.30
+_BETA_CEIL = 2.0  # beta of 2.0+ saturates the signal (twice as jumpy as the market)
+
+
+def beta_signal(beta_value: float) -> float:
+    """|beta| / 2.0 -> 0..1. A beta of 1 (moves with market) -> 0.5."""
+    return _clamp01(abs(beta_value) / _BETA_CEIL)
+
+
+def ticker_risk_score(
+    annualized_vol: float,
+    max_drawdown_pct: float,
+    beta_value: float,
+) -> float:
+    """Single-instrument 0-100 risk score. Documented, deterministic, monotonic."""
+    s = (
+        W_TICKER_VOL * volatility_signal(annualized_vol)
+        + W_TICKER_DD * drawdown_signal(max_drawdown_pct)
+        + W_TICKER_BETA * beta_signal(beta_value)
+    )
+    return round(100.0 * s, 1)

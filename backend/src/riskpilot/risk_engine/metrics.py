@@ -119,3 +119,23 @@ def portfolio_value_series(
         prices = np.asarray(series_by_ticker[t][-min_len:], dtype=float)
         values += shares[t] * prices
     return values.tolist()
+
+
+def beta(asset_prices: list[float], market_prices: list[float]) -> float:
+    """Beta = Cov(asset_returns, market_returns) / Var(market_returns).
+
+    Traps the eng review flagged: must use RETURNS not price levels, and must
+    align the two series (inner-join by trimming to the shorter length) so the
+    covariance isn't computed across mismatched dates.
+    """
+    a = daily_returns(asset_prices)
+    m = daily_returns(market_prices)
+    n = min(a.size, m.size)
+    if n < MIN_OBSERVATIONS:
+        raise ValueError(f"need >= {MIN_OBSERVATIONS} aligned returns for beta, got {n}")
+    a, m = a[-n:], m[-n:]
+    market_var = float(np.var(m, ddof=1))
+    if market_var == 0:
+        raise ValueError("market variance is zero; beta undefined")
+    cov = float(np.cov(a, m, ddof=1)[0, 1])
+    return round(cov / market_var, 2)

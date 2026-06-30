@@ -66,3 +66,33 @@ class RiskReport(BaseModel):
         "Educational risk coaching, not financial advice. No buy/sell recommendations. "
         "Illustrative sample data."
     )
+
+
+class TickerOption(BaseModel):
+    """One searchable instrument in the demo universe."""
+
+    ticker: str
+    sector: str
+
+
+class TickerFacts(BaseModel):
+    """Deterministic single-ticker risk numbers. Produced ONLY by risk_engine."""
+
+    risk_score: float = Field(..., ge=0, le=100)
+    risk_band: RiskBand
+    volatility_annualized_pct: float = Field(..., ge=0)
+    max_drawdown_pct: float = Field(..., le=0)
+    beta: float = Field(..., description="vs the market index")
+    sector: str
+
+
+class TickerReport(BaseModel):
+    ticker: str
+    as_of: str
+    facts: TickerFacts
+    spark: list[float] = Field(..., description="downsampled price series for a sparkline")
+    explanation: RiskExplanation
+    disclaimer: str = (
+        "Educational risk coaching, not financial advice. No buy/sell recommendations. "
+        "Illustrative sample data."
+    )
