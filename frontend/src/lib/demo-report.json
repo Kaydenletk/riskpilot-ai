@@ -1,0 +1,62 @@
+{
+  "portfolio_name": "Sample Aggressive Portfolio",
+  "as_of": "illustrative sample data",
+  "holdings": [
+    {
+      "ticker": "NVDA",
+      "shares": 40.0,
+      "sector": "Technology",
+      "market_value": 3615.46
+    },
+    {
+      "ticker": "AMD",
+      "shares": 60.0,
+      "sector": "Technology",
+      "market_value": 1223.75
+    },
+    {
+      "ticker": "MSFT",
+      "shares": 10.0,
+      "sector": "Technology",
+      "market_value": 1612.28
+    },
+    {
+      "ticker": "KO",
+      "shares": 30.0,
+      "sector": "Consumer Staples",
+      "market_value": 1722.63
+    },
+    {
+      "ticker": "JNJ",
+      "shares": 8.0,
+      "sector": "Healthcare",
+      "market_value": 1248.13
+    }
+  ],
+  "facts": {
+    "risk_score": 67.0,
+    "risk_band": "aggressive",
+    "concentration_pct_top3": 73.8,
+    "volatility_annualized_pct": 27.3,
+    "max_drawdown_pct": -54.0,
+    "largest_sector": "Technology",
+    "largest_sector_pct": 68.5,
+    "holdings_count": 5
+  },
+  "explanation": {
+    "summary": "This portfolio looks aggressive (risk score 67/100). Its top 3 holdings make up 73.8% of the total, and Technology is the largest sector at 68.5%. Estimated annualized volatility is 27.3%.",
+    "top_risk_factors": [
+      "Concentration: top 3 holdings are 73.8% of the portfolio.",
+      "Sector tilt: Technology is 68.5% of holdings.",
+      "Volatility: estimated 27.3% annualized.",
+      "Worst historical decline in the sample: -54%."
+    ],
+    "review_checklist": [
+      "Are you comfortable with this level of concentration in your top holdings?",
+      "Is 68.5% in one sector intentional for your goals?",
+      "Does this volatility match your time horizon and risk tolerance?"
+    ],
+    "source": "demo_fixture"
+  },
+  "disclaimer": "Educational risk coaching, not financial advice. No buy/sell recommendations. Illustrative sample data."
+}
