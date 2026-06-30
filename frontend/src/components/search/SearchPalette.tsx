@@ -5,6 +5,7 @@
 // universe only; selecting a ticker routes to its risk read. ⌘K / Ctrl-K opens,
 // Esc closes, ↑/↓ move, Enter selects.
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 
 import type { TickerOption } from "@/lib/types";
@@ -37,6 +38,7 @@ function rank(options: TickerOption[], query: string): TickerOption[] {
 
 export function SearchPalette({ universe }: SearchPaletteProps) {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
@@ -44,6 +46,9 @@ export function SearchPalette({ universe }: SearchPaletteProps) {
   const listRef = useRef<HTMLUListElement>(null);
 
   const results = useMemo(() => rank(universe, query), [universe, query]);
+
+  // Portal target only exists client-side; flip after first paint.
+  useEffect(() => setMounted(true), []);
 
   const close = useCallback(() => {
     setOpen(false);
@@ -113,12 +118,10 @@ export function SearchPalette({ universe }: SearchPaletteProps) {
         <kbd className={styles.kbd}>⌘K</kbd>
       </button>
 
-      {open && (
-        <div
-          className={styles.overlay}
-          onClick={close}
-          role="presentation"
-        >
+      {open &&
+        mounted &&
+        createPortal(
+          <div className={styles.overlay} onClick={close} role="presentation">
           <div
             className={styles.panel}
             role="dialog"
@@ -182,8 +185,9 @@ export function SearchPalette({ universe }: SearchPaletteProps) {
               <span className="caption">↑↓ navigate · ↵ open · esc close</span>
             </div>
           </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </>
   );
 }
