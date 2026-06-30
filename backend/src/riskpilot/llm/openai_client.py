@@ -87,12 +87,14 @@ def call_openai(
         client = OpenAI(api_key=config.openai_api_key, timeout=20.0)
 
     messages = build_messages(facts, correction)
+    # Newer models (gpt-5.x) only accept the default temperature, so we don't pass
+    # one. Determinism for the demo comes from the pinned model + the guardrail,
+    # not from temperature=0.
     try:
         completion = client.beta.chat.completions.parse(  # type: ignore[attr-defined]
             model=config.openai_model,
             messages=messages,
             response_format=LLMExplanationDraft,
-            temperature=0,
         )
     except Exception as e:  # noqa: BLE001 - intentionally broad: any failure -> fallback
         raise LLMError(f"openai call failed: {e}") from e
