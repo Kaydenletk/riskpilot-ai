@@ -1,7 +1,9 @@
 // Server Component: fetches the report, renders the masthead, hands the report to
 // the client Dashboard (which holds the Coach/Analyst view toggle).
 import { Dashboard } from "@/components/dashboard/Dashboard";
+import { SearchPalette } from "@/components/search/SearchPalette";
 import { fetchSampleReport } from "@/lib/backend";
+import { fetchTickerUniverse } from "@/lib/ticker-backend";
 
 import styles from "./page.module.css";
 
@@ -15,9 +17,15 @@ export default async function Home() {
     return <BackendOffline />;
   }
 
+  const universe = await fetchTickerUniverse();
+
   return (
     <div className={styles.page}>
       <Masthead />
+      <div className={`${styles.searchRow} stage stage-1`}>
+        <SearchPalette universe={universe} />
+        <span className="caption">{universe.length} instruments · type ⌘K to analyze any one</span>
+      </div>
       <Dashboard report={report} />
     </div>
   );

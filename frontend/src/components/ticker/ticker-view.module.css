@@ -1,0 +1,158 @@
+/* Single-ticker read — same instrument grammar as the dashboard. Asymmetric:
+   gauge anchors the left, facts column reads as a spec sheet. */
+
+.wrap {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0 var(--space-3) var(--space-section);
+}
+
+.crumb {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) 0 var(--space-2);
+}
+.crumb a {
+  font-size: var(--text-sm);
+  text-decoration: none;
+  color: var(--ink-soft);
+}
+.crumb a:hover {
+  color: var(--ink);
+}
+
+.header {
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--rule);
+}
+.ticker {
+  font-size: var(--text-hero);
+  font-weight: 650;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+/* primary: gauge + spec-sheet facts */
+.primary {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: var(--space-4);
+  align-items: center;
+  padding: var(--space-4) 0;
+}
+.gaugeCol {
+  display: flex;
+  justify-content: center;
+}
+
+.stats {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.stat {
+  background: var(--surface);
+  padding: var(--space-2) var(--space-3);
+}
+.stat dt {
+  margin-bottom: 0.3rem;
+}
+.statNum {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--ink);
+}
+.statPlain {
+  font-size: var(--text-base);
+  color: var(--ink);
+}
+
+/* scored series chart card */
+.chartCard {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+.chartHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+  gap: var(--space-2);
+}
+.chartTitle {
+  color: var(--ink-soft);
+}
+
+/* the read */
+.read {
+  margin-top: var(--space-4);
+}
+.readTitle,
+.subhead {
+  color: var(--ink-soft);
+}
+.summary {
+  font-size: var(--text-lg);
+  line-height: 1.6;
+  margin: var(--space-1) 0 var(--space-3);
+  max-width: 62ch;
+}
+.subhead {
+  margin: var(--space-3) 0 var(--space-1);
+}
+.checklist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-1);
+}
+.checklist li {
+  padding-left: var(--space-3);
+  position: relative;
+  line-height: 1.55;
+  max-width: 64ch;
+}
+.checklist li::before {
+  content: "?";
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: ui-monospace, Menlo, monospace;
+  color: var(--risk-low);
+  font-weight: 600;
+}
+
+.disclaimer {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--rule);
+}
+
+@media (max-width: 720px) {
+  .primary {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+  .stats {
+    grid-template-columns: 1fr 1fr;
+  }
+  .ticker {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+}
+
+@media (max-width: 420px) {
+  .stats {
+    grid-template-columns: 1fr;
+  }
+}

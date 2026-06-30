@@ -33,3 +33,28 @@ export interface RiskReport {
   explanation: RiskExplanation;
   disclaimer: string;
 }
+
+// ── single-ticker search (mirrors schema.py TickerOption/TickerFacts/TickerReport) ──
+
+export interface TickerOption {
+  ticker: string;
+  sector: string;
+}
+
+export interface TickerFacts {
+  risk_score: number;
+  risk_band: "conservative" | "moderate" | "aggressive";
+  volatility_annualized_pct: number;
+  max_drawdown_pct: number;
+  beta: number;
+  sector: string;
+}
+
+export interface TickerReport {
+  ticker: string;
+  as_of: string;
+  facts: TickerFacts;
+  spark: number[];
+  explanation: RiskExplanation;
+  disclaimer: string;
+}

@@ -24,6 +24,16 @@
   margin-left: 1px;
 }
 
+/* search row under the masthead — the entry point to single-ticker analysis */
+.searchRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  flex-wrap: wrap;
+}
+
 /* HERO — asymmetric: oversized gauge against the verdict block */
 .hero {
   display: flex;
