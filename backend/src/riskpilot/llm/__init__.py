@@ -7,7 +7,13 @@ fail-closed fallback). M2 adds the live OpenAI Structured Outputs call that the
 guardrail wraps.
 """
 
+from .explain import explain
 from .number_guardrail import find_ungrounded_numbers, is_grounded
 from .template import build_template_explanation
 
-__all__ = ["find_ungrounded_numbers", "is_grounded", "build_template_explanation"]
+__all__ = [
+    "explain",
+    "find_ungrounded_numbers",
+    "is_grounded",
+    "build_template_explanation",
+]

@@ -9,20 +9,19 @@ flag to model / model_regenerated accordingly.
 from __future__ import annotations
 
 from .config import Config
-from .llm import build_template_explanation
+from .llm import explain
 from .risk_engine import compute_sample_report
-from .schema import ExplanationSource, RiskReport
+from .schema import RiskReport
 
 
 def build_sample_report(config: Config) -> RiskReport:
     holdings, facts = compute_sample_report()
-    explanation = build_template_explanation(facts)
 
-    # M1: DEMO_MODE always uses the template. Label the source honestly so the UI
-    # can show "verified" / "demo" badges (DX/design: make the guardrail visible).
-    explanation.source = (
-        ExplanationSource.demo_fixture if config.demo_mode else ExplanationSource.template_fallback
-    )
+    # Live guardrailed LLM when configured (has_live_llm); deterministic template
+    # in DEMO_MODE. The pipeline guarantees the explanation never contains a number
+    # absent from `facts`, and stamps the source (model / model_regenerated /
+    # template_fallback / demo_fixture) so the UI can show what happened.
+    explanation = explain(config, facts)
 
     return RiskReport(
         portfolio_name="Sample Aggressive Portfolio",
