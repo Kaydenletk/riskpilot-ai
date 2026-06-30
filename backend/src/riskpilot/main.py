@@ -11,7 +11,9 @@ from fastapi import Depends, FastAPI, Header, HTTPException
 
 from .config import Config, load_config
 from .report import build_sample_report
-from .schema import RiskReport
+from .risk_engine.ticker import UnknownTicker, available_tickers
+from .schema import RiskReport, TickerOption, TickerReport
+from .ticker_report import build_ticker_report
 
 app = FastAPI(title="RiskPilot AI — internal math+LLM service", version="0.1.0")
 
@@ -48,3 +50,26 @@ def sample_report(
     """The M1 demo report. Facts are deterministic; explanation is grounded by
     construction in DEMO_MODE."""
     return build_sample_report(config)
+
+
+@app.get("/tickers", response_model=list[TickerOption])
+def list_tickers(_: None = Depends(require_internal_secret)) -> list[TickerOption]:
+    """The searchable demo universe — also the allow-list / injection boundary."""
+    return available_tickers()
+
+
+@app.get("/analyze/{ticker}", response_model=TickerReport)
+def analyze(
+    ticker: str,
+    _: None = Depends(require_internal_secret),
+    config: Config = Depends(get_config),
+) -> TickerReport:
+    """Single-ticker risk read. 404s anything outside the demo universe (which is
+    the allow-list defense — an injection 'ticker' never reaches the model)."""
+    try:
+        return build_ticker_report(config, ticker)
+    except UnknownTicker:
+        raise HTTPException(
+            status_code=404,
+            detail=f"'{ticker.strip().upper()}' is not in the demo universe.",
+        ) from None

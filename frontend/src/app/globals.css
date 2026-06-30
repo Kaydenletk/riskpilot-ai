@@ -65,26 +65,12 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* atmospheric background: a faint grid + a soft warm/cool wash, very subtle */
+/* atmospheric background: one calm wash, top-anchored. Modern + simple —
+   no grid, no competing radial. Just a near-flat paper field. */
 body {
   background-image:
-    radial-gradient(120% 80% at 85% -10%, var(--risk-high-soft), transparent 55%),
-    radial-gradient(90% 70% at -10% 110%, var(--risk-low-soft), transparent 50%),
-    linear-gradient(var(--rule) 1px, transparent 1px),
-    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 64px 64px, 64px 64px;
-  background-position: 0 0, 0 0, -1px -1px, -1px -1px;
+    radial-gradient(140% 90% at 50% -20%, var(--surface), transparent 60%);
   background-attachment: fixed;
-}
-/* the grid lines barely there */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: var(--bg);
-  opacity: 0.82;
-  z-index: -1;
-  pointer-events: none;
 }
 
 /* tabular figures for every number in a finance grid (non-negotiable) */

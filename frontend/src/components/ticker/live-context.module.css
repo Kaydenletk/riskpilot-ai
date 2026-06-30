@@ -1,0 +1,48 @@
+/* Deliberately framed APART from the synthetic risk read: a dashed border + a
+   LIVE badge make the different provenance unmistakable. */
+
+.panel {
+  margin-top: var(--space-4);
+  padding: var(--space-3);
+  background: var(--surface-raised);
+  border: 1px dashed var(--rule-strong);
+  border-radius: var(--radius);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+.title {
+  color: var(--ink-soft);
+}
+.badge {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  color: var(--risk-high);
+  background: var(--risk-high-soft);
+  white-space: nowrap;
+}
+
+.note {
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  line-height: 1.55;
+  margin: 0 0 var(--space-2);
+  max-width: 64ch;
+}
+.note strong {
+  color: var(--ink);
+}
+
+.widget {
+  min-height: 200px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
