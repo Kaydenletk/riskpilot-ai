@@ -76,7 +76,7 @@ export function TickerView({ report }: { report: TickerReport }) {
           <GroundedText text={explanation.summary} />
         </p>
 
-        <h3 className={`caption ${styles.subhead}`}>What to check</h3>
+        <h3 className={`caption ${styles.subhead}`}>A few things worth checking</h3>
         <ul className={styles.checklist}>
           {explanation.review_checklist.map((q, i) => (
             <li key={i}>

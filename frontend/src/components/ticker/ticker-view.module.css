@@ -59,6 +59,10 @@
 .stat {
   background: var(--surface);
   padding: var(--space-2) var(--space-3);
+  transition: background var(--dur-fast) var(--ease-out-expo);
+}
+.stat:hover {
+  background: var(--surface-raised);
 }
 .stat dt {
   margin-bottom: 0.3rem;
@@ -80,6 +84,7 @@
   background: var(--surface);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
+  box-shadow: 0 1px 2px oklch(20% 0.012 264 / 0.04), 0 6px 18px oklch(20% 0.012 264 / 0.04);
 }
 .chartHead {
   display: flex;
@@ -90,6 +95,31 @@
 }
 .chartTitle {
   color: var(--ink-soft);
+}
+
+/* interactive chart: hover crosshair + honest readout */
+.chartWrap {
+  position: relative;
+}
+.chartSvg {
+  display: block;
+  cursor: crosshair;
+  touch-action: none;
+}
+.chartReadout {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+  padding-top: var(--space-1);
+  border-top: 1px solid var(--rule);
+  min-height: 1.6rem;
+}
+.readoutVal {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--ink);
 }
 
 /* the read */
@@ -117,18 +147,23 @@
   gap: var(--space-1);
 }
 .checklist li {
-  padding-left: var(--space-3);
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-3);
   position: relative;
   line-height: 1.55;
   max-width: 64ch;
+  border-radius: var(--radius-sm);
+  transition: background var(--dur-fast) var(--ease-out-expo);
+}
+.checklist li:hover {
+  background: var(--surface-raised);
 }
 .checklist li::before {
-  content: "?";
+  content: "→";
   position: absolute;
-  left: 0;
-  top: 0;
+  left: var(--space-1);
+  top: var(--space-1);
   font-family: ui-monospace, Menlo, monospace;
-  color: var(--risk-low);
+  color: var(--ink-faint);
   font-weight: 600;
 }
 
