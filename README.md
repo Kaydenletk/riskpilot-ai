@@ -1,11 +1,16 @@
 # RiskPilot AI
 
+[![CI](https://github.com/Kaydenletk/riskpilot-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/Kaydenletk/riskpilot-ai/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
 **A full-stack app where deterministic risk math is computed in Python, and an LLM
 only _explains_ it — with a guardrail that rejects any number the model invents.**
 
-🔗 **Live demo:** [frontend-sandy-psi-76.vercel.app](https://frontend-sandy-psi-76.vercel.app) · runs with **no signup, no API key**
-_(M1: frontend is live on Vercel; the private Python risk engine is hosted in M2 — the live
-page shows the architecture + run instructions until then. Run locally now for the full X-Ray.)_
+🔗 **Live demo:** [riskpilot-coach.vercel.app](https://riskpilot-coach.vercel.app) · runs with **no signup, no API key**
+_(The dashboard renders from a committed snapshot of the real computed report. When the
+private Python risk engine is hosted, the live frontend prefers it and the snapshot is the
+fallback. Run locally for the full pipeline including the live guardrail.)_
 📊 **Reliability:** _0 hallucinated numbers in final output across N eval cases_ — see [`docs/RELIABILITY.md`](docs/RELIABILITY.md)
 🛡️ **Compliance:** educational risk coaching, never buy/sell advice — see [`COMPLIANCE.md`](COMPLIANCE.md)
 
@@ -80,10 +85,28 @@ X-Ray rendered from deterministic facts + a grounded template explanation, behin
 single-public-origin topology. The guardrail core + its tests are in place
 (`is_grounded` is the one function left to implement — 5 RED tests describe its contract).
 
-**M2 (next): the shippable artifact.** Real risk formulas over a committed historical
-dataset, the live guardrailed OpenAI call, the eval number, the radial-gauge dashboard.
+**M2 (done): real risk math.** Every metric is computed from a committed,
+reproducible dataset — covariance-based portfolio volatility, value-weighted
+concentration, historical max drawdown, a documented concentration-led risk score.
+23 hand-verified math/score tests. See [`DATA_SOURCE.md`](DATA_SOURCE.md).
 
-**Deferred (M3+):** FOMO journal coach, scenario simulator, RAG research assistant.
+**M2 (remaining): the live LLM call** wrapping the guardrail, and the radial-gauge
+dashboard (currently a clean stub). **Deferred (M3+):** FOMO journal coach, scenario
+simulator, RAG research assistant.
+
+## Contributing
+
+PRs welcome. RiskPilot keeps math deterministic and never gives investment advice —
+those two constraints are enforced by tests, not just docs. Start with
+[`CONTRIBUTING.md`](CONTRIBUTING.md): setup, the ground rules, and good first issues.
+
+```bash
+make test    # backend suite, runs with NO key
+make eval    # LLM-reliability number, runs on fixtures
+```
+
+By participating you agree to the [Code of Conduct](CODE_OF_CONDUCT.md). Licensed
+under [MIT](LICENSE).
 
 ---
 
