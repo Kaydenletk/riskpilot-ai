@@ -8,6 +8,9 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: true,
+    // Playwright specs live in e2e/ and are run by `playwright test`, not vitest —
+    // vitest would choke on Playwright's test() runner. Keep unit + e2e separate.
+    exclude: ["**/node_modules/**", "**/e2e/**"],
   },
   resolve: {
     alias: {
