@@ -4,6 +4,7 @@ import { Dashboard } from "@/components/dashboard/Dashboard";
 import { SearchPalette } from "@/components/search/SearchPalette";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { fetchSampleReport } from "@/lib/backend";
+import { tickerPath } from "@/lib/seo";
 import { fetchTickerUniverse } from "@/lib/ticker-backend";
 
 import styles from "./page.module.css";
@@ -28,6 +29,18 @@ export default async function Home() {
         <span className="caption">{universe.length} instruments · type ⌘K to analyze any one</span>
       </div>
       <Dashboard report={report} />
+      <nav aria-label="Browse the risk universe" className={styles.tickerNav}>
+        <span className="caption">Browse all instruments:</span>
+        <ul className={styles.tickerNavList}>
+          {universe.map((o) => (
+            <li key={o.ticker}>
+              <a href={tickerPath(o.ticker)}>
+                <span className="num">{o.ticker}</span> · {o.sector}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </div>
   );
 }
@@ -35,9 +48,9 @@ export default async function Home() {
 function Masthead() {
   return (
     <header className={`${styles.masthead} stage stage-1`}>
-      <div className={styles.brand}>
+      <h1 className={styles.brand} style={{ margin: 0 }}>
         RiskPilot<span className={styles.brandAccent}>AI</span>
-      </div>
+      </h1>
       <div className={styles.mastheadRight}>
         <div className="caption">risk coaching · explains the math · never invents numbers</div>
         <ThemeToggle />
