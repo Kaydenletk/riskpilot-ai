@@ -12,7 +12,7 @@ _(The dashboard renders from a committed snapshot of the real computed report. W
 private Python risk engine is hosted, the live frontend prefers it and the snapshot is the
 fallback. Run locally for the full pipeline including the live guardrail.)_
 
-📊 **Reliability:** _0 hallucinated numbers in final output across N eval cases_ — see [`docs/RELIABILITY.md`](docs/RELIABILITY.md)
+📊 **Reliability:** guardrail caught **2/2 injected hallucinations** on the committed fixture set (4 cases) → **0 hallucinated numbers in final output** by fail-closed fallback. This is a small proof-of-wiring set, not a statistical claim yet — a larger live benchmark (recall, false-positive rate, latency, cost) is in progress. See [`docs/RELIABILITY.md`](docs/RELIABILITY.md)
 🛡️ **Compliance:** educational risk coaching, never buy/sell advice — see [`COMPLIANCE.md`](COMPLIANCE.md)
 
 <!-- M2: drop a demo GIF here, above the fold. -->
