@@ -9,6 +9,11 @@ import { fetchTickerUniverse } from "@/lib/ticker-backend";
 
 import styles from "./page.module.css";
 
+// ISR: prerender at build, refresh hourly. With a hosted backend the fetches
+// below pick up live data on the cycle; with none, the fixture render repeats.
+// Literal (not imported const): Next statically analyzes segment config.
+export const revalidate = 3600;
+
 export default async function Home() {
   let report;
   try {
