@@ -9,8 +9,6 @@ import { fetchTickerUniverse } from "@/lib/ticker-backend";
 
 import styles from "./page.module.css";
 
-export const dynamic = "force-dynamic";
-
 export default async function Home() {
   let report;
   try {
