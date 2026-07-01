@@ -29,13 +29,14 @@ injected `$PORT` automatically.
 ## 2. Set the service variables
 
 ```bash
+SECRET=$(openssl rand -hex 32)
 railway variables --set "DEMO_MODE=0" \
   --set "OPENAI_API_KEY=<funded key>" \
   --set "OPENAI_MODEL=gpt-5.5" \
-  --set "INTERNAL_SHARED_SECRET=$(openssl rand -hex 32)"
+  --set "INTERNAL_SHARED_SECRET=$SECRET"
+echo "$SECRET"   # step 4 sets the same value on Vercel — copy it now
 ```
 
-Copy the generated `INTERNAL_SHARED_SECRET` — step 4 needs the same value.
 Never commit any of these.
 
 ## 3. Deploy + smoke test
@@ -71,8 +72,9 @@ vercel --prod   # redeploy so the build picks them up
 ## 5. Verify prod
 
 - Dashboard explanation shows `explanation.source: model` (or
-  `model_regenerated`) — not `demo_fixture`.
-- The `BackendOffline` panel no longer renders.
+  `model_regenerated`) — not `demo_fixture`. **This is THE signal**: the
+  fixture fallback means a broken deploy degrades silently to the snapshot
+  (no error panel), so only the source field proves live wiring.
 - Pages revalidate hourly (ISR): backend data changes appear within an hour,
   or immediately on the next `vercel --prod`.
 
