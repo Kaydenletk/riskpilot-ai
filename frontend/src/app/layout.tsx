@@ -1,3 +1,4 @@
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { spaceGrotesk } from "@/lib/fonts";
 import { CANONICAL_ORIGIN } from "@/lib/seo";
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <main>{children}</main>
+        <SpeedInsights />
       </body>
     </html>
   );
