@@ -37,7 +37,9 @@ function Masthead() {
       <div className={styles.brand}>
         RiskPilot<span className={styles.brandAccent}>AI</span>
       </div>
-      <div className="caption">risk coaching · explains the math · never invents numbers</div>
+      <div className={styles.mastheadRight}>
+        <a href="/analyze" className="caption">Analyze your portfolio →</a>
+      </div>
     </header>
   );
 }
