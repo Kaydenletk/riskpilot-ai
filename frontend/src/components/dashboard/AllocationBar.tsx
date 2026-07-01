@@ -45,7 +45,7 @@ export function AllocationBar({ holdings, selectedSector = null, onSelectSector 
       </div>
       <div
         className={styles.bar}
-        role="img"
+        role="group"
         aria-label={
           "Sector allocation: " + segments.map((s) => `${s.sector} ${s.pct}%`).join(", ")
         }
