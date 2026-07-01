@@ -1,12 +1,32 @@
 import type { Metadata } from "next";
 import { spaceGrotesk } from "@/lib/fonts";
+import { CANONICAL_ORIGIN } from "@/lib/seo";
 
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "RiskPilot AI — Portfolio Risk Coach",
+  metadataBase: new URL(CANONICAL_ORIGIN),
+  title: {
+    default: "RiskPilot AI — Portfolio Risk Coach",
+    template: "%s | RiskPilot AI",
+  },
   description:
     "Deterministic risk math, explained by a guardrailed LLM that never invents numbers.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: "RiskPilot AI",
+    title: "RiskPilot AI — Portfolio Risk Coach",
+    description:
+      "Deterministic risk math, explained by a guardrailed LLM that never invents numbers.",
+    url: CANONICAL_ORIGIN,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "RiskPilot AI — Portfolio Risk Coach",
+    description:
+      "Portfolio risk math you can verify. AI explanations that cannot invent the numbers.",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
