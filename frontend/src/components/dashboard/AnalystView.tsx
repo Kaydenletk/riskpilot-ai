@@ -96,11 +96,14 @@ export function AnalystView({ report }: { report: RiskReport }) {
 
       <section className={`${styles.allocation} stage stage-3`}>
         <div className="caption" style={{ marginBottom: 8 }}>Holdings</div>
-        <HoldingsTable
-          holdings={holdings}
-          selectedSector={selectedSector}
-          onClearFilter={() => setSelectedSector(null)}
-        />
+        {/* overflow-x:auto so the table scrolls horizontally at narrow widths (e.g. 320px) */}
+        <div style={{ overflowX: "auto" }}>
+          <HoldingsTable
+            holdings={holdings}
+            selectedSector={selectedSector}
+            onClearFilter={() => setSelectedSector(null)}
+          />
+        </div>
       </section>
 
       <section className={`${styles.explain} stage stage-4`}>
