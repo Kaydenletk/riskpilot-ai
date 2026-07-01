@@ -1,6 +1,7 @@
 // Server Component: fetches the report, renders the masthead, hands the report to
 // the client Dashboard (which holds the Coach/Analyst view toggle).
 import { Dashboard } from "@/components/dashboard/Dashboard";
+import { Masthead } from "@/components/layout/Masthead";
 import { SearchWithCompare } from "@/components/search/SearchWithCompare";
 import { fetchSampleReport } from "@/lib/backend";
 import { fetchTickerUniverse } from "@/lib/ticker-backend";
@@ -21,7 +22,7 @@ export default async function Home() {
 
   return (
     <div className={styles.page}>
-      <Masthead />
+      <Masthead caption="risk coaching · explains the math · never invents numbers" />
       <div className={`${styles.searchRow} stage stage-1`}>
         <SearchWithCompare universe={universe} />
         <span className="caption">{universe.length} instruments · type ⌘K to analyze any one</span>
@@ -31,23 +32,10 @@ export default async function Home() {
   );
 }
 
-function Masthead() {
-  return (
-    <header className={`${styles.masthead} stage stage-1`}>
-      <div className={styles.brand}>
-        RiskPilot<span className={styles.brandAccent}>AI</span>
-      </div>
-      <div className={styles.mastheadRight}>
-        <a href="/analyze" className="caption">Analyze your portfolio →</a>
-      </div>
-    </header>
-  );
-}
-
 function BackendOffline() {
   return (
     <div className={styles.page}>
-      <Masthead />
+      <Masthead caption="risk coaching · explains the math · never invents numbers" />
       <section className={styles.explain}>
         <p className={styles.summary}>
           The risk engine (a private Python service) isn&apos;t connected to this deployment

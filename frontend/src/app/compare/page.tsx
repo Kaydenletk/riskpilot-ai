@@ -1,8 +1,7 @@
 // Server component: reads ?t=, resolves each ticker through the allow-list
 // (unknowns dropped), renders the comparison.
-import Link from "next/link";
-
 import { CompareGrid } from "@/components/compare/CompareGrid";
+import { Masthead } from "@/components/layout/Masthead";
 import { parseCompare } from "@/lib/compare";
 import { fetchTickerReport } from "@/lib/ticker-backend";
 import type { TickerReport } from "@/lib/types";
@@ -24,19 +23,14 @@ export default async function ComparePage({
 
   return (
     <div className={page.page}>
-      <header className={`${page.masthead} stage stage-1`}>
-        <Link href="/" className={page.brand} style={{ textDecoration: "none" }}>
-          RiskPilot<span className={page.brandAccent}>AI</span>
-        </Link>
-        <div className="caption">side-by-side risk comparison · illustrative data</div>
-      </header>
+      <Masthead caption="side-by-side risk comparison · illustrative data" />
 
       <div className={`${styles.wrap} stage stage-2`}>
         <div className={styles.head}>
           <div className="caption">
             Comparing {reports.length} of {requested.length} requested
           </div>
-          <Link href="/" className="caption">← back to portfolio</Link>
+          <a href="/" className="caption">← back to portfolio</a>
         </div>
 
         {reports.length === 0 ? (

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 
 import { Dashboard } from "@/components/dashboard/Dashboard";
+import { Masthead } from "@/components/layout/Masthead";
 import { computeBreakdown } from "@/lib/breakdown";
 import { parseHoldings, type RowError } from "@/lib/parse-holdings";
 import type { Holding, RiskReport } from "@/lib/types";
@@ -65,12 +65,7 @@ export default function AnalyzePage() {
 
   return (
     <div className={page.page}>
-      <header className={`${page.masthead} stage stage-1`}>
-        <Link href="/" className={page.brand} style={{ textDecoration: "none" }}>
-          RiskPilot<span className={page.brandAccent}>AI</span>
-        </Link>
-        <div className="caption">analyze your own holdings · figures come from the engine</div>
-      </header>
+      <Masthead caption="analyze your own holdings · figures come from the engine" />
 
       <div className={`${styles.wrap} stage stage-2`}>
         <p className={styles.intro}>
