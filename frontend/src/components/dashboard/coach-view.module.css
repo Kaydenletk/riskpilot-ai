@@ -97,7 +97,7 @@
   padding: var(--space-3);
 }
 .promptIcon {
-  color: var(--risk-mid);
+  color: var(--risk-mid-ink);
   font-size: 1.2rem;
   line-height: 1.4;
   flex-shrink: 0;
@@ -126,7 +126,7 @@
   content: "→";
   position: absolute;
   left: 0;
-  color: var(--risk-mid);
+  color: var(--risk-mid-ink);
   font-weight: 700;
 }
 .promptFoot {

@@ -4,7 +4,7 @@
 // 150KB budget and the keyboard handling explicit. Searches the allow-listed
 // universe only; selecting a ticker routes to its risk read. ⌘K / Ctrl-K opens,
 // Esc closes, ↑/↓ move, Enter selects.
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 
@@ -42,6 +42,10 @@ export function SearchPalette({ universe }: SearchPaletteProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
+  // the ticker currently being routed to, so we can show a pending row instead
+  // of a dead pause while the destination page server-renders
+  const [pending, setPending] = useState<string | null>(null);
+  const [isRouting, startRouting] = useTransition();
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
 
@@ -54,14 +58,19 @@ export function SearchPalette({ universe }: SearchPaletteProps) {
     setOpen(false);
     setQuery("");
     setActive(0);
+    setPending(null);
   }, []);
 
   const go = useCallback(
     (ticker: string) => {
-      close();
-      router.push(`/ticker/${ticker.toLowerCase()}`);
+      // Keep the palette open and show a pending row until the route commits —
+      // startTransition keeps isRouting true across the server render.
+      setPending(ticker);
+      startRouting(() => {
+        router.push(`/ticker/${ticker.toLowerCase()}`);
+      });
     },
-    [close, router],
+    [router],
   );
 
   // global ⌘K / Ctrl-K to open, "/" as a secondary shortcut
@@ -112,23 +121,36 @@ export function SearchPalette({ universe }: SearchPaletteProps) {
 
   return (
     <>
-      <button className={styles.trigger} onClick={() => setOpen(true)} aria-haspopup="dialog">
-        <SearchIcon />
-        <span className={styles.triggerLabel}>Analyze a stock or ETF…</span>
-        <kbd className={styles.kbd}>⌘K</kbd>
-      </button>
+      <div role="search">
+        <button
+          className={styles.trigger}
+          onClick={() => setOpen(true)}
+          aria-haspopup="dialog"
+          aria-label="Search the risk universe"
+        >
+          <SearchIcon />
+          <span className={styles.triggerLabel}>Analyze a stock or ETF…</span>
+          <kbd className={`${styles.kbd} ${styles.triggerKbd}`}>⌘K</kbd>
+        </button>
+      </div>
 
       {open &&
         mounted &&
         createPortal(
-          <div className={styles.overlay} onClick={close} role="presentation">
+          <div
+            className={styles.overlay}
+            onClick={isRouting ? undefined : close}
+            role="presentation"
+          >
           <div
             className={styles.panel}
             role="dialog"
             aria-modal="true"
             aria-label="Search the risk universe"
             onClick={(e) => e.stopPropagation()}
+            aria-busy={isRouting}
           >
+            {isRouting && <div className={styles.routingBar} aria-hidden />}
             <div className={styles.searchRow}>
               <SearchIcon />
               <input
@@ -160,23 +182,33 @@ export function SearchPalette({ universe }: SearchPaletteProps) {
               </div>
             ) : (
               <ul className={styles.results} id="search-results" role="listbox" ref={listRef}>
-                {results.map((o, i) => (
-                  <li
-                    key={o.ticker}
-                    id={`opt-${o.ticker}`}
-                    role="option"
-                    aria-selected={i === active}
-                    className={`${styles.option} ${i === active ? styles.optionActive : ""}`}
-                    onMouseEnter={() => setActive(i)}
-                    onClick={() => go(o.ticker)}
-                  >
-                    <span className={`num ${styles.optTicker}`}>{o.ticker}</span>
-                    <span className={styles.optSector}>{o.sector}</span>
-                    <span className={styles.optGo} aria-hidden>
-                      ↵
-                    </span>
-                  </li>
-                ))}
+                {results.map((o, i) => {
+                  const isPending = pending === o.ticker;
+                  return (
+                    <li
+                      key={o.ticker}
+                      id={`opt-${o.ticker}`}
+                      role="option"
+                      aria-selected={i === active}
+                      aria-busy={isPending}
+                      className={`${styles.option} ${i === active ? styles.optionActive : ""} ${
+                        isPending ? styles.optionPending : ""
+                      }`}
+                      onMouseEnter={() => setActive(i)}
+                      onClick={() => go(o.ticker)}
+                    >
+                      <span className={`num ${styles.optTicker}`}>{o.ticker}</span>
+                      <span className={styles.optSector}>{o.sector}</span>
+                      {isPending ? (
+                        <span className={styles.optLoading}>Opening…</span>
+                      ) : (
+                        <span className={styles.optGo} aria-hidden>
+                          ↵
+                        </span>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             )}
 

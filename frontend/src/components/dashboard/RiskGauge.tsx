@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { riskColorForScore, riskVar, type RiskBand } from "@/lib/risk-color";
+import { riskColorForScore, riskInkVar, riskVar, type RiskBand } from "@/lib/risk-color";
 
 import styles from "./risk-gauge.module.css";
 
@@ -20,6 +20,10 @@ const ARC_LEN = CIRC * SWEEP;
 const GAP_LEN = CIRC * (1 - SWEEP);
 
 export function RiskGauge({ score, band }: RiskGaugeProps) {
+  // one displayed value everywhere: the gauge, the aria-label, and any text that
+  // references "the risk score" all read this rounded integer. The raw decimal
+  // (e.g. 73.8) is a computed internal; users only ever see 74.
+  const displayScore = Math.round(score);
   // animate from 0 to the real value on mount (compositor-friendly: stroke offset)
   const [shown, setShown] = useState(0);
 
@@ -42,7 +46,7 @@ export function RiskGauge({ score, band }: RiskGaugeProps) {
   const rotation = 135; // degrees
 
   return (
-    <div className={styles.wrap} role="img" aria-label={`Risk score ${score} of 100, ${band}`}>
+    <div className={styles.wrap} role="img" aria-label={`Risk score ${displayScore} of 100, ${band}`}>
       <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} className={styles.svg}>
         <g transform={`rotate(${rotation} ${SIZE / 2} ${SIZE / 2})`}>
           {/* track */}
@@ -76,7 +80,7 @@ export function RiskGauge({ score, band }: RiskGaugeProps) {
         <div className={`num ${styles.score}`} style={{ color: riskVar(band) }}>
           {Math.round(shown)}
         </div>
-        <div className={`caption ${styles.band}`} style={{ color: riskVar(band) }}>
+        <div className={`caption ${styles.band}`} style={{ color: riskInkVar(band) }}>
           {band}
         </div>
         <div className="caption" style={{ marginTop: 2, opacity: 0.7 }}>

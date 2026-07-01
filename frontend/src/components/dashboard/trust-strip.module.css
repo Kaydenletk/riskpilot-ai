@@ -1,0 +1,52 @@
+/* Provenance strip — quiet instrument-panel receipts. Reads as a spec footer,
+   not a marketing badge: mono labels, tabular scope, one calm disclosure. */
+
+.strip {
+  margin-top: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--rule);
+}
+
+.facts {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+}
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.factValue {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  line-height: 1.4;
+}
+
+.how {
+  margin-top: var(--space-2);
+}
+.summary {
+  cursor: pointer;
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  width: fit-content;
+  border-radius: var(--radius-sm);
+  transition: color var(--dur-fast) var(--ease-out-expo);
+}
+.summary:hover {
+  color: var(--ink);
+}
+.body {
+  margin-top: var(--space-1);
+  max-width: 64ch;
+}
+.body p {
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  line-height: 1.55;
+  margin: 0 0 var(--space-1);
+}

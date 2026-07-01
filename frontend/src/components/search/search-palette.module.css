@@ -128,6 +128,49 @@
 .optionActive {
   background: var(--risk-low-soft);
 }
+.optionPending {
+  background: var(--risk-low-soft);
+  opacity: 0.85;
+  cursor: progress;
+}
+.optLoading {
+  font-size: var(--text-sm);
+  color: var(--risk-low-ink);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Indeterminate routing bar across the top of the panel while the destination
+   page server-renders — turns a dead pause into visible progress. */
+.routingBar {
+  height: 2px;
+  background: var(--risk-low-soft);
+  overflow: hidden;
+  position: relative;
+}
+.routingBar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  background: var(--risk-low);
+  animation: routingSlide 1s var(--ease-out-expo) infinite;
+}
+@keyframes routingSlide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(350%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .routingBar::before {
+    animation: none;
+    width: 100%;
+    opacity: 0.6;
+  }
+}
 .optTicker {
   font-weight: 600;
   font-size: var(--text-base);
@@ -175,5 +218,13 @@
   }
   .triggerLabel {
     font-size: var(--text-xs);
+  }
+}
+
+/* The ⌘K shortcut badge is meaningless on a touch device with no keyboard —
+   the tap target itself is the affordance there, so drop the hint. */
+@media (hover: none), (pointer: coarse) {
+  .triggerKbd {
+    display: none;
   }
 }

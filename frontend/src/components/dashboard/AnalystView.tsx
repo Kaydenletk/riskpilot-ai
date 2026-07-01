@@ -6,6 +6,7 @@ import type { RiskReport } from "@/lib/types";
 import { AllocationBar } from "./AllocationBar";
 import { GroundedText } from "./GroundedText";
 import { RiskGauge } from "./RiskGauge";
+import { TrustStrip } from "./TrustStrip";
 import styles from "../../app/page.module.css";
 
 const SOURCE_LABEL: Record<string, string> = {
@@ -90,6 +91,8 @@ export function AnalystView({ report }: { report: RiskReport }) {
           </div>
         </div>
       </section>
+
+      <TrustStrip source={explanation.source} holdingsCount={facts.holdings_count} />
 
       <footer className={styles.footer}>
         <span className="num">{holdings.length} holdings</span> · {as_of}

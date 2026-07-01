@@ -10,17 +10,26 @@
   --surface: oklch(100% 0 0);
   --surface-raised: oklch(99% 0.003 250);
   --ink: oklch(20% 0.012 264);
-  --ink-soft: oklch(46% 0.012 264);
-  --ink-faint: oklch(62% 0.01 264);
+  --ink-soft: oklch(44% 0.012 264);
+  /* Darkened from 62%→52% L: .caption is small uppercase text and must clear
+     WCAG AA 4.5:1 on the paper background. 52% ≈ 4.6:1 on --surface. */
+  --ink-faint: oklch(52% 0.012 264);
   --rule: oklch(91% 0.006 264);
   --rule-strong: oklch(84% 0.008 264);
 
-  /* ── semantic risk ramp (the ONLY place these hues appear) ── */
+  /* ── semantic risk ramp (large fills: gauge arc, soft badge backgrounds) ── */
   --risk-low: oklch(64% 0.13 232);   /* cool blue = diversified / safe */
   --risk-mid: oklch(74% 0.15 75);    /* amber = elevated */
   --risk-high: oklch(60% 0.20 25);   /* warm red = concentrated / high */
   --risk-low-soft: oklch(64% 0.13 232 / 0.12);
   --risk-high-soft: oklch(60% 0.20 25 / 0.12);
+
+  /* ── text-safe ramp variants: same hue, darkened to clear AA when the color
+     is applied to SMALL text or thin indicators (not large fills). The bright
+     amber especially fails as text (~2.2:1); these land ≥4.5:1 on --surface. ── */
+  --risk-low-ink: oklch(50% 0.15 232);
+  --risk-mid-ink: oklch(52% 0.13 75);
+  --risk-high-ink: oklch(52% 0.20 25);
 
   /* ── one non-risk accent for chrome (kept distinct from the ramp) ── */
   --accent: oklch(52% 0.02 264);
@@ -104,10 +113,28 @@ a:hover {
   text-decoration-color: var(--ink-soft);
 }
 
+/* Strong, unmistakable keyboard focus: a solid ring PLUS a soft halo so it reads
+   on any surface (white cards, tinted badges, the dark search scrim). */
 :focus-visible {
-  outline: 2px solid var(--risk-low);
+  outline: 2.5px solid var(--risk-low);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 3px;
+  box-shadow: 0 0 0 4px var(--risk-low-soft);
+}
+
+/* Pointer-aware instructional copy. A device that can hover (mouse/trackpad)
+   sees the ".hover-hint" text and hides ".touch-hint"; a coarse/touch pointer
+   does the reverse. CSS-only so it's SSR-safe (no hydration mismatch). */
+.touch-hint {
+  display: none;
+}
+@media (hover: none), (pointer: coarse) {
+  .hover-hint {
+    display: none;
+  }
+  .touch-hint {
+    display: inline;
+  }
 }
 
 /* staged entrance — one directed load sequence, not scattered micro-interactions */

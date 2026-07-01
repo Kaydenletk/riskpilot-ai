@@ -24,7 +24,11 @@ export default async function Home() {
       <Masthead />
       <div className={`${styles.searchRow} stage stage-1`}>
         <SearchPalette universe={universe} />
-        <span className="caption">{universe.length} instruments · type ⌘K to analyze any one</span>
+        <span className="caption">
+          {universe.length} instruments ·{" "}
+          <span className="hover-hint">type ⌘K to analyze any one</span>
+          <span className="touch-hint">tap to search any one</span>
+        </span>
       </div>
       <Dashboard report={report} />
     </div>

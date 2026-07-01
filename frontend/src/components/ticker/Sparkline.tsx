@@ -72,6 +72,13 @@ export function Sparkline({ values, score, width = 640, height = 160 }: Sparklin
         className={styles.chartSvg}
         onMouseMove={(e) => setHover(indexFromClientX(e.clientX, e.currentTarget.getBoundingClientRect()))}
         onMouseLeave={() => setHover(null)}
+        onTouchStart={(e) =>
+          setHover(indexFromClientX(e.touches[0].clientX, e.currentTarget.getBoundingClientRect()))
+        }
+        onTouchMove={(e) =>
+          setHover(indexFromClientX(e.touches[0].clientX, e.currentTarget.getBoundingClientRect()))
+        }
+        onTouchEnd={() => setHover(null)}
       >
         <defs>
           <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
@@ -117,7 +124,8 @@ export function Sparkline({ values, score, width = 640, height = 160 }: Sparklin
           </>
         ) : (
           <>
-            <span className="caption">hover to scrub</span>
+            <span className="caption hover-hint">hover to scrub</span>
+            <span className="caption touch-hint">drag to inspect</span>
             <span className={`num ${styles.readoutVal}`}>
               {geom.min.toFixed(2)} – {geom.max.toFixed(2)}
             </span>
