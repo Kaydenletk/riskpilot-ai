@@ -14,6 +14,8 @@ import styles from "./search-palette.module.css";
 
 interface SearchPaletteProps {
   universe: TickerOption[];
+  compareSet: string[];
+  onToggleCompare: (ticker: string) => void;
 }
 
 // rank: exact ticker prefix first, then ticker substring, then sector match
@@ -36,7 +38,16 @@ function rank(options: TickerOption[], query: string): TickerOption[] {
   return scored.map((s) => s.o);
 }
 
-export function SearchPalette({ universe }: SearchPaletteProps) {
+// Returns all focusable elements within a container
+function getFocusable(container: HTMLElement): HTMLElement[] {
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    ),
+  );
+}
+
+export function SearchPalette({ universe, compareSet, onToggleCompare }: SearchPaletteProps) {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
@@ -44,6 +55,9 @@ export function SearchPalette({ universe }: SearchPaletteProps) {
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  // FIX 4a: ref to the trigger button so focus can return on close
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   const results = useMemo(() => rank(universe, query), [universe, query]);
 
@@ -54,6 +68,8 @@ export function SearchPalette({ universe }: SearchPaletteProps) {
     setOpen(false);
     setQuery("");
     setActive(0);
+    // FIX 4a: return focus to the trigger button
+    triggerRef.current?.focus();
   }, []);
 
   const go = useCallback(
@@ -103,16 +119,50 @@ export function SearchPalette({ universe }: SearchPaletteProps) {
     } else if (e.key === "Enter") {
       e.preventDefault();
       const pick = results[active];
-      if (pick) go(pick.ticker);
+      if (!pick) return;
+      if (e.shiftKey) onToggleCompare(pick.ticker);
+      else go(pick.ticker);
     } else if (e.key === "Escape") {
       e.preventDefault();
       close();
     }
   }
 
+  // FIX 4b+4c: Tab focus trap + Escape on the panel
+  function onPanelKey(e: React.KeyboardEvent<HTMLDivElement>) {
+    // FIX 4c: Escape closes when focus is anywhere in the panel (e.g. on a cmpBtn)
+    if (e.key === "Escape") {
+      e.preventDefault();
+      close();
+      return;
+    }
+
+    // FIX 4b: Tab trap — wrap focus within the panel
+    if (e.key === "Tab" && panelRef.current) {
+      const focusable = getFocusable(panelRef.current);
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        // Shift+Tab from first → wrap to last
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        // Tab from last → wrap to first
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }
+  }
+
   return (
     <>
-      <button className={styles.trigger} onClick={() => setOpen(true)} aria-haspopup="dialog">
+      {/* FIX 4a: triggerRef attached for return-focus after close */}
+      <button ref={triggerRef} className={styles.trigger} onClick={() => setOpen(true)} aria-haspopup="dialog">
         <SearchIcon />
         <span className={styles.triggerLabel}>Analyze a stock or ETF…</span>
         <kbd className={styles.kbd}>⌘K</kbd>
@@ -123,11 +173,13 @@ export function SearchPalette({ universe }: SearchPaletteProps) {
         createPortal(
           <div className={styles.overlay} onClick={close} role="presentation">
           <div
+            ref={panelRef}
             className={styles.panel}
             role="dialog"
             aria-modal="true"
             aria-label="Search the risk universe"
             onClick={(e) => e.stopPropagation()}
+            onKeyDown={onPanelKey}
           >
             <div className={styles.searchRow}>
               <SearchIcon />
@@ -172,6 +224,19 @@ export function SearchPalette({ universe }: SearchPaletteProps) {
                   >
                     <span className={`num ${styles.optTicker}`}>{o.ticker}</span>
                     <span className={styles.optSector}>{o.sector}</span>
+                    <button
+                      type="button"
+                      className={styles.cmpBtn}
+                      aria-pressed={compareSet.includes(o.ticker)}
+                      aria-label={compareSet.includes(o.ticker) ? `Remove ${o.ticker} from compare` : `Add ${o.ticker} to compare`}
+                      title={compareSet.includes(o.ticker) ? "Remove from compare" : "Add to compare"}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onToggleCompare(o.ticker);
+                      }}
+                    >
+                      {compareSet.includes(o.ticker) ? "✓" : "+"}
+                    </button>
                     <span className={styles.optGo} aria-hidden>
                       ↵
                     </span>
@@ -182,7 +247,7 @@ export function SearchPalette({ universe }: SearchPaletteProps) {
 
             <div className={styles.footer}>
               <span className="caption">{results.length} instruments</span>
-              <span className="caption">↑↓ navigate · ↵ open · esc close</span>
+              <span className="caption">↑↓ navigate · ↵ open · ⇧↵ compare · esc close</span>
             </div>
           </div>
           </div>,

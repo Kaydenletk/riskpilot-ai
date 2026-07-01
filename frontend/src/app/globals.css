@@ -11,7 +11,7 @@
   --surface-raised: oklch(99% 0.003 250);
   --ink: oklch(20% 0.012 264);
   --ink-soft: oklch(46% 0.012 264);
-  --ink-faint: oklch(62% 0.01 264);
+  --ink-faint: oklch(51% 0.012 264);
   --rule: oklch(91% 0.006 264);
   --rule-strong: oklch(84% 0.008 264);
 
@@ -48,6 +48,28 @@
   --dur-normal: 420ms;
   --dur-slow: 900ms;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Opt-in dark theme — surfaces/ink invert; the risk ramp hues stay (they read
+   on both). Light remains the default (no [data-theme] / [data-theme=light]). */
+[data-theme="dark"] {
+  --bg: oklch(20% 0.012 264);
+  --bg-grain: oklch(23% 0.012 264);
+  --surface: oklch(25% 0.012 264);
+  --surface-raised: oklch(28% 0.012 264);
+  --ink: oklch(94% 0.004 250);
+  --ink-soft: oklch(78% 0.008 250);
+  --ink-faint: oklch(70% 0.01 250);  /* bumped L0.62→0.70: clears 4.5:1 on --surface L0.25 */
+  --rule: oklch(36% 0.008 264);
+  --rule-strong: oklch(46% 0.01 264);
+  --risk-low-soft: oklch(64% 0.13 232 / 0.20);
+  --risk-high-soft: oklch(60% 0.20 25 / 0.20);
+  --accent: oklch(80% 0.02 264);
+}
+
+/* Explicit dark body wash — deliberately visible-but-subtle depth (Δ from bg L0.20 to 0.30) */
+[data-theme="dark"] body {
+  background-image: radial-gradient(140% 90% at 50% -20%, oklch(30% 0.012 264), transparent 60%);
 }
 
 * {

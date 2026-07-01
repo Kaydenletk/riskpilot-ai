@@ -1,0 +1,17 @@
+.table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+.table th, .table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); }
+.table th { color: var(--ink-faint); font-weight: 600; }
+.sortBtn {
+  font: inherit; font-weight: 600; color: var(--ink-faint);
+  background: none; border: none; cursor: pointer; padding: 0; display: inline-flex; gap: 4px; align-items: center;
+}
+th[aria-sort="descending"] .sortBtn, th[aria-sort="ascending"] .sortBtn { color: var(--ink); }
+.right { text-align: right; }
+.bar { height: 6px; border-radius: 3px; background: var(--risk-low-soft); overflow: hidden; }
+.barFill { height: 100%; background: var(--risk-low); }
+.filterRow { display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-2); }
+.clear {
+  font: inherit; font-size: var(--text-xs); padding: 3px 10px; border-radius: 100px;
+  border: 1px solid var(--rule-strong); background: var(--surface); color: var(--ink-soft); cursor: pointer;
+}
+.clear:hover { color: var(--ink); }

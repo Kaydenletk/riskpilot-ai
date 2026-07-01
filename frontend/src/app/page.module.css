@@ -204,3 +204,22 @@
     gap: var(--space-2);
   }
 }
+
+.mastheadRight { display: flex; align-items: baseline; gap: var(--space-2); }
+
+.tileButton {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  border: none;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out-expo);
+}
+.tileButton:hover { background: var(--surface-raised); }
+.factorFlash {
+  animation: factorFlash 1.2s var(--ease-out-expo);
+}
+@keyframes factorFlash {
+  0% { background: var(--risk-low-soft); }
+  100% { background: transparent; }
+}

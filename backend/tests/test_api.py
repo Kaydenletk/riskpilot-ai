@@ -59,3 +59,30 @@ def test_analyze_known_ticker_returns_a_report() -> None:
 def test_analyze_unknown_ticker_404s() -> None:
     r = client.get("/analyze/DOGE", headers={"x-internal-secret": SECRET})
     assert r.status_code == 404
+
+
+def test_post_report_scores_known_holdings() -> None:
+    r = client.post(
+        "/report",
+        headers={"x-internal-secret": SECRET},
+        json={"holdings": [{"ticker": "NVDA", "shares": 40, "sector": "x", "market_value": 1},
+                           {"ticker": "KO", "shares": 30, "sector": "x", "market_value": 1}]},
+    )
+    assert r.status_code == 200
+    body = r.json()
+    assert body["facts"]["holdings_count"] == 2
+    assert "not financial advice" in body["disclaimer"].lower()
+
+
+def test_post_report_rejects_unknown_ticker() -> None:
+    r = client.post(
+        "/report",
+        headers={"x-internal-secret": SECRET},
+        json={"holdings": [{"ticker": "DOGE", "shares": 1, "sector": "x", "market_value": 1}]},
+    )
+    assert r.status_code == 422
+    assert "DOGE" in r.json()["detail"]["symbols"]
+
+
+def test_post_report_requires_secret() -> None:
+    assert client.post("/report", json={"holdings": []}).status_code == 401
