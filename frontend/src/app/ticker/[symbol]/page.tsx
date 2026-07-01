@@ -7,11 +7,15 @@ import { notFound } from "next/navigation";
 
 import { TickerView } from "@/components/ticker/TickerView";
 import { tickerDescription, tickerPath, tickerTitle } from "@/lib/seo";
-import { fetchTickerReport } from "@/lib/ticker-backend";
+import { fetchTickerReport, fixtureUniverse } from "@/lib/ticker-backend";
 
 import styles from "../../page.module.css";
 
-export const dynamic = "force-dynamic";
+// Prerender all 11 allow-listed tickers at build (from the committed fixtures).
+// Unknown symbols aren't listed → rendered on demand → notFound() → 404.
+export function generateStaticParams() {
+  return fixtureUniverse().map((o) => ({ symbol: o.ticker.toLowerCase() }));
+}
 
 export async function generateMetadata({
   params,
