@@ -54,14 +54,6 @@
   min-width: 260px;
 }
 
-.headline {
-  font-size: var(--text-hero);
-  font-weight: 700;
-  line-height: 0.95;
-  letter-spacing: -0.03em;
-  margin: 8px 0 12px;
-}
-
 .lede {
   font-size: var(--text-lg);
   color: var(--ink-soft);

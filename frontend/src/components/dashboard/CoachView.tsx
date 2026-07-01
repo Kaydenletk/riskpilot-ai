@@ -17,27 +17,14 @@ function whyLine(report: RiskReport): string {
 interface PlainStat {
   label: string;
   value: string;
-  plain: string;
 }
 
 function plainStats(report: RiskReport): PlainStat[] {
   const f = report.facts;
   return [
-    {
-      label: "Concentration",
-      value: `${f.concentration_pct_top3}%`,
-      plain: "share of your money in your top 3 holdings. Higher means more riding on fewer bets.",
-    },
-    {
-      label: "Volatility",
-      value: `${f.volatility_annualized_pct}%`,
-      plain: "how much the value tends to swing in a year. Higher means a bumpier ride.",
-    },
-    {
-      label: "Worst dip so far",
-      value: `${f.max_drawdown_pct}%`,
-      plain: "the deepest drop from a high point in this sample. Illustrative, not a prediction.",
-    },
+    { label: "Concentration", value: `${f.concentration_pct_top3}%` },
+    { label: "Volatility", value: `${f.volatility_annualized_pct}%` },
+    { label: "Worst dip so far", value: `${f.max_drawdown_pct}%` },
   ];
 }
 

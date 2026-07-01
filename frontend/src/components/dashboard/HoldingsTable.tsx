@@ -57,6 +57,16 @@ export function HoldingsTable({ holdings, onSelectSector }: HoldingsTableProps) 
             key={r.ticker}
             className={selected === r.sector ? styles.rowSelected : ""}
             onClick={() => selectSector(r.sector)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                selectSector(r.sector);
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-pressed={selected === r.sector}
+            aria-label={`Filter allocation by ${r.sector}`}
           >
             <td className={`num ${styles.ticker}`}>{r.ticker}</td>
             <td className={styles.sector}>{r.sector}</td>
