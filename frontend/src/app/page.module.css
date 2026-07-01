@@ -202,3 +202,18 @@
     gap: var(--space-2);
   }
 }
+
+.tickerNav {
+  margin-top: var(--space-4);
+}
+.tickerNavList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  padding: 0;
+  margin: var(--space-2) 0 0;
+}
+.tickerNavList a {
+  text-decoration: none;
+}
