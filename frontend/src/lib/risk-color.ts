@@ -9,6 +9,14 @@ export function riskVar(band: RiskBand): string {
   return "var(--risk-low)";
 }
 
+// Text-safe ink variant: slightly adjusted hue/lightness for legibility on
+// both light and dark surfaces (CSS variables handle the per-theme values).
+export function riskInkVar(band: RiskBand): string {
+  if (band === "aggressive") return "var(--risk-high-ink)";
+  if (band === "moderate") return "var(--risk-mid-ink)";
+  return "var(--risk-low-ink)";
+}
+
 // Continuous color for the gauge stroke: interpolate across the ramp by score.
 // oklch interpolation via CSS color-mix keeps it perceptually smooth.
 export function riskColorForScore(score: number): string {

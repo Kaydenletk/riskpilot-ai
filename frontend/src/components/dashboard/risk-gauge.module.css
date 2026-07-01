@@ -27,6 +27,7 @@
 }
 
 .score {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   font-size: 4.25rem;
   font-weight: 700;
   line-height: 0.9;

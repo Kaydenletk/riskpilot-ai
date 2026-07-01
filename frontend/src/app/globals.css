@@ -21,9 +21,14 @@
   --risk-high: oklch(60% 0.20 25);   /* warm red = concentrated / high */
   --risk-low-soft: oklch(64% 0.13 232 / 0.12);
   --risk-high-soft: oklch(60% 0.20 25 / 0.12);
+  --risk-low-ink: oklch(52% 0.13 232);
+  --risk-mid-ink: oklch(60% 0.15 75);
+  --risk-high-ink: oklch(48% 0.20 25);
 
-  /* ── one non-risk accent for chrome (kept distinct from the ramp) ── */
-  --accent: oklch(52% 0.02 264);
+  /* ── one deliberate chrome accent (indigo/violet, distinct from the risk
+     ramp). Used for focus, links, active rows, theme toggle — never risk state. ── */
+  --accent: oklch(58% 0.19 285);
+  --accent-soft: oklch(58% 0.19 285 / 0.12);
 
   /* ── type scale (fluid, editorial contrast) ── */
   --text-xs: 0.75rem;
@@ -43,11 +48,40 @@
   --radius: 10px;
   --radius-sm: 6px;
 
+  /* ── display font (overridden by next/font variable injected on <html>) ── */
+  --font-display: ui-sans-serif, system-ui, sans-serif; /* overridden by next/font on <html> */
+
   /* ── motion ── */
   --dur-fast: 180ms;
   --dur-normal: 420ms;
   --dur-slow: 900ms;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Opt-in dark theme — reassigns token VALUES only; names stay identical so no
+   component changes are needed. Risk ramp keeps its hue, lifted for a dark field. */
+[data-theme="dark"] {
+  --bg: oklch(20% 0.012 264);
+  --bg-grain: oklch(22% 0.012 264);
+  --surface: oklch(24% 0.012 264);
+  --surface-raised: oklch(27% 0.012 264);
+  --ink: oklch(94% 0.006 264);
+  --ink-soft: oklch(78% 0.008 264);
+  --ink-faint: oklch(66% 0.01 264);
+  --rule: oklch(34% 0.008 264);
+  --rule-strong: oklch(42% 0.01 264);
+
+  --risk-low: oklch(70% 0.13 232);
+  --risk-mid: oklch(78% 0.15 75);
+  --risk-high: oklch(68% 0.20 25);
+  --risk-low-soft: oklch(70% 0.13 232 / 0.16);
+  --risk-high-soft: oklch(68% 0.20 25 / 0.16);
+  --risk-low-ink: oklch(72% 0.13 232);
+  --risk-mid-ink: oklch(80% 0.14 75);
+  --risk-high-ink: oklch(72% 0.19 25);
+
+  --accent: oklch(70% 0.17 285);
+  --accent-soft: oklch(70% 0.17 285 / 0.18);
 }
 
 * {
@@ -105,9 +139,10 @@ a:hover {
 }
 
 :focus-visible {
-  outline: 2px solid var(--risk-low);
+  outline: 2.5px solid var(--accent);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 3px;
+  box-shadow: 0 0 0 4px var(--accent-soft);
 }
 
 /* staged entrance — one directed load sequence, not scattered micro-interactions */
