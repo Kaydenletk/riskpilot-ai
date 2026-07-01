@@ -22,6 +22,8 @@ export function LiveContextPanel({ ticker }: { ticker: string }) {
     let injected = false;
 
     function loadWidget() {
+      // `!container` is required: TS doesn't narrow the captured ref inside this
+      // closure, so this guard is load-bearing for the type-checker (not dead).
       if (injected || !container) return;
       injected = true;
       const script = document.createElement("script");
