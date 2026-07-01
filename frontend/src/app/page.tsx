@@ -2,6 +2,7 @@
 // the client Dashboard (which holds the Coach/Analyst view toggle).
 import { Dashboard } from "@/components/dashboard/Dashboard";
 import { SearchPalette } from "@/components/search/SearchPalette";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { fetchSampleReport } from "@/lib/backend";
 import { fetchTickerUniverse } from "@/lib/ticker-backend";
 
@@ -37,7 +38,10 @@ function Masthead() {
       <div className={styles.brand}>
         RiskPilot<span className={styles.brandAccent}>AI</span>
       </div>
-      <div className="caption">risk coaching · explains the math · never invents numbers</div>
+      <div className={styles.mastheadRight}>
+        <div className="caption">risk coaching · explains the math · never invents numbers</div>
+        <ThemeToggle />
+      </div>
     </header>
   );
 }
