@@ -1,6 +1,7 @@
+"use client";
+
 // Persona A — "The Evaluator". The precise instrument dashboard: gauge, the
 // deterministic receipts, allocation, and the AI explanation with verified chips.
-"use client";
 
 import { useState } from "react";
 
