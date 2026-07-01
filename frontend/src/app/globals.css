@@ -21,6 +21,9 @@
   --risk-high: oklch(60% 0.20 25);   /* warm red = concentrated / high */
   --risk-low-soft: oklch(64% 0.13 232 / 0.12);
   --risk-high-soft: oklch(60% 0.20 25 / 0.12);
+  --risk-low-ink: oklch(52% 0.13 232);
+  --risk-mid-ink: oklch(60% 0.15 75);
+  --risk-high-ink: oklch(48% 0.20 25);
 
   /* ── one deliberate chrome accent (indigo/violet, distinct from the risk
      ramp). Used for focus, links, active rows, theme toggle — never risk state. ── */
