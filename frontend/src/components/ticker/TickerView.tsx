@@ -36,7 +36,7 @@ export function TickerView({ report }: { report: TickerReport }) {
 
       <header className={`${styles.header} stage stage-1`}>
         <div>
-          <div className={`num ${styles.ticker}`}>{ticker}</div>
+          <h1 className={`num ${styles.ticker}`}>{ticker}</h1>
           <div className="caption">{facts.sector} · synthetic illustrative data</div>
         </div>
       </header>
