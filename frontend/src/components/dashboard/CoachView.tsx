@@ -2,19 +2,12 @@
 // coaching that bends the emotional arc DOWN: lands anxious -> understood -> calmer
 // -> one reflective action. No new numbers (still grounded); jargon translated;
 // the discipline prompt is prominent, not buried. Never says buy/sell.
-import { riskVar, type RiskBand } from "@/lib/risk-color";
 import type { RiskReport } from "@/lib/types";
 
+import { NumberCard } from "./NumberCard";
 import { RiskGauge } from "./RiskGauge";
+import { VerdictHeadline } from "./VerdictHeadline";
 import styles from "./coach-view.module.css";
-
-function verdictLine(band: RiskBand): string {
-  if (band === "aggressive")
-    return "You're running hot. This portfolio would swing hard in a downturn.";
-  if (band === "moderate")
-    return "You're taking real risk, but it's not extreme. Worth watching.";
-  return "You're playing it fairly safe right now.";
-}
 
 function whyLine(report: RiskReport): string {
   const f = report.facts;
@@ -60,9 +53,7 @@ export function CoachView({ report }: { report: RiskReport }) {
         </div>
         <div>
           <div className="caption">Your read right now</div>
-          <h1 className={styles.verdict} style={{ color: riskVar(facts.risk_band) }}>
-            {verdictLine(facts.risk_band)}
-          </h1>
+          <VerdictHeadline facts={facts} />
           <p className={styles.why}>{whyLine(report)}</p>
         </div>
       </section>
@@ -76,15 +67,7 @@ export function CoachView({ report }: { report: RiskReport }) {
       {/* jargon translated inline — B half-understood these before */}
       <section className={`${styles.stats} stage stage-3`}>
         {plainStats(report).map((s) => (
-          <div key={s.label} className={styles.stat}>
-            <div className={styles.statHead}>
-              <span className={styles.statLabel}>{s.label}</span>
-              <span className={`num ${styles.statValue}`} style={{ color: riskVar(facts.risk_band) }}>
-                {s.value}
-              </span>
-            </div>
-            <p className={styles.statPlain}>{s.plain}</p>
-          </div>
+          <NumberCard key={s.label} label={s.label} value={s.value} />
         ))}
       </section>
 
