@@ -11,6 +11,7 @@ only _explains_ it — with a guardrail that rejects any number the model invent
 _(The dashboard renders from a committed snapshot of the real computed report. When the
 private Python risk engine is hosted, the live frontend prefers it and the snapshot is the
 fallback. Run locally for the full pipeline including the live guardrail.)_
+
 📊 **Reliability:** _0 hallucinated numbers in final output across N eval cases_ — see [`docs/RELIABILITY.md`](docs/RELIABILITY.md)
 🛡️ **Compliance:** educational risk coaching, never buy/sell advice — see [`COMPLIANCE.md`](COMPLIANCE.md)
 
