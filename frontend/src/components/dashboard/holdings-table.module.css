@@ -1,0 +1,52 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+.table th {
+  text-align: left;
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--rule-strong);
+  color: var(--ink-faint);
+  font-weight: 600;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.table td {
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--rule);
+}
+.table tbody tr {
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out-expo);
+}
+.table tbody tr:hover {
+  background: var(--surface-raised);
+}
+.rowSelected {
+  background: var(--accent-soft);
+}
+.right {
+  text-align: right;
+}
+.ticker {
+  font-weight: 600;
+  color: var(--ink);
+}
+.sector {
+  color: var(--ink-soft);
+}
+.sortBtn {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  text-transform: inherit;
+  letter-spacing: inherit;
+}
+.sortBtn:hover {
+  color: var(--accent);
+}
