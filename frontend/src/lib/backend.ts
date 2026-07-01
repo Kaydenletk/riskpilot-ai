@@ -17,7 +17,10 @@ export async function fetchSampleReport(): Promise<RiskReport> {
   try {
     const res = await fetch(`${BACKEND_URL}/report/sample`, {
       headers: { "x-internal-secret": SECRET },
-      cache: "no-store",
+      // force-cache (not no-store) so the route can prerender statically. With no
+      // backend the fetch throws/times out and the committed fixture is returned;
+      // when a backend is hosted, phase 5 switches this to a revalidating strategy.
+      cache: "force-cache",
       // Don't hang the page on a sleeping/absent backend — fall back fast.
       signal: AbortSignal.timeout(2500),
     });
