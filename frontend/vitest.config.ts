@@ -15,6 +15,9 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
+      // `server-only` throws when imported outside a Server Component. Unit tests
+      // import server modules' pure helpers directly, so stub it to a no-op.
+      "server-only": fileURLToPath(new URL("./src/test/server-only-stub.ts", import.meta.url)),
     },
   },
 });
