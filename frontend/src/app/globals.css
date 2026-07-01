@@ -45,6 +45,9 @@
   --radius: 10px;
   --radius-sm: 6px;
 
+  /* ── display font (overridden by next/font variable injected on <html>) ── */
+  --font-display: ui-sans-serif, system-ui, sans-serif; /* overridden by next/font on <html> */
+
   /* ── motion ── */
   --dur-fast: 180ms;
   --dur-normal: 420ms;
