@@ -7,6 +7,9 @@ test("landing renders verdict headline + theme toggle", async ({ page }) => {
   await expect(page.getByRole("button", { name: /switch to (dark|light) theme/i })).toBeVisible();
   // the deterministic verdict sentence contains "risk"
   await expect(page.getByText(/risk/i).first()).toBeVisible();
+  // exactly one semantic <h1> for SEO (retag, not a visual change)
+  await expect(page.locator("h1")).toHaveCount(1);
+  await expect(page.locator("h1")).toBeVisible();
 });
 
 for (const w of widths) {

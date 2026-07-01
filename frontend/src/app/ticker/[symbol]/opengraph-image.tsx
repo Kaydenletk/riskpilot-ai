@@ -16,13 +16,14 @@ export default async function TickerOg({
 
   // Unknown symbol → branded default card (never throw from an OG route).
   const heading = report ? report.ticker : "RiskPilot AI";
-  const score = report ? `${Math.round(report.facts.risk_score)}/100` : "";
+  const score = report ? `Risk score ${Math.round(report.facts.risk_score)}/100` : "Portfolio risk";
   const sub = report
     ? `${report.facts.risk_band} · ${report.facts.sector} · vol ~${Math.round(
         report.facts.volatility_annualized_pct,
       )}%`
     : "Portfolio risk math you can verify.";
 
+  // Satori requires every div with >1 child to declare display:flex explicitly.
   return new ImageResponse(
     (
       <div
@@ -38,12 +39,14 @@ export default async function TickerOg({
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ fontSize: 32, color: "#7c9cff", fontWeight: 700 }}>
+        <div style={{ display: "flex", fontSize: 32, color: "#7c9cff", fontWeight: 700 }}>
           RiskPilot AI · risk read
         </div>
-        <div style={{ fontSize: 96, fontWeight: 700, marginTop: 16 }}>{heading}</div>
-        {score ? <div style={{ fontSize: 56, marginTop: 8 }}>Risk score {score}</div> : null}
-        <div style={{ fontSize: 32, color: "#a3a3a3", marginTop: 24 }}>{sub}</div>
+        <div style={{ display: "flex", fontSize: 96, fontWeight: 700, marginTop: 16 }}>
+          {heading}
+        </div>
+        <div style={{ display: "flex", fontSize: 56, marginTop: 8 }}>{score}</div>
+        <div style={{ display: "flex", fontSize: 32, color: "#a3a3a3", marginTop: 24 }}>{sub}</div>
       </div>
     ),
     size,
