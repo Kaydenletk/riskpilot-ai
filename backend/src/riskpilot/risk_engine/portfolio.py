@@ -12,9 +12,7 @@ from ..schema import Holding, RiskBand, RiskFacts
 from . import metrics as m
 from . import score as sc
 from .dataset import load_prices, sector_of
-from .ticker import MARKET_INDEX, available_tickers
-
-MIN_HOLDINGS = 1
+from .ticker import available_tickers
 
 
 class UnknownHolding(ValueError):

@@ -19,12 +19,13 @@ export function SearchWithCompare({ universe }: { universe: TickerOption[] }) {
         onToggleCompare={(t) => setCompareSet((s) => toggleCompare(s, t))}
       />
       {compareSet.length > 0 && (
-        <div className={styles.tray} role="status">
+        <div className={styles.tray}>
           <span className="caption">Compare ({compareSet.length}/{MAX_COMPARE})</span>
           {compareSet.map((t) => (
             <button
               key={t}
               className={styles.chip}
+              aria-label={`Remove ${t} from comparison`}
               onClick={() => setCompareSet((s) => toggleCompare(s, t))}
               title="Remove"
             >

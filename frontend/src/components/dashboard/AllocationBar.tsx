@@ -63,6 +63,7 @@ export function AllocationBar({ holdings, selectedSector = null, onSelectSector 
                 background: segColor(i, segments.length),
                 opacity: dimmed ? 0.35 : 1,
               }}
+              aria-label={`${seg.sector} ${seg.pct}% — filter holdings`}
               title={`${seg.sector} ${seg.pct}%`}
               onClick={() => onSelectSector?.(selectedSector === seg.sector ? null : seg.sector)}
             />
