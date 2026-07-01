@@ -19,26 +19,53 @@ export function LiveContextPanel({ ticker }: { ticker: string }) {
 
     // clear any prior widget (symbol change / remount)
     container.innerHTML = "";
+    let injected = false;
 
-    const script = document.createElement("script");
-    script.src = WIDGET_SRC;
-    script.async = true;
-    script.type = "text/javascript";
-    script.innerHTML = JSON.stringify({
-      symbol: ticker.toUpperCase(),
-      width: "100%",
-      height: 200,
-      locale: "en",
-      dateRange: "12M",
-      colorTheme: "light",
-      isTransparent: true,
-      autosize: false,
-      largeChartUrl: "",
-    });
-    container.appendChild(script);
+    function loadWidget() {
+      if (injected || !container) return;
+      injected = true;
+      const script = document.createElement("script");
+      script.src = WIDGET_SRC;
+      script.async = true;
+      script.type = "text/javascript";
+      script.innerHTML = JSON.stringify({
+        symbol: ticker.toUpperCase(),
+        width: "100%",
+        height: 200,
+        locale: "en",
+        dateRange: "12M",
+        colorTheme: "light",
+        isTransparent: true,
+        autosize: false,
+        largeChartUrl: "",
+      });
+      container.appendChild(script);
+    }
+
+    // No IntersectionObserver (very old browser) → load immediately so the chart
+    // still appears. Otherwise defer the third-party fetch until the panel (which
+    // is below the fold) is about to scroll into view.
+    if (typeof IntersectionObserver === "undefined") {
+      loadWidget();
+      return () => {
+        if (container) container.innerHTML = "";
+      };
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          loadWidget();
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(container);
 
     return () => {
-      container.innerHTML = "";
+      observer.disconnect();
+      if (container) container.innerHTML = "";
     };
   }, [ticker]);
 
