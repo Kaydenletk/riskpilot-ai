@@ -65,7 +65,7 @@ export function RiskGauge({ score, band, size = 260 }: RiskGaugeProps) {
       </svg>
 
       <div className={styles.center}>
-        <div className={`num ${styles.score}`} style={{ color: riskVar(band), fontSize: `${SIZE / 61}px` }}>
+        <div className={`num ${styles.score}`} style={{ color: riskVar(band), fontSize: `${SIZE / 3.82}px` }}>
           {Math.round(shown)}
         </div>
         <div className={`caption ${styles.band}`} style={{ color: riskVar(band) }}>
