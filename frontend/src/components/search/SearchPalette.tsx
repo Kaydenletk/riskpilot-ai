@@ -14,6 +14,8 @@ import styles from "./search-palette.module.css";
 
 interface SearchPaletteProps {
   universe: TickerOption[];
+  compareSet: string[];
+  onToggleCompare: (ticker: string) => void;
 }
 
 // rank: exact ticker prefix first, then ticker substring, then sector match
@@ -36,7 +38,7 @@ function rank(options: TickerOption[], query: string): TickerOption[] {
   return scored.map((s) => s.o);
 }
 
-export function SearchPalette({ universe }: SearchPaletteProps) {
+export function SearchPalette({ universe, compareSet, onToggleCompare }: SearchPaletteProps) {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
@@ -103,7 +105,9 @@ export function SearchPalette({ universe }: SearchPaletteProps) {
     } else if (e.key === "Enter") {
       e.preventDefault();
       const pick = results[active];
-      if (pick) go(pick.ticker);
+      if (!pick) return;
+      if (e.shiftKey) onToggleCompare(pick.ticker);
+      else go(pick.ticker);
     } else if (e.key === "Escape") {
       e.preventDefault();
       close();
@@ -172,6 +176,18 @@ export function SearchPalette({ universe }: SearchPaletteProps) {
                   >
                     <span className={`num ${styles.optTicker}`}>{o.ticker}</span>
                     <span className={styles.optSector}>{o.sector}</span>
+                    <button
+                      type="button"
+                      className={styles.cmpBtn}
+                      aria-pressed={compareSet.includes(o.ticker)}
+                      title={compareSet.includes(o.ticker) ? "Remove from compare" : "Add to compare"}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onToggleCompare(o.ticker);
+                      }}
+                    >
+                      {compareSet.includes(o.ticker) ? "✓" : "+"}
+                    </button>
                     <span className={styles.optGo} aria-hidden>
                       ↵
                     </span>
@@ -182,7 +198,7 @@ export function SearchPalette({ universe }: SearchPaletteProps) {
 
             <div className={styles.footer}>
               <span className="caption">{results.length} instruments</span>
-              <span className="caption">↑↓ navigate · ↵ open · esc close</span>
+              <span className="caption">↑↓ navigate · ↵ open · ⇧↵ compare · esc close</span>
             </div>
           </div>
           </div>,
