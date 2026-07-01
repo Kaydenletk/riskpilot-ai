@@ -1,0 +1,38 @@
+/* Clickable "did you mean" chips for the 404 boundary — same instrument grammar
+   as the search palette rows: tabular ticker, muted sector, one accent on hover. */
+
+.suggestions {
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  text-decoration: none;
+  color: var(--ink);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  transition:
+    border-color var(--dur-fast) var(--ease-out-expo),
+    transform var(--dur-fast) var(--ease-out-expo);
+}
+.chip:hover {
+  border-color: var(--risk-low);
+  transform: translateY(-1px);
+}
+
+.chipSector {
+  font-weight: 400;
+  color: var(--ink-soft);
+  font-size: var(--text-xs);
+}

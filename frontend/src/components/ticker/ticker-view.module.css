@@ -11,12 +11,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--space-1) var(--space-2);
+  flex-wrap: wrap;
   padding: var(--space-3) 0 var(--space-2);
 }
 .crumb a {
   font-size: var(--text-sm);
   text-decoration: none;
   color: var(--ink-soft);
+  white-space: nowrap;
 }
 .crumb a:hover {
   color: var(--ink);

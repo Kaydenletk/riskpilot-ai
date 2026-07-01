@@ -9,6 +9,14 @@ export function riskVar(band: RiskBand): string {
   return "var(--risk-low)";
 }
 
+// Text-safe variant of the ramp: use for SMALL text / thin indicators where the
+// bright ramp colors (esp. amber) fail WCAG AA. Same hue, darkened lightness.
+export function riskInkVar(band: RiskBand): string {
+  if (band === "aggressive") return "var(--risk-high-ink)";
+  if (band === "moderate") return "var(--risk-mid-ink)";
+  return "var(--risk-low-ink)";
+}
+
 // Continuous color for the gauge stroke: interpolate across the ramp by score.
 // oklch interpolation via CSS color-mix keeps it perceptually smooth.
 export function riskColorForScore(score: number): string {

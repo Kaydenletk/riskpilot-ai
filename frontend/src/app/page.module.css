@@ -192,9 +192,23 @@
 
 @media (max-width: 680px) {
   .hero {
-    flex-direction: column;
-    align-items: flex-start;
+    /* Compact hero: gauge + verdict share a row so the fold isn't one giant
+       gauge pushing the headline (and everything below) off-screen. */
+    flex-direction: row;
+    align-items: center;
     gap: var(--space-3);
+    margin: var(--space-3) 0 var(--space-3);
+  }
+  .verdict {
+    min-width: 0; /* let it shrink beside the gauge instead of forcing a wrap */
+  }
+  .headline {
+    /* Cap the fluid hero size on phones — 6rem is desktop-only drama. */
+    font-size: clamp(1.9rem, 8vw, 2.75rem);
+    margin: 4px 0 8px;
+  }
+  .lede {
+    font-size: var(--text-base);
   }
   .metrics {
     grid-template-columns: repeat(2, 1fr);
@@ -202,5 +216,13 @@
   .cols {
     grid-template-columns: 1fr;
     gap: var(--space-2);
+  }
+}
+
+/* Very narrow: the gauge would crowd the verdict — stack, but keep both small. */
+@media (max-width: 460px) {
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

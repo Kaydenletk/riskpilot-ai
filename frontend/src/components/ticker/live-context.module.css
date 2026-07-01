@@ -25,7 +25,7 @@
   letter-spacing: 0.08em;
   padding: 0.15rem 0.5rem;
   border-radius: 4px;
-  color: var(--risk-high);
+  color: var(--risk-high-ink);
   background: var(--risk-high-soft);
   white-space: nowrap;
 }

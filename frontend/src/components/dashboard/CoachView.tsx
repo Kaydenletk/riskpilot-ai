@@ -2,10 +2,11 @@
 // coaching that bends the emotional arc DOWN: lands anxious -> understood -> calmer
 // -> one reflective action. No new numbers (still grounded); jargon translated;
 // the discipline prompt is prominent, not buried. Never says buy/sell.
-import { riskVar, type RiskBand } from "@/lib/risk-color";
+import { riskInkVar, riskVar, type RiskBand } from "@/lib/risk-color";
 import type { RiskReport } from "@/lib/types";
 
 import { RiskGauge } from "./RiskGauge";
+import { TrustStrip } from "./TrustStrip";
 import styles from "./coach-view.module.css";
 
 function verdictLine(band: RiskBand): string {
@@ -79,7 +80,7 @@ export function CoachView({ report }: { report: RiskReport }) {
           <div key={s.label} className={styles.stat}>
             <div className={styles.statHead}>
               <span className={styles.statLabel}>{s.label}</span>
-              <span className={`num ${styles.statValue}`} style={{ color: riskVar(facts.risk_band) }}>
+              <span className={`num ${styles.statValue}`} style={{ color: riskInkVar(facts.risk_band) }}>
                 {s.value}
               </span>
             </div>
@@ -107,9 +108,12 @@ export function CoachView({ report }: { report: RiskReport }) {
         </div>
       </section>
 
-      <p className="disclaimer" style={{ marginTop: "var(--space-3)" }}>
-        {disclaimer}
-      </p>
+      <footer>
+        <TrustStrip source={explanation.source} holdingsCount={facts.holdings_count} />
+        <p className="disclaimer" style={{ marginTop: "var(--space-3)" }}>
+          {disclaimer}
+        </p>
+      </footer>
     </div>
   );
 }

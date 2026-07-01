@@ -7,6 +7,7 @@ import Link from "next/link";
 
 import { GroundedText } from "@/components/dashboard/GroundedText";
 import { RiskGauge } from "@/components/dashboard/RiskGauge";
+import { TrustStrip } from "@/components/dashboard/TrustStrip";
 import type { TickerReport } from "@/lib/types";
 
 import { LiveContextPanel } from "./LiveContextPanel";
@@ -88,7 +89,10 @@ export function TickerView({ report }: { report: TickerReport }) {
 
       <LiveContextPanel ticker={ticker} />
 
-      <p className={`disclaimer ${styles.disclaimer}`}>{disclaimer}</p>
+      <footer>
+        <TrustStrip source={explanation.source} scopeLabel="Single instrument" />
+        <p className={`disclaimer ${styles.disclaimer}`}>{disclaimer}</p>
+      </footer>
     </div>
   );
 }
