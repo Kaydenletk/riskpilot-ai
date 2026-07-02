@@ -37,7 +37,7 @@ reports — the headline, which should be 0 because of the fail-closed fallback)
 `make eval` over the committed fixture set:
 
 ```
-catch_rate_pct: 100.0   (2 of 2 injected hallucinations caught)
+catch_rate_pct: 100.0   (7 of 7 injected hallucinations caught)
 ```
 
 The eval distinguishes a hallucinated score ("95 out of 100" — flagged) from the
