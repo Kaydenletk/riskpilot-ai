@@ -1,0 +1,17 @@
+.card {
+  background: var(--surface);
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.value {
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+}
+.spark {
+  margin-top: var(--space-1);
+  opacity: 0.9;
+}

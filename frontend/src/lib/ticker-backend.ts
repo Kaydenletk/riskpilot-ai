@@ -34,7 +34,8 @@ export async function fetchTickerUniverse(): Promise<TickerOption[]> {
   try {
     const res = await fetch(`${BACKEND_URL}/tickers`, {
       headers: { "x-internal-secret": SECRET },
-      cache: "no-store",
+      // ISR: revalidate hourly (live backend picked up on the cycle); fixture fallback on failure.
+      next: { revalidate: 3600 },
       signal: AbortSignal.timeout(2500),
     });
     if (res.ok) {
@@ -55,7 +56,8 @@ export async function fetchTickerReport(ticker: string): Promise<TickerReport | 
   try {
     const res = await fetch(`${BACKEND_URL}/analyze/${encodeURIComponent(symbol)}`, {
       headers: { "x-internal-secret": SECRET },
-      cache: "no-store",
+      // ISR: revalidate hourly (live backend picked up on the cycle); fixture fallback on failure.
+      next: { revalidate: 3600 },
       signal: AbortSignal.timeout(2500),
     });
     if (res.ok) {

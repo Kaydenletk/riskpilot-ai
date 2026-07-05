@@ -17,7 +17,10 @@ export async function fetchSampleReport(): Promise<RiskReport> {
   try {
     const res = await fetch(`${BACKEND_URL}/report/sample`, {
       headers: { "x-internal-secret": SECRET },
-      cache: "no-store",
+      // ISR: revalidate hourly so a hosted backend's data is picked up, while
+      // still allowing static prerender at build. With no backend the fetch
+      // throws/times out and the committed fixture is returned.
+      next: { revalidate: 3600 },
       // Don't hang the page on a sleeping/absent backend — fall back fast.
       signal: AbortSignal.timeout(2500),
     });

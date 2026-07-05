@@ -1,4 +1,4 @@
-# Private Python math+LLM service. Deploys to Render/Fly.
+# Private Python math+LLM service. Deploys to Railway (any Dockerfile host works).
 FROM python:3.11-slim
 
 WORKDIR /app
@@ -14,4 +14,6 @@ ENV DEMO_MODE=1 \
 EXPOSE 8000
 
 # DEMO_MODE default-on: the container runs with no OpenAI key.
-CMD ["sh", "-c", "uvicorn riskpilot.main:app --host 0.0.0.0 --port ${BACKEND_PORT:-8000}"]
+# Railway injects $PORT; docker-compose sets BACKEND_PORT (no PORT). Prefer
+# $PORT so the Railway healthcheck can reach us; fall back for compose/local.
+CMD ["sh", "-c", "uvicorn riskpilot.main:app --host 0.0.0.0 --port ${PORT:-${BACKEND_PORT:-8000}}"]

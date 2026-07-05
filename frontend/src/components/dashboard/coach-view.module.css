@@ -17,14 +17,6 @@
   flex-shrink: 0;
 }
 
-.verdict {
-  font-size: clamp(1.6rem, 1.2rem + 2vw, 2.4rem);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  margin: 6px 0 12px;
-  max-width: 18ch;
-}
 .why {
   font-size: var(--text-lg);
   color: var(--ink-soft);

@@ -1,0 +1,10 @@
+.verdict {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(1.4rem, 1.1rem + 1.6vw, 2.1rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-2);
+  max-width: 24ch;
+  text-wrap: balance;
+}

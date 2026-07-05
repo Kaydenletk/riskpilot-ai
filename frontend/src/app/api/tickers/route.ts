@@ -5,8 +5,6 @@ import { NextResponse } from "next/server";
 
 import { fetchTickerUniverse } from "@/lib/ticker-backend";
 
-export const dynamic = "force-dynamic";
-
 export async function GET() {
   try {
     const universe = await fetchTickerUniverse();

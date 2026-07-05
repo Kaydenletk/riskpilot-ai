@@ -39,3 +39,5 @@ build/
 
 # Playwright visual baselines — allow past the *.png ignore
 !frontend/e2e/visual.spec.ts-snapshots/*.png
+
+.gstack/
