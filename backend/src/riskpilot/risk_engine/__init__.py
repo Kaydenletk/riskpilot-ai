@@ -8,6 +8,7 @@ M2 replaces `compute_sample_report` internals with real formulas (volatility via
 sample stdev x sqrt(252), value-weighted HHI concentration, drawdown, beta).
 """
 
+from .portfolio import UnknownHolding, compute_report
 from .sample import compute_sample_report
 
-__all__ = ["compute_sample_report"]
+__all__ = ["compute_sample_report", "compute_report", "UnknownHolding"]

@@ -1,19 +1,14 @@
-.toggle {
-  display: inline-grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
+.btn {
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 100px;
   border: 1px solid var(--rule-strong);
-  border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--ink-soft);
   cursor: pointer;
-  font-size: 1rem;
-  transition:
-    border-color var(--dur-fast) var(--ease-out-expo),
-    color var(--dur-fast) var(--ease-out-expo);
+  transition: color var(--dur-fast), border-color var(--dur-fast);
 }
-.toggle:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
+.btn:hover { color: var(--ink); border-color: var(--ink-soft); }

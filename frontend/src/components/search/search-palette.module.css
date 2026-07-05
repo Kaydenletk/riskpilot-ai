@@ -177,3 +177,34 @@
     font-size: var(--text-xs);
   }
 }
+
+.cmpBtn {
+  font: inherit;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+  color: var(--ink-soft);
+  cursor: pointer;
+  margin-right: 8px;
+  transition: transform var(--dur-fast) var(--ease-out-expo), color var(--dur-fast);
+}
+.cmpBtn:hover { transform: scale(1.08); color: var(--ink); }
+.cmpBtn[aria-pressed="true"] { background: var(--risk-low-soft); color: var(--risk-low); border-color: var(--risk-low); }
+
+.tray { display: flex; align-items: center; gap: var(--space-1); flex-wrap: wrap; margin-top: var(--space-2); }
+.chip {
+  font: inherit;
+  font-size: var(--text-xs);
+  padding: 4px 8px;
+  border-radius: 100px;
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.chip:hover { color: var(--risk-high); border-color: var(--risk-high); }
+.trayGo { font-weight: 600; margin-left: var(--space-1); }

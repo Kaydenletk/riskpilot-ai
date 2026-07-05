@@ -2,78 +2,87 @@
 
 import { useMemo, useState } from "react";
 
-import { holdingRows } from "@/lib/breakdown";
 import type { Holding } from "@/lib/types";
 
 import styles from "./holdings-table.module.css";
 
-type SortKey = "weight" | "ticker";
+type SortKey = "value" | "weight";
+type Dir = "asc" | "desc";
 
 interface HoldingsTableProps {
   holdings: Holding[];
-  onSelectSector?: (sector: string | null) => void;
+  selectedSector: string | null;
+  onClearFilter: () => void;
 }
 
-// Sortable spec-sheet of holdings. Weights are exact client-side arithmetic
-// (holdingRows); no risk math here. Selecting a row toggles its sector for the
-// caller (e.g. to filter allocation).
-export function HoldingsTable({ holdings, onSelectSector }: HoldingsTableProps) {
-  const [sort, setSort] = useState<SortKey>("weight");
-  const [selected, setSelected] = useState<string | null>(null);
+export function HoldingsTable({ holdings, selectedSector, onClearFilter }: HoldingsTableProps) {
+  const [key, setKey] = useState<SortKey>("value");
+  const [dir, setDir] = useState<Dir>("desc");
+
+  const total = useMemo(() => holdings.reduce((s, h) => s + h.market_value, 0) || 1, [holdings]);
 
   const rows = useMemo(() => {
-    const base = holdingRows(holdings);
-    return sort === "ticker"
-      ? [...base].sort((a, b) => a.ticker.localeCompare(b.ticker))
-      : base;
-  }, [holdings, sort]);
+    const filtered = selectedSector ? holdings.filter((h) => h.sector === selectedSector) : holdings;
+    const sorted = [...filtered].sort((a, b) => {
+      const av = key === "value" ? a.market_value : a.market_value / total;
+      const bv = key === "value" ? b.market_value : b.market_value / total;
+      return dir === "desc" ? bv - av : av - bv;
+    });
+    return sorted;
+  }, [holdings, selectedSector, key, dir, total]);
 
-  function selectSector(sector: string) {
-    const next = selected === sector ? null : sector;
-    setSelected(next);
-    onSelectSector?.(next);
+  function sortOn(k: SortKey) {
+    if (k === key) setDir((d) => (d === "desc" ? "asc" : "desc"));
+    else { setKey(k); setDir("desc"); }
   }
 
+  const ariaSort = (k: SortKey): "ascending" | "descending" | "none" =>
+    k === key ? (dir === "desc" ? "descending" : "ascending") : "none";
+
   return (
-    <table className={styles.table}>
-      <thead>
-        <tr>
-          <th>
-            <button className={styles.sortBtn} onClick={() => setSort("ticker")}>
-              Ticker
-            </button>
-          </th>
-          <th>Sector</th>
-          <th className={styles.right}>
-            <button className={styles.sortBtn} onClick={() => setSort("weight")}>
-              Weight
-            </button>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((r) => (
-          <tr
-            key={r.ticker}
-            className={selected === r.sector ? styles.rowSelected : ""}
-            onClick={() => selectSector(r.sector)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                selectSector(r.sector);
-              }
-            }}
-            role="button"
-            tabIndex={0}
-            aria-pressed={selected === r.sector}
-            aria-label={`Filter allocation by ${r.sector}`}
-          >
-            <td className={`num ${styles.ticker}`}>{r.ticker}</td>
-            <td className={styles.sector}>{r.sector}</td>
-            <td className={`num ${styles.right}`}>{r.weightPct.toFixed(1)}%</td>
+    <div>
+      {selectedSector && (
+        <div className={styles.filterRow}>
+          <span className="caption">Filtered: {selectedSector}</span>
+          <button className={styles.clear} onClick={onClearFilter}>clear ✕</button>
+        </div>
+      )}
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            <th>Ticker</th>
+            <th>Sector</th>
+            <th className={styles.right} aria-sort={ariaSort("value")}>
+              <button className={styles.sortBtn} onClick={() => sortOn("value")}>
+                Value {key === "value" ? (dir === "desc" ? "↓" : "↑") : ""}
+              </button>
+            </th>
+            <th className={styles.right} aria-sort={ariaSort("weight")}>
+              <button className={styles.sortBtn} onClick={() => sortOn("weight")}>
+                Weight {key === "weight" ? (dir === "desc" ? "↓" : "↑") : ""}
+              </button>
+            </th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {rows.map((h) => {
+            const w = (100 * h.market_value) / total;
+            return (
+              <tr key={h.ticker}>
+                <td className="num">{h.ticker}</td>
+                <td>{h.sector}</td>
+                <td className={`num ${styles.right}`}>${h.market_value.toLocaleString()}</td>
+                <td className={styles.right}>
+                  <span className="num">{w.toFixed(1)}%</span>
+                  <span className={styles.bar} aria-hidden>
+                    <span className={styles.barFill} style={{ width: `${Math.min(100, w)}%`, display: "block" }} />
+                  </span>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 }

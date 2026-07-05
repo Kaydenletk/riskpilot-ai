@@ -12,7 +12,10 @@
   height: 100%;
   /* hairline separators between sectors */
   box-shadow: inset -1px 0 0 oklch(100% 0 0 / 0.5);
-  transition: filter var(--dur-fast) var(--ease-out-expo);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: opacity var(--dur-fast) var(--ease-out-expo);
 }
 .seg:hover {
   filter: brightness(1.06);

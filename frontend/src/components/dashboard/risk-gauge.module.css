@@ -27,8 +27,6 @@
 }
 
 .score {
-  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
-  font-size: 4.25rem;
   font-weight: 700;
   line-height: 0.9;
 }
@@ -43,8 +41,5 @@
   .wrap {
     width: 220px;
     height: 220px;
-  }
-  .score {
-    font-size: 3.5rem;
   }
 }

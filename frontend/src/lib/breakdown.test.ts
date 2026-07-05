@@ -1,43 +1,37 @@
-import { describe, expect, test } from "vitest";
+import { describe, test, expect } from "vitest";
+import { computeBreakdown } from "@/lib/breakdown";
+import type { Holding } from "@/lib/types";
 
-import { holdingRows, sectorRows } from "./breakdown";
-import type { Holding } from "./types";
-
-const holdings: Holding[] = [
-  { ticker: "NVDA", shares: 40, sector: "Technology", market_value: 6000 },
-  { ticker: "MSFT", shares: 10, sector: "Technology", market_value: 3000 },
-  { ticker: "KO", shares: 20, sector: "Staples", market_value: 1000 },
-];
-
-describe("holdingRows", () => {
-  test("weights sum to ~100 and are sorted desc", () => {
-    const rows = holdingRows(holdings);
-    expect(rows[0].ticker).toBe("NVDA");
-    const sum = rows.reduce((s, r) => s + r.weightPct, 0);
-    expect(sum).toBeGreaterThan(99.9);
-    expect(sum).toBeLessThan(100.1);
-  });
-
-  test("does not mutate input", () => {
-    const copy = JSON.parse(JSON.stringify(holdings));
-    holdingRows(holdings);
-    expect(holdings).toEqual(copy);
-  });
-
-  test("single holding is 100%", () => {
-    const rows = holdingRows([holdings[0]]);
-    expect(rows[0].weightPct).toBeCloseTo(100, 5);
-  });
+const H = (ticker: string, sector: string, mv: number): Holding => ({
+  ticker, sector, shares: 1, market_value: mv,
 });
 
-describe("sectorRows", () => {
-  test("aggregates by sector, sorted desc", () => {
-    const rows = sectorRows(holdings);
-    expect(rows[0].sector).toBe("Technology");
-    expect(rows[0].pct).toBeCloseTo(90, 1);
+describe("computeBreakdown", () => {
+  test("computes total and sector weights summing to ~100", () => {
+    const b = computeBreakdown([H("A", "Tech", 60), H("B", "Tech", 20), H("C", "Energy", 20)]);
+    expect(b.total).toBe(100);
+    expect(b.largestSector).toBe("Tech");
+    expect(b.largestSectorPct).toBe(80);
+    const sum = b.sectors.reduce((s, x) => s + x.pct, 0);
+    expect(Math.round(sum)).toBe(100);
   });
 
-  test("empty input yields empty rows", () => {
-    expect(sectorRows([])).toEqual([]);
+  test("top-3 concentration uses the 3 largest holdings", () => {
+    const b = computeBreakdown([
+      H("A", "Tech", 50), H("B", "Tech", 30), H("C", "Energy", 15), H("D", "Energy", 5),
+    ]);
+    expect(b.concentrationTop3Pct).toBe(95); // (50+30+15)/100
+  });
+
+  test("handles fewer than 3 holdings", () => {
+    const b = computeBreakdown([H("A", "Tech", 70), H("B", "Energy", 30)]);
+    expect(b.concentrationTop3Pct).toBe(100);
+  });
+
+  test("empty input yields zeros, no divide-by-zero", () => {
+    const b = computeBreakdown([]);
+    expect(b.total).toBe(0);
+    expect(b.concentrationTop3Pct).toBe(0);
+    expect(b.sectors).toEqual([]);
   });
 });
