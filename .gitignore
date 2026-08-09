@@ -41,3 +41,4 @@ build/
 !frontend/e2e/visual.spec.ts-snapshots/*.png
 
 .gstack/
+.superpowers/
