@@ -9,6 +9,35 @@
   font-weight: 400;
 }
 
+/* 44px input, tokens only — focus ring comes from the global :focus-visible rule */
+.filter {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  height: 44px;
+  margin-bottom: var(--space-3);
+  padding: 0 14px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--text-base);
+}
+.filter::placeholder {
+  color: var(--ink-faint);
+}
+
+.group {
+  margin-bottom: var(--space-3);
+}
+.group:last-child {
+  margin-bottom: 0;
+}
+
+.groupLabel {
+  margin: 0 0 var(--space-1);
+}
+
 .list {
   list-style: none;
   margin: 0;

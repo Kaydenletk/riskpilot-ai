@@ -1,8 +1,10 @@
 // Server Component: fetches the report, renders the masthead, hands the report to
 // the client Dashboard (which holds the Coach/Analyst view toggle).
 import { Dashboard } from "@/components/dashboard/Dashboard";
+import { Hero } from "@/components/home/Hero";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { InstrumentIndex } from "@/components/home/InstrumentIndex";
+import { WhatIfTeaser } from "@/components/home/WhatIfTeaser";
 import { Masthead } from "@/components/layout/Masthead";
 import { SearchWithCompare } from "@/components/search/SearchWithCompare";
 import { fetchSampleReport } from "@/lib/backend";
@@ -25,14 +27,21 @@ export default async function Home() {
   return (
     <div className={styles.page}>
       <Masthead caption="risk coaching · explains the math · never invents numbers" />
-      <div className={`${styles.searchRow} stage stage-1`}>
+      <Hero />
+      <div className={`${styles.searchRow} stage stage-2`}>
         <SearchWithCompare universe={universe} />
         <span className="caption">
           {universe.length} instruments
           <span className="fine-pointer-only"> · type ⌘K to analyze any one</span>
         </span>
       </div>
-      <Dashboard report={report} />
+      <section id="sample" className="stage stage-3">
+        <div className="caption" style={{ marginBottom: "var(--space-2)" }}>
+          Sample portfolio — live from the engine
+        </div>
+        <Dashboard report={report} />
+      </section>
+      <WhatIfTeaser />
       <HowItWorks />
       <InstrumentIndex universe={universe} />
     </div>
@@ -43,6 +52,7 @@ function BackendOffline() {
   return (
     <div className={styles.page}>
       <Masthead caption="risk coaching · explains the math · never invents numbers" />
+      <Hero />
       <section className={styles.explain}>
         <p className={styles.summary}>
           The risk engine (a private Python service) isn&apos;t connected to this deployment

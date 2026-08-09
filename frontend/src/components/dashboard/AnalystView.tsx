@@ -63,13 +63,13 @@ export function AnalystView({ report }: { report: RiskReport }) {
         <RiskGauge score={facts.risk_score} band={facts.risk_band} />
         <div className={styles.verdict}>
           <div className="caption">{portfolio_name}</div>
-          <h1 className={styles.headline}>
+          <h2 className={styles.headline}>
             This portfolio is{" "}
             <span style={{ color: `var(--risk-${bandKey(facts.risk_band)})` }}>
               {facts.risk_band}
             </span>
             .
-          </h1>
+          </h2>
           <p className={styles.lede}>
             Its top 3 holdings are{" "}
             <strong className="num">{facts.concentration_pct_top3}%</strong> of the book, and{" "}
