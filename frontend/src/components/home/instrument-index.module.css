@@ -1,0 +1,46 @@
+.index {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--rule);
+}
+
+.title {
+  margin: 0 0 var(--space-2);
+  font-weight: 400;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+/* 44px minimum touch target, visibly clickable without hover */
+.chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: border-color var(--dur-fast) var(--ease-out-expo);
+}
+.chip:hover {
+  border-color: var(--rule-strong);
+}
+
+.ticker {
+  font-weight: 700;
+  font-size: var(--text-sm);
+}
+
+.sector {
+  font-size: var(--text-xs);
+  color: var(--ink-faint);
+}

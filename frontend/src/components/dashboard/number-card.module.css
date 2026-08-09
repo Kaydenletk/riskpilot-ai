@@ -6,6 +6,7 @@
   gap: 4px;
 }
 .value {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   font-size: 1.9rem;
   font-weight: 700;
   line-height: 1;

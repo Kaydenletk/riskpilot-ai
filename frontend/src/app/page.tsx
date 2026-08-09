@@ -1,6 +1,8 @@
 // Server Component: fetches the report, renders the masthead, hands the report to
 // the client Dashboard (which holds the Coach/Analyst view toggle).
 import { Dashboard } from "@/components/dashboard/Dashboard";
+import { HowItWorks } from "@/components/home/HowItWorks";
+import { InstrumentIndex } from "@/components/home/InstrumentIndex";
 import { Masthead } from "@/components/layout/Masthead";
 import { SearchWithCompare } from "@/components/search/SearchWithCompare";
 import { fetchSampleReport } from "@/lib/backend";
@@ -25,9 +27,14 @@ export default async function Home() {
       <Masthead caption="risk coaching · explains the math · never invents numbers" />
       <div className={`${styles.searchRow} stage stage-1`}>
         <SearchWithCompare universe={universe} />
-        <span className="caption">{universe.length} instruments · type ⌘K to analyze any one</span>
+        <span className="caption">
+          {universe.length} instruments
+          <span className="fine-pointer-only"> · type ⌘K to analyze any one</span>
+        </span>
       </div>
       <Dashboard report={report} />
+      <HowItWorks />
+      <InstrumentIndex universe={universe} />
     </div>
   );
 }

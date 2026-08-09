@@ -27,6 +27,7 @@
   border-bottom: 1px solid var(--rule);
 }
 .ticker {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   font-size: var(--text-hero);
   font-weight: 650;
   line-height: 0.95;

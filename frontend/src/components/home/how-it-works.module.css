@@ -1,0 +1,91 @@
+/* Project explainer — editorial break: strong top rule, ghost numerals,
+   type-only structure (no cards, no icons). The guardrail step carries the
+   one risk-accent so the eye lands on the thing that makes this project. */
+
+.section {
+  margin-top: var(--space-section);
+  padding-top: var(--space-3);
+  border-top: 2px solid var(--rule-strong);
+}
+
+.head {
+  max-width: 62ch;
+}
+
+.title {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(1.5rem, 1.2rem + 1.6vw, 2.2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  margin: 8px 0 var(--space-2);
+  text-wrap: balance;
+}
+
+.lede {
+  font-size: var(--text-lg);
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0 0 var(--space-4);
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.step {
+  border-top: 1px solid var(--rule);
+  padding-top: var(--space-2);
+}
+
+/* oversized ghost numeral — the section's one indulgence */
+.stepNum {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--rule-strong);
+  display: block;
+}
+.stepNumAccent {
+  color: var(--risk-high);
+}
+
+.stepTitle {
+  font-size: var(--text-base);
+  font-weight: 700;
+  margin: 10px 0 6px;
+}
+
+.stepBody {
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.foot {
+  margin-top: var(--space-4);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--rule);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 70ch;
+}
+.foot strong {
+  color: var(--ink);
+}
+
+@media (max-width: 720px) {
+  .steps {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+}

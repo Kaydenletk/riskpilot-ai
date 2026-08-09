@@ -33,15 +33,21 @@ export function CoachView({ report }: { report: RiskReport }) {
 
   return (
     <div className={styles.coach}>
-      {/* lands anxious -> immediate plain verdict + the gauge as support, not the star */}
+      {/* lands anxious -> immediate plain verdict + the gauge as support, not the star.
+          Verdict left, gauge right — asymmetric, full-width. */}
       <section className={`${styles.lead} stage stage-2`}>
-        <div className={styles.gaugeSmall}>
-          <RiskGauge score={facts.risk_score} band={facts.risk_band} />
-        </div>
-        <div>
-          <div className="caption">Your read right now</div>
+        <div className={styles.verdictCol}>
+          <div className={styles.leadCaption}>
+            <span className="caption">Sample portfolio · your read right now</span>
+            <a className={styles.howLink} href="#how-it-works">
+              how it works ↓
+            </a>
+          </div>
           <VerdictHeadline facts={facts} />
           <p className={styles.why}>{whyLine(report)}</p>
+        </div>
+        <div className={styles.gaugeSmall}>
+          <RiskGauge score={facts.risk_score} band={facts.risk_band} />
         </div>
       </section>
 

@@ -21,7 +21,7 @@ for (const w of widths) {
   });
 
   test(`dark @ ${w}`, async ({ page }) => {
-    await page.addInitScript(() => localStorage.setItem("riskpilot-theme", "dark"));
+    await page.addInitScript(() => localStorage.setItem("rp-theme", "dark"));
     await page.setViewportSize({ width: w, height: 900 });
     await page.goto("/");
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
