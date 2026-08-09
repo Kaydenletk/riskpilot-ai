@@ -15,12 +15,14 @@ export default function OgImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          background: "#0a0a0a",
+          background: "#101116",
           color: "#f5f5f5",
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ fontSize: 40, color: "#7c9cff", fontWeight: 700 }}>RiskPilot AI</div>
+        <div style={{ display: "flex", fontSize: 40, fontWeight: 700 }}>
+          RISK<span style={{ color: "#3b52ff" }}>/</span>PILOT
+        </div>
         <div style={{ fontSize: 64, fontWeight: 700, marginTop: 24, lineHeight: 1.1 }}>
           Portfolio risk math you can verify.
         </div>

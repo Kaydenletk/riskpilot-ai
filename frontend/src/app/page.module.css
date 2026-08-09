@@ -14,16 +14,6 @@
   flex-wrap: wrap;
 }
 
-.brand {
-  font-size: var(--text-xl);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-.brandAccent {
-  color: var(--risk-high);
-  margin-left: 1px;
-}
-
 /* search row under the masthead — the entry point to single-ticker analysis */
 .searchRow {
   display: flex;
@@ -87,6 +77,7 @@
 }
 
 .tileValue {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   font-size: 1.65rem;
   font-weight: 600;
   line-height: 1;
@@ -116,7 +107,7 @@
   color: var(--ink-soft);
   padding: 4px 10px 4px 8px;
   border-radius: 100px;
-  background: var(--risk-low-soft);
+  background: var(--accent-soft);
   margin-bottom: var(--space-2);
 }
 .check {
@@ -125,7 +116,7 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--risk-low);
+  background: var(--accent);
   color: #fff;
   font-size: 10px;
   font-weight: 700;
