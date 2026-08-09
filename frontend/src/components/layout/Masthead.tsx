@@ -1,7 +1,7 @@
 import Link from "next/link";
 
-import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { Wordmark } from "@/components/layout/Wordmark";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 import styles from "@/app/page.module.css";
 

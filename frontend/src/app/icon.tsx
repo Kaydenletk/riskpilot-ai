@@ -1,5 +1,7 @@
 import { ImageResponse } from "next/og";
 
+import { OG_ACCENT, OG_BG, OG_INK } from "@/lib/og-brand";
+
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 
@@ -13,14 +15,14 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#101116",
-          color: "#f5f5f5",
+          background: OG_BG,
+          color: OG_INK,
           fontSize: 22,
           fontWeight: 700,
           borderRadius: 6,
         }}
       >
-        R<span style={{ color: "#3b52ff" }}>/</span>
+        R<span style={{ color: OG_ACCENT }}>/</span>
       </div>
     ),
     size,

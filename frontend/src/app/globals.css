@@ -25,6 +25,7 @@
   /* ── the ONLY chrome accent — ultramarine (links, focus, CTAs) ── */
   --accent: oklch(45% 0.26 265);
   --accent-soft: oklch(45% 0.26 265 / 0.09);
+  --accent-strong: oklch(45% 0.26 265);
 
   /* ── type scale (fluid, editorial contrast) ── */
   --text-xs: 0.75rem;
@@ -67,6 +68,8 @@
   --risk-high-soft: oklch(60% 0.20 25 / 0.20);
   --accent: oklch(72% 0.17 265);
   --accent-soft: oklch(72% 0.17 265 / 0.16);
+  /* darker than --accent: white ✓ glyphs need ≥4.5:1, --accent's 72% L only clears ~2.6:1 */
+  --accent-strong: oklch(50% 0.22 265);
 }
 
 /* Explicit dark body wash — deliberately visible-but-subtle depth (Δ from bg L0.20 to 0.30) */

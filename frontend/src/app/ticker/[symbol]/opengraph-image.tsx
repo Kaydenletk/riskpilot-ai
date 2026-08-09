@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 
+import { OG_ACCENT, OG_BG, OG_INK } from "@/lib/og-brand";
 import { fetchTickerReport } from "@/lib/ticker-backend";
 
 export const size = { width: 1200, height: 630 };
@@ -15,7 +16,7 @@ export default async function TickerOg({
   const report = await fetchTickerReport(symbol);
 
   // Unknown symbol → branded default card (never throw from an OG route).
-  const heading = report ? report.ticker : "RiskPilot AI";
+  const heading = report ? report.ticker : "RISK/PILOT";
   const score = report ? `Risk score ${Math.round(report.facts.risk_score)}/100` : "Portfolio risk";
   const sub = report
     ? `${report.facts.risk_band} · ${report.facts.sector} · vol ~${Math.round(
@@ -34,13 +35,13 @@ export default async function TickerOg({
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          background: "#0a0a0a",
+          background: OG_BG,
           color: "#f5f5f5",
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", fontSize: 32, color: "#7c9cff", fontWeight: 700 }}>
-          RiskPilot AI · risk read
+        <div style={{ display: "flex", fontSize: 32, fontWeight: 700, color: OG_INK }}>
+          RISK<span style={{ color: OG_ACCENT }}>/</span>PILOT · risk read
         </div>
         <div style={{ display: "flex", fontSize: 96, fontWeight: 700, marginTop: 16 }}>
           {heading}

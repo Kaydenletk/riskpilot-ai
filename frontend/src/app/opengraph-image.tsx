@@ -1,5 +1,7 @@
 import { ImageResponse } from "next/og";
 
+import { OG_ACCENT, OG_BG, OG_INK } from "@/lib/og-brand";
+
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const alt = "RiskPilot AI — Portfolio Risk Coach";
@@ -15,13 +17,13 @@ export default function OgImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          background: "#101116",
+          background: OG_BG,
           color: "#f5f5f5",
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", fontSize: 40, fontWeight: 700 }}>
-          RISK<span style={{ color: "#3b52ff" }}>/</span>PILOT
+        <div style={{ display: "flex", fontSize: 40, fontWeight: 700, color: OG_INK }}>
+          RISK<span style={{ color: OG_ACCENT }}>/</span>PILOT
         </div>
         <div style={{ fontSize: 64, fontWeight: 700, marginTop: 24, lineHeight: 1.1 }}>
           Portfolio risk math you can verify.
