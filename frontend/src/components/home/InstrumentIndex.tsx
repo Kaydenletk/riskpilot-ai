@@ -28,16 +28,19 @@ function groupBySector(universe: TickerOption[]): Map<string, TickerOption[]> {
 export function InstrumentIndex({ universe }: { universe: TickerOption[] }) {
   const [filter, setFilter] = useState("");
 
-  if (universe.length === 0) return null;
+  const groups = useMemo(() => {
+    const query = filter.trim().toLowerCase();
+    const filtered =
+      query === ""
+        ? universe
+        : universe.filter(
+            (t) =>
+              t.ticker.toLowerCase().includes(query) || t.sector.toLowerCase().includes(query)
+          );
+    return groupBySector(filtered);
+  }, [universe, filter]);
 
-  const query = filter.trim().toLowerCase();
-  const filtered =
-    query === ""
-      ? universe
-      : universe.filter(
-          (t) => t.ticker.toLowerCase().includes(query) || t.sector.toLowerCase().includes(query)
-        );
-  const groups = useMemo(() => groupBySector(filtered), [filtered]);
+  if (universe.length === 0) return null;
 
   return (
     <nav className={styles.index} aria-labelledby="instrument-index-h">
