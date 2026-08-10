@@ -14,7 +14,8 @@ from .config import Config, load_config
 from .report import build_report_from_holdings, build_sample_report
 from .risk_engine.portfolio import UnknownHolding
 from .risk_engine.ticker import UnknownTicker, available_tickers
-from .schema import Holding, RiskReport, TickerOption, TickerReport
+from .schema import Holding, RiskReport, ScoreResponse, TickerOption, TickerReport, WeightedHolding
+from .score_api import score_weights
 from .ticker_report import build_ticker_report
 
 MAX_HOLDINGS = 50
@@ -74,6 +75,27 @@ def report_from_holdings(
     shares = {h.ticker: h.shares for h in body.holdings}
     try:
         return build_report_from_holdings(config, shares)
+    except UnknownHolding as e:
+        raise HTTPException(
+            status_code=422, detail={"error": "unknown_tickers", "symbols": e.symbols}
+        ) from None
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail={"error": "invalid", "message": str(e)}) from None
+
+
+class ScoreRequest(BaseModel):
+    holdings: list[WeightedHolding]
+
+
+@app.post("/score", response_model=ScoreResponse)
+def score_portfolio(
+    body: ScoreRequest,
+    _: None = Depends(require_internal_secret),
+) -> ScoreResponse:
+    """Deterministic facts for the what-if simulator. No LLM in this path — powers
+    the slider, which can fire on every drag frame without a model round trip."""
+    try:
+        return score_weights(body.holdings)
     except UnknownHolding as e:
         raise HTTPException(
             status_code=422, detail={"error": "unknown_tickers", "symbols": e.symbols}

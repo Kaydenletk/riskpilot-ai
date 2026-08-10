@@ -25,6 +25,13 @@ class Holding(BaseModel):
     market_value: float = Field(..., description="shares * current price, computed")
 
 
+class WeightedHolding(BaseModel):
+    """Builder input: percent weights. The engine converts to synthetic shares."""
+
+    ticker: str
+    weight_pct: float = Field(..., gt=0, le=100)
+
+
 class RiskFacts(BaseModel):
     """Deterministic numbers. Produced ONLY by risk_engine. The LLM never writes these."""
 
@@ -36,6 +43,15 @@ class RiskFacts(BaseModel):
     largest_sector: str
     largest_sector_pct: float = Field(..., ge=0, le=100)
     holdings_count: int = Field(..., ge=0)
+
+
+class ScoreResponse(BaseModel):
+    """Facts-only response for the what-if fast path. Deliberately NO explanation
+    field — this endpoint never touches the LLM."""
+
+    holdings: list[Holding]
+    facts: RiskFacts
+    score_version: str
 
 
 class ExplanationSource(str, Enum):
