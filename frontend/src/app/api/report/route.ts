@@ -79,8 +79,7 @@ export async function POST(req: Request) {
 
 // Weighted (percent) branch: zod-validated at this boundary BEFORE the engine
 // ever sees it (defense in depth — the engine re-validates independently).
-// 502 (not 503, unlike the shares branch above) to match the /api/score
-// contract for the same "engine unreachable" condition on the newer paths.
+// Engine-down = 503, matching the shares branch above and /api/score.
 async function handleWeighted(value: unknown) {
   const parsed = weightedPortfolio.safeParse(value);
   if (!parsed.success) {
@@ -99,6 +98,6 @@ async function handleWeighted(value: unknown) {
   }
   return NextResponse.json(
     { error: "engine_unavailable", message: "The risk service is temporarily unavailable." },
-    { status: 502 },
+    { status: 503 },
   );
 }

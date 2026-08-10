@@ -1,8 +1,8 @@
 // Public surface for the what-if simulator. Browser -> this route (same-origin,
 // no CORS) -> the private, math-only /score engine path. No LLM in this path,
 // so it's safe to call on every slider drag. zod validates the body BEFORE the
-// engine ever sees it; a down/absent engine returns 502 — numbers are never
-// fabricated for a portfolio we can't compute.
+// engine ever sees it; a down/absent engine returns 503 (matching /api/report's
+// convention) — numbers are never fabricated for a portfolio we can't compute.
 import { NextResponse } from "next/server";
 
 import { scorePortfolio } from "@/lib/backend";
@@ -31,5 +31,5 @@ export async function POST(req: Request) {
   if (result.reason === "invalid") {
     return NextResponse.json(result, { status: 400 });
   }
-  return NextResponse.json(result, { status: 502 });
+  return NextResponse.json(result, { status: 503 });
 }
