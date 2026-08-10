@@ -46,7 +46,8 @@
 }
 
 .primary {
-  background: var(--accent);
+  /* --accent-strong keeps white text ≥4.5:1 in dark theme (dark --accent is too light) */
+  background: var(--accent-strong);
   color: #fff;
 }
 .primary:hover {
