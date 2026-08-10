@@ -92,3 +92,41 @@ def compute_report(shares: dict[str, float]) -> tuple[list[Holding], RiskFacts]:
         holdings_count=len(normalized),
     )
     return holdings, facts
+
+
+MIN_WEIGHTED_HOLDINGS = 2
+MAX_WEIGHTED_HOLDINGS = 20
+_WEIGHT_SUM_TOLERANCE = 0.5
+
+
+def compute_report_from_weights(
+    weights_pct: dict[str, float],
+) -> tuple[list[Holding], RiskFacts]:
+    """Weight-based entry point for the /analyze builder. Converts weights to
+    synthetic share counts (weight / latest price on a 100-unit book) so ALL
+    downstream math is the existing shares path — one source of truth.
+
+    Validation order matters: count/positivity/sum are cheap local checks and
+    run before the universe lookup, so a 25-row request fails on count even if
+    every ticker is unknown."""
+    normalized = {t.strip().upper(): float(w) for t, w in weights_pct.items()}
+    n = len(normalized)
+    if not MIN_WEIGHTED_HOLDINGS <= n <= MAX_WEIGHTED_HOLDINGS:
+        raise ValueError(
+            f"needs {MIN_WEIGHTED_HOLDINGS}-{MAX_WEIGHTED_HOLDINGS} holdings, got {n}"
+        )
+    if any(w <= 0 for w in normalized.values()):
+        raise ValueError("every holding needs a positive weight")
+    total = sum(normalized.values())
+    if abs(total - 100.0) > _WEIGHT_SUM_TOLERANCE:
+        raise ValueError(f"weights must sum to 100, got {total:.2f}")
+
+    allow = _allow_set()
+    unknown = sorted(t for t in normalized if t not in allow)
+    if unknown:
+        raise UnknownHolding(unknown)
+
+    series = load_prices()
+    latest = {t: series[t][-1] for t in normalized}
+    shares = {t: w / latest[t] for t, w in normalized.items()}
+    return compute_report(shares)
