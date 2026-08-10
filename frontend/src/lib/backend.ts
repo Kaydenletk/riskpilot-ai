@@ -3,7 +3,8 @@
 import "server-only";
 
 import demoReport from "./demo-report.json";
-import type { Holding, RiskReport } from "./types";
+import type { WeightedHolding } from "./portfolio-schema";
+import type { Holding, RiskFacts, RiskReport } from "./types";
 
 const BACKEND_URL = process.env.BACKEND_INTERNAL_URL ?? "http://localhost:8000";
 const SECRET = process.env.INTERNAL_SHARED_SECRET_FRONTEND ?? "dev-local-secret-change-me";
@@ -49,6 +50,68 @@ export async function analyzePortfolio(holdings: Holding[]): Promise<AnalyzeResu
       method: "POST",
       headers: { "x-internal-secret": SECRET, "content-type": "application/json" },
       body: JSON.stringify({ holdings }),
+      cache: "no-store",
+      signal: AbortSignal.timeout(4000),
+    });
+    if (res.ok) {
+      return { ok: true, report: (await res.json()) as RiskReport };
+    }
+    if (res.status === 422) {
+      const body = (await res.json()) as { detail?: { symbols?: string[] } };
+      return { ok: false, reason: "unknown_tickers", symbols: body.detail?.symbols ?? [] };
+    }
+  } catch {
+    // engine absent / timed out — reported as unavailable, never faked
+  }
+  return { ok: false, reason: "engine_unavailable" };
+}
+
+export type ScoreResult =
+  | { ok: true; holdings: Holding[]; facts: RiskFacts; score_version: string }
+  | { ok: false; reason: "engine_unavailable" }
+  | { ok: false; reason: "unknown_tickers"; symbols: string[] }
+  | { ok: false; reason: "invalid" };
+
+// POSTs percent-weighted holdings to the math-only /score fast path (what-if
+// simulator). No LLM in this path, so the budget is tighter than analyze*
+// (2500ms, matching the sample/ticker reads) — this can fire on every slider
+// drag and must never hang the UI on a slow/absent engine. No fixture
+// fallback: we never fabricate numbers for a portfolio we can't compute.
+export async function scorePortfolio(holdings: WeightedHolding[]): Promise<ScoreResult> {
+  try {
+    const res = await fetch(`${BACKEND_URL}/score`, {
+      method: "POST",
+      headers: { "x-internal-secret": SECRET, "content-type": "application/json" },
+      body: JSON.stringify({ holdings }),
+      cache: "no-store",
+      signal: AbortSignal.timeout(2500),
+    });
+    if (res.ok) {
+      const body = (await res.json()) as { holdings: Holding[]; facts: RiskFacts; score_version: string };
+      return { ok: true, ...body };
+    }
+    if (res.status === 422) {
+      const body = (await res.json()) as { detail?: { symbols?: string[] } };
+      return { ok: false, reason: "unknown_tickers", symbols: body.detail?.symbols ?? [] };
+    }
+    if (res.status === 400) {
+      return { ok: false, reason: "invalid" };
+    }
+  } catch {
+    // engine absent / timed out — reported as unavailable, never faked
+  }
+  return { ok: false, reason: "engine_unavailable" };
+}
+
+// POSTs percent weights to /report for the full (LLM-explained) weighted
+// report. Same union/timeout contract as analyzePortfolio's shares path —
+// the engine picks the `weighted` branch instead of `holdings`.
+export async function analyzeWeighted(weighted: WeightedHolding[]): Promise<AnalyzeResult> {
+  try {
+    const res = await fetch(`${BACKEND_URL}/report`, {
+      method: "POST",
+      headers: { "x-internal-secret": SECRET, "content-type": "application/json" },
+      body: JSON.stringify({ weighted }),
       cache: "no-store",
       signal: AbortSignal.timeout(4000),
     });
