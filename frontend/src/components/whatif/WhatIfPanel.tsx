@@ -14,9 +14,15 @@ import {
   totalWeight,
   type PortfolioRow,
 } from "@/lib/portfolio-state";
-import type { RiskReport } from "@/lib/types";
+import type { RiskExplanation, RiskReport } from "@/lib/types";
 
 import styles from "./what-if-panel.module.css";
+
+type ExplainState =
+  | { kind: "idle" }
+  | { kind: "loading" }
+  | { kind: "done"; explanation: RiskExplanation }
+  | { kind: "failed" };
 
 const SLIDER_MIN = 0.5;
 const SLIDER_MAX = 95;
@@ -43,9 +49,40 @@ export function WhatIfPanel({ report }: { report: RiskReport }) {
   const dirty = serializePortfolio(rows) !== serializePortfolio(baseline);
   const simulatable = rows.length >= MIN_SIM_ROWS;
   const { state, retry } = useDebouncedScore(rows, dirty && simulatable);
+  const [explain, setExplain] = useState<ExplainState>({ kind: "idle" });
+
+  // Full pipeline (math -> LLM -> guardrail) on the modified weights.
+  // Deliberately user-triggered: model calls stay explicit and cheap.
+  async function explainThisVersion() {
+    setExplain({ kind: "loading" });
+    try {
+      const res = await fetch("/api/report", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          weighted: rows.map((r) => ({ ticker: r.ticker, weight_pct: r.weightPct })),
+        }),
+      });
+      if (res.ok) {
+        const report = (await res.json()) as RiskReport;
+        setExplain({ kind: "done", explanation: report.explanation });
+        return;
+      }
+    } catch {
+      // network failure — fall through to failed
+    }
+    setExplain({ kind: "failed" });
+  }
 
   const removed = baseline.filter((b) => !rows.some((r) => r.ticker === b.ticker));
   const scored = state.kind === "scored" ? state.facts : null;
+
+  // Any weight change invalidates fetched prose — stale explanations of a
+  // portfolio you've since edited are exactly what this product refuses to show.
+  function update(next: PortfolioRow[]) {
+    setRows(next);
+    setExplain({ kind: "idle" });
+  }
 
   return (
     <section className={styles.panel} aria-labelledby="whatif-h">
@@ -75,7 +112,7 @@ export function WhatIfPanel({ report }: { report: RiskReport }) {
           <span className="caption">risk score</span>
         </div>
         {dirty && (
-          <button type="button" className={styles.reset} onClick={() => setRows(baseline)}>
+          <button type="button" className={styles.reset} onClick={() => update(baseline)}>
             Reset
           </button>
         )}
@@ -119,7 +156,7 @@ export function WhatIfPanel({ report }: { report: RiskReport }) {
                 step={SLIDER_STEP}
                 value={r.weightPct}
                 aria-label={`${r.ticker} weight percent`}
-                onChange={(e) => setRows(setWeight(rows, r.ticker, Number(e.target.value)))}
+                onChange={(e) => update(setWeight(rows, r.ticker, Number(e.target.value)))}
               />
               <span className={`num ${styles.weight}`}>{r.weightPct}%</span>
               <button
@@ -127,7 +164,7 @@ export function WhatIfPanel({ report }: { report: RiskReport }) {
                 className={styles.iconBtn}
                 aria-label={`Remove ${r.ticker} from what-if`}
                 disabled={rows.length <= MIN_SIM_ROWS}
-                onClick={() => setRows(removeHolding(rows, r.ticker))}
+                onClick={() => update(removeHolding(rows, r.ticker))}
               >
                 ✕
               </button>
@@ -144,7 +181,7 @@ export function WhatIfPanel({ report }: { report: RiskReport }) {
               key={b.ticker}
               type="button"
               className={styles.addBack}
-              onClick={() => setRows(setWeight([...rows, { ...b, weightPct: SLIDER_MIN }], b.ticker, b.weightPct))}
+              onClick={() => update(setWeight([...rows, { ...b, weightPct: SLIDER_MIN }], b.ticker, b.weightPct))}
             >
               + {b.ticker}
             </button>
@@ -161,9 +198,46 @@ export function WhatIfPanel({ report }: { report: RiskReport }) {
         </div>
       )}
 
+      {/* Explain-this-version: explicit, never automatic. Only offered once the
+          modified weights have real engine numbers behind them. */}
+      {dirty && scored && explain.kind === "idle" && (
+        <button type="button" className={styles.explainBtn} onClick={explainThisVersion}>
+          Explain this version →
+        </button>
+      )}
+      {explain.kind === "loading" && (
+        <p className={styles.explainLoading} role="status">
+          Writing the read for your what-if…
+        </p>
+      )}
+      {explain.kind === "done" && (
+        <div className={styles.explainBox}>
+          <div className={styles.explainHead}>
+            <span className="caption">Explaining your what-if</span>
+            <button
+              type="button"
+              className={styles.explainBack}
+              onClick={() => setExplain({ kind: "idle" })}
+            >
+              back to original read ↑
+            </button>
+          </div>
+          <p className={styles.explainText}>{explain.explanation.summary}</p>
+          <p className={`caption ${styles.explainSource}`}>{explain.explanation.source}</p>
+        </div>
+      )}
+      {explain.kind === "failed" && (
+        <div className={styles.errorBox} role="alert">
+          <span>Couldn&apos;t get an explanation — the numbers above are still valid.</span>
+          <button type="button" className={styles.retry} onClick={explainThisVersion}>
+            Retry
+          </button>
+        </div>
+      )}
+
       <p className={`caption ${styles.foot}`}>
         Total {Math.round(totalWeight(rows) * 10) / 10}% · scored by the engine on every change ·
-        no AI in this loop
+        the AI only speaks when you ask it to
       </p>
     </section>
   );

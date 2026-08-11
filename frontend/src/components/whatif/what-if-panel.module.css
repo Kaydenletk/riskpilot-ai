@@ -175,6 +175,62 @@
   cursor: pointer;
 }
 
+/* explain-this-version */
+.explainBtn {
+  font: inherit;
+  font-weight: 600;
+  min-height: 44px;
+  margin-top: var(--space-2);
+  padding: 10px 18px;
+  color: #fff;
+  background: var(--accent-strong);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: filter var(--dur-fast) var(--ease-out-expo);
+}
+.explainBtn:hover {
+  filter: brightness(0.92);
+}
+.explainLoading {
+  margin: var(--space-2) 0 0;
+  color: var(--ink-soft);
+}
+.explainBox {
+  margin-top: var(--space-2);
+  background: color-mix(in oklch, var(--accent) 5%, var(--surface));
+  border: 1px solid color-mix(in oklch, var(--accent) 22%, var(--rule));
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3);
+}
+.explainHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.explainBack {
+  font: inherit;
+  font-size: var(--text-xs);
+  background: none;
+  border: none;
+  color: var(--ink-faint);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  padding: 0;
+}
+.explainText {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-lg);
+  line-height: 1.55;
+  max-width: 62ch;
+}
+.explainSource {
+  margin: var(--space-1) 0 0;
+}
+
 .foot {
   margin: var(--space-3) 0 0;
 }
