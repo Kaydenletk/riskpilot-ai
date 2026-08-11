@@ -6,7 +6,7 @@
 import { NextResponse } from "next/server";
 
 import { scorePortfolio } from "@/lib/backend";
-import { weightedPortfolio } from "@/lib/portfolio-schema";
+import { simulatorPortfolio } from "@/lib/portfolio-schema";
 
 export async function POST(req: Request) {
   let body: unknown;
@@ -16,7 +16,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, reason: "invalid" }, { status: 400 });
   }
 
-  const parsed = weightedPortfolio.safeParse(
+  // simulatorPortfolio (min 2, not 3): remove-toggles can shrink a report to
+  // the engine's own floor without bouncing off this boundary.
+  const parsed = simulatorPortfolio.safeParse(
     (body as { holdings?: unknown } | null)?.holdings,
   );
   if (!parsed.success) {

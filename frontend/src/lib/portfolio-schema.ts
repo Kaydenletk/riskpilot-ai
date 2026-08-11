@@ -27,3 +27,19 @@ export const weightedPortfolio = z
       WEIGHT_SUM_TOLERANCE,
     { message: "weights must sum to 100" },
   );
+
+// The simulator can drop to 2 rows via remove-toggles (the engine's own floor);
+// building a NEW portfolio still requires MIN_HOLDINGS. Separate schema so the
+// /score boundary matches the engine instead of the builder.
+export const SIMULATOR_MIN_HOLDINGS = 2;
+
+export const simulatorPortfolio = z
+  .array(weightedHolding)
+  .min(SIMULATOR_MIN_HOLDINGS)
+  .max(MAX_HOLDINGS)
+  .refine(
+    (rows) =>
+      Math.abs(rows.reduce((sum, row) => sum + row.weight_pct, 0) - 100) <=
+      WEIGHT_SUM_TOLERANCE,
+    { message: "weights must sum to 100" },
+  );

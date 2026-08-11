@@ -21,6 +21,11 @@
   --risk-high: oklch(60% 0.20 25);   /* warm red = concentrated / high */
   --risk-low-soft: oklch(64% 0.13 232 / 0.12);
   --risk-high-soft: oklch(60% 0.20 25 / 0.12);
+  /* text-safe ink variants of the ramp (riskInkVar) — darker for contrast on
+     light surfaces; dark theme lifts them below */
+  --risk-low-ink: oklch(48% 0.13 232);
+  --risk-mid-ink: oklch(55% 0.13 75);
+  --risk-high-ink: oklch(50% 0.19 25);
 
   /* ── the ONLY chrome accent — ultramarine (links, focus, CTAs) ── */
   --accent: oklch(45% 0.26 265);
@@ -66,6 +71,9 @@
   --rule-strong: oklch(46% 0.01 264);
   --risk-low-soft: oklch(64% 0.13 232 / 0.20);
   --risk-high-soft: oklch(60% 0.20 25 / 0.20);
+  --risk-low-ink: oklch(72% 0.11 232);
+  --risk-mid-ink: oklch(78% 0.13 75);
+  --risk-high-ink: oklch(70% 0.17 25);
   --accent: oklch(72% 0.17 265);
   --accent-soft: oklch(72% 0.17 265 / 0.16);
   /* darker than --accent: white ✓ glyphs need ≥4.5:1, --accent's 72% L only clears ~2.6:1 */

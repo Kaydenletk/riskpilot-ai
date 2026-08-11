@@ -1,0 +1,180 @@
+/* What-if simulator panel. Same instrument-panel voice as the report above it:
+   hairline rules, mono captions, display-face numbers. Accent = chrome only;
+   the target score wears its risk-band ink. */
+
+.panel {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 2px solid var(--rule-strong);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.title {
+  margin: 0;
+  font-weight: 400;
+}
+
+.scoreLine {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-1);
+}
+.scoreFrom {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ink-faint);
+}
+.arrow {
+  color: var(--ink-faint);
+}
+.scoreTo {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.pending {
+  opacity: 0.4;
+}
+
+.reset {
+  font: inherit;
+  font-size: var(--text-sm);
+  min-height: 44px;
+  padding: 8px 14px;
+  margin-left: auto;
+  color: var(--ink);
+  background: none;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.reset:hover {
+  border-color: var(--ink-soft);
+}
+
+.deltas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin: var(--space-2) 0 0;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.delta {
+  background: var(--surface);
+  padding: var(--space-1) var(--space-2);
+}
+.delta dd {
+  margin: 2px 0 0;
+  font-weight: 600;
+}
+
+.sliders {
+  list-style: none;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+}
+.sliderRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+}
+.ticker {
+  font-weight: 700;
+  min-width: 5ch;
+}
+.slider {
+  flex: 1;
+  accent-color: var(--accent);
+  min-height: 44px;
+}
+.weight {
+  min-width: 5.5ch;
+  text-align: right;
+  color: var(--ink-soft);
+}
+.iconBtn {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.iconBtn:hover:not(:disabled) {
+  border-color: var(--rule-strong);
+}
+.iconBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.note {
+  margin: var(--space-2) 0 0;
+  color: var(--ink-soft);
+}
+
+.removedLine {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+.addBack {
+  font: inherit;
+  font-size: var(--text-sm);
+  min-height: 36px;
+  padding: 4px 10px;
+  color: var(--ink);
+  background: var(--accent-soft);
+  border: 1px solid var(--rule-strong);
+  border-radius: 100px;
+  cursor: pointer;
+}
+
+.errorBox {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  color: var(--ink-soft);
+  background: var(--surface-raised);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  flex-wrap: wrap;
+}
+.retry {
+  font: inherit;
+  font-weight: 600;
+  min-height: 40px;
+  padding: 6px 14px;
+  color: #fff;
+  background: var(--accent-strong);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.foot {
+  margin: var(--space-3) 0 0;
+}
