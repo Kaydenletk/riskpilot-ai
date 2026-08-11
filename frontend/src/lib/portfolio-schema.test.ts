@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { weightedPortfolio } from "./portfolio-schema";
+import { simulatorPortfolio, weightedPortfolio } from "./portfolio-schema";
 
 const rows = (n: number) =>
   Array.from({ length: n }, (_, i) => ({
@@ -61,5 +61,22 @@ describe("weightedPortfolio", () => {
         { ticker: "KO", weight_pct: 29.8 },
       ]).success,
     ).toBe(true);
+  });
+});
+
+describe("simulatorPortfolio", () => {
+  test("accepts 2 rows (engine floor — builder minimum stays 3)", () => {
+    expect(
+      simulatorPortfolio.safeParse([
+        { ticker: "NVDA", weight_pct: 60 },
+        { ticker: "KO", weight_pct: 40 },
+      ]).success,
+    ).toBe(true);
+  });
+
+  test("still rejects a single row", () => {
+    expect(simulatorPortfolio.safeParse([{ ticker: "NVDA", weight_pct: 100 }]).success).toBe(
+      false,
+    );
   });
 });
