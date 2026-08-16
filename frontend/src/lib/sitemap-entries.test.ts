@@ -9,12 +9,17 @@ describe("sitemapEntries", () => {
     expect(urls).toContain("https://riskpilot-coach.vercel.app");
   });
 
+  it("includes the analyze page", () => {
+    const urls = sitemapEntries().map((e) => e.url);
+    expect(urls).toContain("https://riskpilot-coach.vercel.app/analyze");
+  });
+
   it("includes every ticker in the universe, lowercased", () => {
     const entries = sitemapEntries();
     const universe = fixtureUniverse();
     for (const { ticker } of universe) {
       expect(entries.some((e) => e.url.endsWith(`/ticker/${ticker.toLowerCase()}`))).toBe(true);
     }
-    expect(entries.length).toBe(universe.length + 1);
+    expect(entries.length).toBe(universe.length + 2);
   });
 });

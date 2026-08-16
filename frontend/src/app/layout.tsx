@@ -9,26 +9,49 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(CANONICAL_ORIGIN),
   title: {
-    default: "RiskPilot AI — Portfolio Risk Coach",
+    default: "RiskPilot AI — Portfolio Risk Management Coach",
     template: "%s | RiskPilot AI",
   },
   description:
-    "Deterministic risk math, explained by a guardrailed LLM that never invents numbers.",
+    "Portfolio risk analysis for investors: deterministic risk scores, volatility and drawdown metrics, explained in plain English by an AI that cannot invent numbers.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     siteName: "RiskPilot AI",
-    title: "RiskPilot AI — Portfolio Risk Coach",
+    title: "RiskPilot AI — Portfolio Risk Management Coach",
     description:
-      "Deterministic risk math, explained by a guardrailed LLM that never invents numbers.",
+      "Portfolio risk analysis for investors: deterministic risk scores, volatility and drawdown metrics, explained in plain English by an AI that cannot invent numbers.",
     url: CANONICAL_ORIGIN,
   },
   twitter: {
     card: "summary_large_image",
-    title: "RiskPilot AI — Portfolio Risk Coach",
+    title: "RiskPilot AI — Portfolio Risk Management Coach",
     description:
-      "Portfolio risk math you can verify. AI explanations that cannot invent the numbers.",
+      "Investment risk analysis you can verify. AI explanations that cannot invent the numbers.",
   },
+};
+
+// Structured data: the site + the free web app. Static content only — no user
+// input flows into this JSON.
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      name: "RiskPilot AI",
+      url: CANONICAL_ORIGIN,
+    },
+    {
+      "@type": "WebApplication",
+      name: "RiskPilot AI — Portfolio Risk X-Ray",
+      url: `${CANONICAL_ORIGIN}/analyze`,
+      applicationCategory: "FinanceApplication",
+      operatingSystem: "Web",
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      description:
+        "Build a weighted portfolio and get an instant investment risk analysis — concentration, volatility, worst drawdown — with plain-English risk coaching. Educational, never buy/sell advice.",
+    },
+  ],
 };
 
 // No stored choice -> honor OS preference for the INITIAL theme; light is the
@@ -41,6 +64,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" data-theme="light" className={spaceGrotesk.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+        />
       </head>
       <body>
         <main>{children}</main>

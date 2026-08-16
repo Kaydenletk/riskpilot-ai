@@ -12,9 +12,10 @@ import styles from "./analyze.module.css";
 import page from "../page.module.css";
 
 export const metadata: Metadata = {
-  title: "Analyze your portfolio",
+  title: "Portfolio Risk Analyzer — Free Investment Risk Analysis",
   description:
-    "Build a weighted portfolio from the vetted universe and get a deterministic risk X-Ray, explained by a guardrailed AI.",
+    "Build your portfolio and get an instant investment risk analysis — concentration, volatility, worst drawdown — with plain-English risk coaching. No signup.",
+  alternates: { canonical: "/analyze" },
 };
 
 export default async function AnalyzePage() {

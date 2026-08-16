@@ -11,7 +11,8 @@ export function Hero() {
         Think twice before your next trade.
       </h1>
       <p className={styles.support}>
-        Deterministic risk math, explained by an AI that <strong>cannot invent numbers</strong>.
+        Portfolio risk management with deterministic math — explained by an AI that{" "}
+        <strong>cannot invent numbers</strong>.
       </p>
       <div className={styles.ctas}>
         <Link href="/analyze" className={styles.primary}>
