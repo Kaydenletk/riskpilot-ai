@@ -22,6 +22,11 @@ import styles from "./analyze.module.css";
 const LAST_PORTFOLIO_KEY = "rp-last-portfolio";
 const URL_SYNC_DEBOUNCE_MS = 300;
 
+// One-click starting point for first-timers: teaches the builder by showing a
+// filled state instead of explaining an empty one. Tech-heavy on purpose — the
+// resulting report demonstrates the concentration coaching immediately.
+const EXAMPLE_PORTFOLIO = "NVDA:30,AAPL:20,MSFT:15,AMZN:15,KO:10,JNJ:10";
+
 type Phase =
   | { kind: "builder" }
   | { kind: "scoring" }
@@ -142,19 +147,30 @@ export function AnalyzeClient({ universe }: { universe: TickerOption[] }) {
 
   return (
     <div className="stage stage-2">
-      {resumeAvailable && phase.kind === "builder" && rows.length === 0 && (
-        <div className={styles.resumeChip}>
-          <button type="button" className={styles.resumeBtn} onClick={resumeLast}>
-            Resume last portfolio →
-          </button>
+      {phase.kind === "builder" && rows.length === 0 && (
+        <div className={styles.starterRow}>
           <button
             type="button"
-            className={styles.dismissBtn}
-            aria-label="Dismiss"
-            onClick={() => setResumeAvailable(false)}
+            className={styles.starterBtn}
+            onClick={() => setRows(parsePortfolio(EXAMPLE_PORTFOLIO))}
           >
-            ✕
+            Try an example portfolio →
           </button>
+          {resumeAvailable && (
+            <div className={styles.resumeChip}>
+              <button type="button" className={styles.resumeBtn} onClick={resumeLast}>
+                Resume last portfolio →
+              </button>
+              <button
+                type="button"
+                className={styles.dismissBtn}
+                aria-label="Dismiss"
+                onClick={() => setResumeAvailable(false)}
+              >
+                ✕
+              </button>
+            </div>
+          )}
         </div>
       )}
 

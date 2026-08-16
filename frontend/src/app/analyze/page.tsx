@@ -28,8 +28,12 @@ export default async function AnalyzePage() {
         <div className="caption">Build your portfolio</div>
         <h1 className={styles.title}>What are you actually holding?</h1>
         <p className={styles.support}>
-          3–20 holdings from the {universe.length}-instrument universe. Weights, not dollars —
-          nothing you enter leaves your browser except tickers and percentages.
+          Pick 3–20 holdings and set what share of your money sits in each. Nothing you enter
+          leaves your browser except tickers and percentages —{" "}
+          <a className={styles.howLink} href="/#how-it-works">
+            here&apos;s how the pipeline works
+          </a>
+          .
         </p>
       </header>
 

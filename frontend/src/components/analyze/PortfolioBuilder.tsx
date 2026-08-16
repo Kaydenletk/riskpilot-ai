@@ -72,6 +72,11 @@ export function PortfolioBuilder({
         onPick={(ticker) => onRowsChange(addHolding(rows, ticker))}
       />
 
+      {rows.length > 0 && (
+        <p className={`caption ${styles.legend}`}>
+          Change any weight — the others rebalance to keep 100%. Lock 🔒 to pin one in place.
+        </p>
+      )}
       {rows.length > 0 ? (
         <ul className={styles.rows}>
           {rows.map((r) => (
@@ -132,7 +137,13 @@ export function PortfolioBuilder({
           {rows.length} of {MAX_HOLDINGS} holdings
         </span>
         <span className={styles.runWrap}>
-          {!canRun && <span className={styles.reason}>Add at least {MIN_HOLDINGS} holdings</span>}
+          {!canRun ? (
+            <span className={styles.reason}>Add at least {MIN_HOLDINGS} holdings</span>
+          ) : (
+            <span className={`caption ${styles.runHint}`}>
+              engine computes · AI explains · guardrail checks
+            </span>
+          )}
           <button
             type="button"
             className={styles.run}

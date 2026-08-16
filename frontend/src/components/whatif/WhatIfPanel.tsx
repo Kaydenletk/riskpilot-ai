@@ -118,6 +118,11 @@ export function WhatIfPanel({ report }: { report: RiskReport }) {
         )}
       </div>
 
+      <p className={styles.intro}>
+        Drag a slider to preview a different mix — the engine re-scores it instantly. Nothing is
+        saved, and the report above doesn&apos;t change.
+      </p>
+
       {scored && (
         <dl className={styles.deltas}>
           <div className={styles.delta}>

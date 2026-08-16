@@ -60,6 +60,13 @@
   border-color: var(--ink-soft);
 }
 
+.intro {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  max-width: 60ch;
+}
+
 .deltas {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

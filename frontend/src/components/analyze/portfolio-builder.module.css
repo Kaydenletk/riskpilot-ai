@@ -85,6 +85,14 @@
   border-radius: var(--radius-sm);
 }
 
+.legend {
+  margin: var(--space-3) 0 calc(-1 * var(--space-2));
+}
+
+.runHint {
+  text-align: right;
+}
+
 /* ── rows ── */
 .rows {
   list-style: none;
