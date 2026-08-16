@@ -18,29 +18,37 @@ export function sectorWeights(
     .sort((a, b) => b.pct - a.pct);
 }
 
-// Horizontal sector-exposure bars. The dominant sector (≥50%) wears the
-// risk-mid ink — data coloring, not decoration.
+// Horizontal sector-exposure bars. All fills share the chrome gradient — a
+// dominant sector (≥50%) is flagged with an amber dot marker instead of a
+// tinted bar (graphical risk marker, not text: no contrast constraint, and
+// no mud-colored fills).
 export function SectorBars({ holdings }: { holdings: Holding[] }) {
   const rows = sectorWeights(holdings);
   if (rows.length === 0) return null;
   return (
     <ul className={styles.bars} aria-label="Sector exposure">
-      {rows.map((r) => (
-        <li key={r.sector} className={styles.row}>
-          <span className={`caption ${styles.label}`}>{r.sector}</span>
-          <span className={styles.track}>
-            <span
-              className={styles.fill}
-              style={{
-                width: `${r.pct}%`,
-                background:
-                  r.pct >= DOMINANT_PCT ? "var(--risk-mid-ink)" : "var(--accent)",
-              }}
-            />
-          </span>
-          <span className={`num ${styles.pct}`}>{r.pct}%</span>
-        </li>
-      ))}
+      {rows.map((r) => {
+        const dominant = r.pct >= DOMINANT_PCT;
+        return (
+          <li key={r.sector} className={styles.row}>
+            <span className={`caption ${styles.label}`}>
+              {r.sector}
+              {dominant && (
+                <span
+                  className={styles.dominantDot}
+                  role="img"
+                  aria-label="dominant sector — concentration driver"
+                  title="Dominant sector — concentration driver"
+                />
+              )}
+            </span>
+            <span className={styles.track}>
+              <span className={styles.fill} style={{ width: `${r.pct}%` }} />
+            </span>
+            <span className={`num ${styles.pct}`}>{r.pct}%</span>
+          </li>
+        );
+      })}
     </ul>
   );
 }
