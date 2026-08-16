@@ -92,9 +92,16 @@ export function InstrumentIndex({ universe }: { universe: TickerOption[] }) {
                   <span className={`caption ${styles.groupLabel}`}>{sector}</span>
                   <span className={`num ${styles.count}`}>{tickers.length}</span>
                 </span>
-                <span className={styles.track} aria-hidden="true">
-                  <span className={styles.fill} style={{ width: `${pct}%` }} />
-                </span>
+                {/* the bar shows whole-universe share — while filtering, the
+                    count is a per-sector match count instead, and pairing it
+                    with a share-of-everything bar reads as "more matches"
+                    when it isn't. Hide the bar during filtering; it returns
+                    once the filter clears. */}
+                {!filtering && (
+                  <span className={styles.track} aria-hidden="true">
+                    <span className={styles.fill} style={{ width: `${pct}%` }} />
+                  </span>
+                )}
               </summary>
               <ul className={styles.list}>
                 {tickers.map((t) => (
