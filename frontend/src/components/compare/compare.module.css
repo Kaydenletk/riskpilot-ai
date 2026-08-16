@@ -1,18 +1,24 @@
 .wrap { max-width: 1100px; margin: 0 auto; }
 .head { display: flex; justify-content: space-between; align-items: baseline; margin: var(--space-3) 0; flex-wrap: wrap; gap: var(--space-2); }
+/* each column is now its own glass card (className approach — glass supplies
+   background/border/radius/shadow), so the grid separates cards with a real
+   gap instead of the old 1px-hairline-on-shared-background trick. */
 .grid {
   display: grid;
   grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr));
-  gap: 1px;
-  background: var(--rule);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  overflow: hidden;
+  gap: var(--space-3);
 }
-.col { background: var(--surface); padding: var(--space-3); display: flex; flex-direction: column; align-items: center; gap: var(--space-2); }
+.col { padding: var(--space-3); display: flex; flex-direction: column; align-items: center; gap: var(--space-2); }
 .ticker { font-size: var(--text-xl); font-weight: 700; letter-spacing: -0.02em; }
 .facts { width: 100%; list-style: none; margin: 0; padding: 0; }
-.fact { display: flex; justify-content: space-between; padding: 8px 0; border-top: 1px solid var(--rule); font-size: var(--text-sm); }
+.fact { display: flex; flex-direction: column; gap: 6px; padding: 8px 0; border-top: 1px solid var(--rule); font-size: var(--text-sm); }
+.factRow { display: flex; justify-content: space-between; }
 .factLabel { color: var(--ink-soft); }
+/* inline bar — decorative only (paired with an aria-hidden span in TSX); the
+   number in .factRow above remains the accessible value. Width normalized
+   per-row to the row's riskiest ticker, so the tallest bar always sits on
+   the tinted, highest-risk cell. */
+.bar { height: 6px; border-radius: 3px; background: var(--rule); overflow: hidden; }
+.barFill { height: 100%; background: var(--accent); }
 .empty { margin: var(--space-4) 0; color: var(--ink-soft); }
 @media (max-width: 760px) { .grid { --cols: 1; } }
