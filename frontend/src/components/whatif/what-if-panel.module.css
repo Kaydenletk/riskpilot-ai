@@ -104,8 +104,48 @@
 }
 .slider {
   flex: 1;
-  accent-color: var(--accent);
+  appearance: none;
+  background: transparent;
   min-height: 44px;
+}
+/* progress fill: --fill is set inline from React on every drag (WhatIfPanel.tsx)
+   since a gradient stop can't be driven by var(--fill) without JS. The first
+   oklch stop below mirrors --grad-accent's own first stop — linear-gradient()
+   can't compose var(--grad-accent) with a percentage stop, so it's hardcoded
+   here as the one sanctioned exception to the token-only rule. */
+.slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, oklch(48% 0.24 275) var(--fill, 0%), var(--bg-grain) var(--fill, 0%));
+}
+.slider::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, oklch(48% 0.24 275) var(--fill, 0%), var(--bg-grain) var(--fill, 0%));
+}
+:global([data-theme="dark"]) .slider::-webkit-slider-runnable-track {
+  background: linear-gradient(to right, oklch(70% 0.17 275) var(--fill, 0%), var(--bg-grain) var(--fill, 0%));
+}
+:global([data-theme="dark"]) .slider::-moz-range-track {
+  background: linear-gradient(to right, oklch(70% 0.17 275) var(--fill, 0%), var(--bg-grain) var(--fill, 0%));
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  margin-top: -7px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  box-shadow: var(--shadow-1);
+}
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  box-shadow: var(--shadow-1);
 }
 .weight {
   min-width: 5.5ch;

@@ -64,6 +64,7 @@ export function LiveWhatIfStrip({ report }: { report: RiskReport }) {
             step={SLIDER_STEP}
             value={current.weightPct}
             aria-label={`${current.ticker} weight percent`}
+            style={{ "--fill": `${current.weightPct}%` } as React.CSSProperties}
             onChange={(e) => setRows(setWeight(rows, current.ticker, Number(e.target.value)))}
           />
           <span className={`num ${styles.weight}`}>{current.weightPct}%</span>

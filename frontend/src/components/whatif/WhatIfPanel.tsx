@@ -150,6 +150,7 @@ export function WhatIfPanel({ report }: { report: RiskReport }) {
                 step={SLIDER_STEP}
                 value={r.weightPct}
                 aria-label={`${r.ticker} weight percent`}
+                style={{ "--fill": `${r.weightPct}%` } as React.CSSProperties}
                 onChange={(e) => update(setWeight(rows, r.ticker, Number(e.target.value)))}
               />
               <span className={`num ${styles.weight}`}>{r.weightPct}%</span>

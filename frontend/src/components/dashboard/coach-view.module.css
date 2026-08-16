@@ -53,16 +53,20 @@
   max-width: 62ch;
 }
 
-/* jargon translated — instrument tiles, 3-up on desktop */
+/* jargon translated — instrument tiles, 3-up on desktop. Section already
+   carries `glass` (T1); the grid stays a 1px-conceptual hairline layout but
+   softened to a 6px gap of individually-radiused cells rather than flat
+   dividers so it doesn't double-wrap the glass treatment. */
 .stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
+  gap: 6px;
   overflow: hidden;
   margin-bottom: var(--space-3);
 }
 .stat {
-  background: var(--surface);
+  background: var(--surface-raised);
+  border-radius: 8px;
   padding: var(--space-2) var(--space-3);
 }
 .statHead {

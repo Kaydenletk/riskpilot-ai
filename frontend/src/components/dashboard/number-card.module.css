@@ -1,5 +1,9 @@
+/* cell sits inside a `glass` grid wrapper (CoachView's .stats) — --surface-raised
+   (not --surface) reads with more separation against the translucent/blurred
+   backdrop in dark theme, while staying visually identical to --surface in light. */
 .card {
-  background: var(--surface);
+  background: var(--surface-raised);
+  border-radius: 8px;
   padding: var(--space-2) var(--space-3);
   display: flex;
   flex-direction: column;

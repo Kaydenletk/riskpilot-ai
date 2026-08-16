@@ -110,6 +110,7 @@
   flex: 1;
 }
 .weightWrap {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -125,6 +126,19 @@
   background: var(--surface);
   border: 1px solid var(--rule);
   border-radius: var(--radius-sm);
+}
+/* subtle weight indicator: --fill is set inline from React on every edit
+   (PortfolioBuilder.tsx) — a decorative, aria-hidden bar under the input. */
+.weightFill {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: var(--fill, 0%);
+  max-width: 100%;
+  background: var(--grad-accent);
+  border-radius: 1px;
+  pointer-events: none;
 }
 .iconBtn {
   display: inline-grid;

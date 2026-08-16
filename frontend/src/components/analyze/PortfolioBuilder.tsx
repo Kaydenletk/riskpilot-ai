@@ -96,6 +96,11 @@ export function PortfolioBuilder({
                   onChange={(e) => onWeightInput(r.ticker, e.target.value)}
                   onBlur={() => setDraft(null)}
                 />
+                <span
+                  className={styles.weightFill}
+                  aria-hidden
+                  style={{ "--fill": `${r.weightPct}%` } as React.CSSProperties}
+                />
                 <span aria-hidden> %</span>
               </span>
               <button

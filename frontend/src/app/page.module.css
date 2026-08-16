@@ -56,17 +56,20 @@
   color: var(--ink);
 }
 
-/* TIER 2 — instrument-panel tiles */
+/* TIER 2 — instrument-panel tiles. Section already carries `glass` (T1); the
+   grid stays a hairline layout but softened to a 6px gap of individually-
+   radiused cells rather than flat dividers so it doesn't double-wrap glass. */
 .metrics {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
+  gap: 6px;
   overflow: hidden;
   margin-bottom: var(--space-3);
 }
 
 .tile {
-  background: var(--surface);
+  background: var(--surface-raised);
+  border-radius: 8px;
   padding: var(--space-2) var(--space-2) calc(var(--space-2) + 2px);
   display: flex;
   flex-direction: column;
@@ -197,7 +200,7 @@
   cursor: pointer;
   transition: background var(--dur-fast) var(--ease-out-expo);
 }
-.tileButton:hover { background: var(--surface-raised); }
+.tileButton:hover { background: color-mix(in oklch, var(--accent) 6%, var(--surface-raised)); }
 .factorFlash {
   animation: factorFlash 1.2s var(--ease-out-expo);
 }
