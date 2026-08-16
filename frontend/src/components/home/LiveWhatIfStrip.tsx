@@ -93,9 +93,9 @@ export function LiveWhatIfStrip({ report }: { report: RiskReport }) {
       </div>
 
       {state.kind === "error" && (
-        <div className={styles.errorBox} role="alert">
+        <div className={`error-box ${styles.errorBox}`} role="alert">
           <span>Couldn&apos;t reach the engine — drag again or retry.</span>
-          <button type="button" className={styles.retry} onClick={retry}>
+          <button type="button" className="btn-retry" onClick={retry}>
             Retry
           </button>
         </div>

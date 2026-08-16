@@ -185,9 +185,9 @@ export function WhatIfPanel({ report }: { report: RiskReport }) {
       )}
 
       {state.kind === "error" && (
-        <div className={styles.errorBox} role="alert">
+        <div className={`error-box ${styles.errorBox}`} role="alert">
           <span>Couldn&apos;t reach the engine — the report above is untouched.</span>
-          <button type="button" className={styles.retry} onClick={retry}>
+          <button type="button" className="btn-retry" onClick={retry}>
             Retry
           </button>
         </div>
@@ -222,9 +222,9 @@ export function WhatIfPanel({ report }: { report: RiskReport }) {
         </div>
       )}
       {explain.kind === "failed" && (
-        <div className={styles.errorBox} role="alert">
+        <div className={`error-box ${styles.errorBox}`} role="alert">
           <span>Couldn&apos;t get an explanation — the numbers above are still valid.</span>
-          <button type="button" className={styles.retry} onClick={explainThisVersion}>
+          <button type="button" className="btn-retry" onClick={explainThisVersion}>
             Retry
           </button>
         </div>

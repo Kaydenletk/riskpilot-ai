@@ -36,14 +36,14 @@ export default async function Home() {
           <span className="fine-pointer-only"> · type ⌘K to analyze any one</span>
         </span>
       </div>
+      <LiveWhatIfStrip report={report} />
+      <HowItWorks />
       <section id="sample" className="stage stage-3">
         <div className="caption" style={{ marginBottom: "var(--space-2)" }}>
           Sample portfolio — live from the engine
         </div>
         <Dashboard report={report} />
       </section>
-      <LiveWhatIfStrip report={report} />
-      <HowItWorks />
       <InstrumentIndex universe={universe} />
     </div>
   );

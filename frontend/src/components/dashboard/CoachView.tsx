@@ -40,8 +40,8 @@ export function CoachView({ report }: { report: RiskReport }) {
         <div className={styles.verdictCol}>
           <div className={styles.leadCaption}>
             <span className="caption">Sample portfolio · your read right now</span>
-            <a className={styles.howLink} href="#how-it-works">
-              how it works ↓
+            <a className={styles.howLink} href="/#how-it-works">
+              how it works →
             </a>
           </div>
           <VerdictHeadline facts={facts} />

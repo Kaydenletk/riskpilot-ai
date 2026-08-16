@@ -79,8 +79,10 @@ test("score failure grays the panel, report stays intact", async ({ page }) => {
   await panel.locator('input[type="range"]').first().press("ArrowRight");
   await expect(panel.getByRole("alert")).toContainText(/report above is untouched/i);
   await expect(panel.getByRole("button", { name: "Retry" })).toBeVisible();
-  // the report above still renders its verdict
-  await expect(page.getByRole("heading", { level: 2 }).first()).toBeVisible();
+  // the report above still renders its verdict (scoped to #sample: CoachView's
+  // VerdictHeadline always precedes WhatIfPanel's own h2 there, regardless of
+  // where #sample sits in the homepage section order)
+  await expect(page.locator("#sample").getByRole("heading", { level: 2 }).first()).toBeVisible();
 });
 
 test("home strip rescores on slider drag", async ({ page }) => {

@@ -197,28 +197,10 @@
   cursor: pointer;
 }
 
+/* shared error-state chrome lives in globals.css as .error-box / .btn-retry;
+   this modifier only carries the one rule that differs from the strip's. */
 .errorBox {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
   margin-top: var(--space-2);
-  padding: var(--space-2);
-  color: var(--ink-soft);
-  background: var(--surface-raised);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-sm);
-  flex-wrap: wrap;
-}
-.retry {
-  font: inherit;
-  font-weight: 600;
-  min-height: 40px;
-  padding: 6px 14px;
-  color: #fff;
-  background: var(--grad-accent);
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
 }
 
 /* explain-this-version */
@@ -238,8 +220,7 @@
 .explainBtn:hover {
   filter: brightness(0.92);
 }
-:global([data-theme="dark"]) .explainBtn,
-:global([data-theme="dark"]) .retry {
+:global([data-theme="dark"]) .explainBtn {
   color: oklch(18% 0.03 275);
 }
 .explainLoading {
