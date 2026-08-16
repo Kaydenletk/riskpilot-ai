@@ -47,3 +47,20 @@ def build_report_from_holdings(config: Config, shares: dict[str, float]) -> Risk
         facts=facts,
         explanation=explanation,
     )
+
+
+def build_report_from_weights(config: Config, weights_pct: dict[str, float]) -> RiskReport:
+    """Weighted variant of build_report_from_holdings — same grounded explain
+    pipeline, so the number-hallucination guardrail applies unchanged. Raises
+    UnknownHolding / ValueError on bad input; the API layer maps those to 422 / 400."""
+    from .risk_engine.portfolio import compute_report_from_weights
+
+    holdings, facts = compute_report_from_weights(weights_pct)
+    explanation = explain(config, facts)
+    return RiskReport(
+        portfolio_name="Your portfolio",
+        as_of="synthetic illustrative data",
+        holdings=holdings,
+        facts=facts,
+        explanation=explanation,
+    )

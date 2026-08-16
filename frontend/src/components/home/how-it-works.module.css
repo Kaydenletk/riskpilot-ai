@@ -1,0 +1,150 @@
+/* Project explainer — strong top rule + three glass panels, each carrying a
+   small currentColor diagram of what that pipeline stage does to the data.
+   Ghost numerals survive from the editorial version, just smaller. The
+   guardrail step keeps its one risk-accent numeral so the eye lands on the
+   thing that makes this project; the diagrams themselves stay data-color-free
+   (ink-faint for "rejected", accent for "checked") — risk hues never appear
+   here. */
+
+.section {
+  margin-top: var(--space-section);
+  padding-top: var(--space-3);
+  border-top: 2px solid var(--rule-strong);
+}
+
+.head {
+  max-width: 62ch;
+}
+
+.title {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(1.5rem, 1.2rem + 1.6vw, 2.2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  margin: 8px 0 var(--space-2);
+  text-wrap: balance;
+}
+
+.lede {
+  font-size: var(--text-lg);
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0 0 var(--space-4);
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.step {
+  padding: var(--space-3);
+}
+
+/* ghost numeral — kept, but shrunk now that the panel carries a diagram too */
+.stepNum {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--rule-strong);
+  display: block;
+  margin-bottom: 6px;
+}
+.stepNumAccent {
+  color: var(--risk-high);
+}
+
+/* mini-diagram — currentColor by default (inherits --ink-soft below); the
+   two exceptions (rejected numeral, checkmark) get explicit token colors so
+   risk hues never leak in as decoration. */
+.diagram {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 160px;
+  color: var(--ink-soft);
+  margin-bottom: var(--space-2);
+}
+.diagramBox {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+.diagramArrow {
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.diagramArrowHead {
+  fill: currentColor;
+}
+.diagramLine {
+  fill: currentColor;
+  opacity: 0.5;
+}
+.diagramNum {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 800;
+  fill: currentColor;
+}
+.diagramNumLg {
+  font-size: 26px;
+}
+.diagramNumSm {
+  font-size: 11px;
+}
+/* rejected numeral: circle + strike are a "this was thrown out" marker, not a
+   risk color — ink-faint keeps it data-neutral */
+.diagramReject {
+  fill: none;
+  stroke: var(--ink-faint);
+  stroke-width: 2;
+}
+/* the surviving line's checkmark — the one chrome accent, not a risk hue */
+.diagramCheck {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.stepTitle {
+  font-size: var(--text-base);
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.stepBody {
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.foot {
+  margin-top: var(--space-4);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--rule);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 70ch;
+}
+.foot strong {
+  color: var(--ink);
+}
+
+@media (max-width: 720px) {
+  .steps {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+}

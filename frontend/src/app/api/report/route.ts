@@ -1,8 +1,9 @@
 // Public surface. Browser -> this route (same-origin, no CORS) -> private backend.
 import { NextResponse } from "next/server";
 
-import { analyzePortfolio, fetchSampleReport } from "@/lib/backend";
+import { analyzePortfolio, analyzeWeighted, fetchSampleReport } from "@/lib/backend";
 import { MAX_HOLDINGS } from "@/lib/parse-holdings";
+import { weightedPortfolio } from "@/lib/portfolio-schema";
 import type { Holding } from "@/lib/types";
 
 export async function GET() {
@@ -50,6 +51,13 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ error: "invalid_json" }, { status: 400 });
   }
+
+  // Builder / what-if flow: percent weights instead of shares. Routed on the
+  // presence of `weighted` so the two input modes can share this endpoint.
+  if (body && typeof body === "object" && "weighted" in (body as Record<string, unknown>)) {
+    return handleWeighted((body as { weighted: unknown }).weighted);
+  }
+
   const v = validateHoldings(body);
   if (!v.ok) {
     return NextResponse.json({ error: "invalid_holdings", errors: v.errors }, { status: 400 });
@@ -63,6 +71,31 @@ export async function POST(req: Request) {
     );
   }
   // mirror the GET envelope shape for the engine-down case
+  return NextResponse.json(
+    { error: "engine_unavailable", message: "The risk service is temporarily unavailable." },
+    { status: 503 },
+  );
+}
+
+// Weighted (percent) branch: zod-validated at this boundary BEFORE the engine
+// ever sees it (defense in depth — the engine re-validates independently).
+// Engine-down = 503, matching the shares branch above and /api/score.
+async function handleWeighted(value: unknown) {
+  const parsed = weightedPortfolio.safeParse(value);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "invalid_weighted", errors: parsed.error.issues.map((issue) => issue.message) },
+      { status: 400 },
+    );
+  }
+  const result = await analyzeWeighted(parsed.data);
+  if (result.ok) return NextResponse.json(result.report);
+  if (result.reason === "unknown_tickers") {
+    return NextResponse.json(
+      { error: "unknown_tickers", symbols: result.symbols, message: `Not in the demo universe: ${result.symbols.join(", ")}.` },
+      { status: 422 },
+    );
+  }
   return NextResponse.json(
     { error: "engine_unavailable", message: "The risk service is temporarily unavailable." },
     { status: 503 },

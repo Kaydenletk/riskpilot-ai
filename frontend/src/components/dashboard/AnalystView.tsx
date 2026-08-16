@@ -9,6 +9,7 @@ import type { RiskReport } from "@/lib/types";
 import { AllocationBar } from "./AllocationBar";
 import { GroundedText } from "./GroundedText";
 import { HoldingsTable } from "./HoldingsTable";
+import { RiskComposition } from "./RiskComposition";
 import { RiskGauge } from "./RiskGauge";
 import styles from "../../app/page.module.css";
 
@@ -63,13 +64,13 @@ export function AnalystView({ report }: { report: RiskReport }) {
         <RiskGauge score={facts.risk_score} band={facts.risk_band} />
         <div className={styles.verdict}>
           <div className="caption">{portfolio_name}</div>
-          <h1 className={styles.headline}>
+          <h2 className={styles.headline}>
             This portfolio is{" "}
             <span style={{ color: `var(--risk-${bandKey(facts.risk_band)})` }}>
               {facts.risk_band}
             </span>
             .
-          </h1>
+          </h2>
           <p className={styles.lede}>
             Its top 3 holdings are{" "}
             <strong className="num">{facts.concentration_pct_top3}%</strong> of the book, and{" "}
@@ -79,14 +80,18 @@ export function AnalystView({ report }: { report: RiskReport }) {
         </div>
       </section>
 
-      <section className={`${styles.metrics} stage stage-3`}>
+      <section className={`glass ${styles.metrics} stage stage-3`}>
         <Metric label="Top-3 concentration" value={`${facts.concentration_pct_top3}%`} onJump={() => jumpToFactor("Top-3 concentration")} />
         <Metric label="Annualized volatility" value={`${facts.volatility_annualized_pct}%`} onJump={() => jumpToFactor("Annualized volatility")} />
         <Metric label="Worst drawdown" value={`${facts.max_drawdown_pct}%`} onJump={() => jumpToFactor("Worst drawdown")} />
         <Metric label="Holdings" value={`${facts.holdings_count}`} onJump={() => jumpToFactor("Holdings")} />
       </section>
 
-      <section className={`${styles.allocation} stage stage-3`}>
+      {/* self-validating: the actual point math behind the headline score.
+          Hidden entirely if the mirror ever disagrees with the engine. */}
+      <RiskComposition facts={facts} />
+
+      <section className={`glass ${styles.allocation} stage stage-3`}>
         <AllocationBar
           holdings={holdings}
           selectedSector={selectedSector}
@@ -94,7 +99,7 @@ export function AnalystView({ report }: { report: RiskReport }) {
         />
       </section>
 
-      <section className={`${styles.allocation} stage stage-3`}>
+      <section className={`glass ${styles.allocation} stage stage-3`}>
         <div className="caption" style={{ marginBottom: 8 }}>Holdings</div>
         {/* overflow-x:auto so the table scrolls horizontally at narrow widths (e.g. 320px) */}
         <div style={{ overflowX: "auto" }}>
@@ -106,7 +111,7 @@ export function AnalystView({ report }: { report: RiskReport }) {
         </div>
       </section>
 
-      <section className={`${styles.explain} stage stage-4`}>
+      <section className={`glass ${styles.explain} stage stage-4`}>
         <div className={styles.verified}>
           <span className={styles.check} aria-hidden>
             ✓

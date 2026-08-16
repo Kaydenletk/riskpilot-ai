@@ -5,15 +5,13 @@
 
 :root {
   /* ── surfaces & ink (near-monochrome, paper-like) ── */
-  --bg: oklch(97.5% 0.004 250);
-  --bg-grain: oklch(96% 0.004 250);
   --surface: oklch(100% 0 0);
-  --surface-raised: oklch(99% 0.003 250);
-  --ink: oklch(20% 0.012 264);
-  --ink-soft: oklch(46% 0.012 264);
-  --ink-faint: oklch(51% 0.012 264);
-  --rule: oklch(91% 0.006 264);
-  --rule-strong: oklch(84% 0.008 264);
+  --surface-raised: oklch(99% 0.002 250);
+  --ink: oklch(19% 0.014 268);
+  --ink-soft: oklch(45% 0.014 268);
+  --ink-faint: oklch(51% 0.012 268);
+  --rule: oklch(90.5% 0.006 264);
+  --rule-strong: oklch(82% 0.01 264);
 
   /* ── semantic risk ramp (the ONLY place these hues appear) ── */
   --risk-low: oklch(64% 0.13 232);   /* cool blue = diversified / safe */
@@ -21,9 +19,28 @@
   --risk-high: oklch(60% 0.20 25);   /* warm red = concentrated / high */
   --risk-low-soft: oklch(64% 0.13 232 / 0.12);
   --risk-high-soft: oklch(60% 0.20 25 / 0.12);
+  /* text-safe ink variants of the ramp (riskInkVar) — darker for contrast on
+     light surfaces; dark theme lifts them below */
+  --risk-low-ink: oklch(48% 0.13 232);
+  --risk-mid-ink: oklch(55% 0.13 75);
+  --risk-high-ink: oklch(50% 0.19 25);
 
-  /* ── one non-risk accent for chrome (kept distinct from the ramp) ── */
-  --accent: oklch(52% 0.02 264);
+  /* ── the ONLY chrome accent — ultramarine (links, focus, CTAs) ── */
+  --accent: oklch(45% 0.26 265);
+  --accent-soft: oklch(45% 0.26 265 / 0.09);
+  --accent-strong: oklch(45% 0.26 265);
+
+  /* ── v3 glass system ── */
+  --bg: oklch(97.5% 0.008 275);              /* indigo-tinted near-white */
+  --bg-grain: oklch(95.8% 0.01 275);
+  --glass-fill: oklch(100% 0 0 / 0.62);
+  --glass-border: oklch(100% 0 0 / 0.85);
+  --glass-blur: 14px;
+  --shadow-1: 0 2px 10px oklch(45% 0.12 275 / 0.08);
+  --shadow-2: 0 10px 30px oklch(45% 0.12 275 / 0.12);
+  --shadow-3: 0 24px 60px oklch(45% 0.12 275 / 0.16);
+  --grad-accent: linear-gradient(120deg, oklch(48% 0.24 275), oklch(55% 0.22 295));
+  --radius-card: 14px;
 
   /* ── type scale (fluid, editorial contrast) ── */
   --text-xs: 0.75rem;
@@ -53,10 +70,10 @@
 /* Opt-in dark theme — surfaces/ink invert; the risk ramp hues stay (they read
    on both). Light remains the default (no [data-theme] / [data-theme=light]). */
 [data-theme="dark"] {
-  --bg: oklch(20% 0.012 264);
-  --bg-grain: oklch(23% 0.012 264);
-  --surface: oklch(25% 0.012 264);
-  --surface-raised: oklch(28% 0.012 264);
+  --bg: oklch(18% 0.03 275);
+  --bg-grain: oklch(21% 0.035 275);
+  --surface: oklch(26% 0.012 264);
+  --surface-raised: oklch(29% 0.012 264);
   --ink: oklch(94% 0.004 250);
   --ink-soft: oklch(78% 0.008 250);
   --ink-faint: oklch(70% 0.01 250);  /* bumped L0.62→0.70: clears 4.5:1 on --surface L0.25 */
@@ -64,12 +81,21 @@
   --rule-strong: oklch(46% 0.01 264);
   --risk-low-soft: oklch(64% 0.13 232 / 0.20);
   --risk-high-soft: oklch(60% 0.20 25 / 0.20);
-  --accent: oklch(80% 0.02 264);
-}
+  --risk-low-ink: oklch(72% 0.11 232);
+  --risk-mid-ink: oklch(78% 0.13 75);
+  --risk-high-ink: oklch(70% 0.17 25);
+  --accent: oklch(72% 0.17 265);
+  --accent-soft: oklch(72% 0.17 265 / 0.16);
+  /* darker than --accent: white ✓ glyphs need ≥4.5:1, --accent's 72% L only clears ~2.6:1 */
+  --accent-strong: oklch(50% 0.22 265);
 
-/* Explicit dark body wash — deliberately visible-but-subtle depth (Δ from bg L0.20 to 0.30) */
-[data-theme="dark"] body {
-  background-image: radial-gradient(140% 90% at 50% -20%, oklch(30% 0.012 264), transparent 60%);
+  /* ── v3 glass system (dark) ── */
+  --glass-fill: oklch(30% 0.04 275 / 0.45);
+  --glass-border: oklch(85% 0.02 275 / 0.22);
+  --shadow-1: 0 2px 10px oklch(5% 0.05 275 / 0.5);
+  --shadow-2: 0 10px 30px oklch(5% 0.05 275 / 0.6);
+  --shadow-3: 0 24px 60px oklch(35% 0.18 275 / 0.35);
+  --grad-accent: linear-gradient(120deg, oklch(70% 0.17 275), oklch(75% 0.15 295));
 }
 
 * {
@@ -87,12 +113,17 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* atmospheric background: one calm wash, top-anchored. Modern + simple —
-   no grid, no competing radial. Just a near-flat paper field. */
+/* atmospheric background: v3 glass wash — two soft indigo/blue radials, top-anchored. */
 body {
   background-image:
-    radial-gradient(140% 90% at 50% -20%, var(--surface), transparent 60%);
+    radial-gradient(120% 70% at 15% -10%, oklch(90% 0.05 285 / 0.55), transparent 55%),
+    radial-gradient(100% 60% at 100% 0%, oklch(92% 0.04 255 / 0.45), transparent 50%);
   background-attachment: fixed;
+}
+[data-theme="dark"] body {
+  background-image:
+    radial-gradient(120% 70% at 15% -10%, oklch(30% 0.08 285 / 0.6), transparent 55%),
+    radial-gradient(100% 60% at 100% 0%, oklch(26% 0.07 255 / 0.5), transparent 50%);
 }
 
 /* tabular figures for every number in a finance grid (non-negotiable) */
@@ -117,6 +148,16 @@ body {
   line-height: 1.6;
 }
 
+/* keyboard-shortcut hints only make sense with a keyboard + fine pointer */
+.fine-pointer-only {
+  display: none;
+}
+@media (pointer: fine) {
+  .fine-pointer-only {
+    display: inline;
+  }
+}
+
 a {
   color: var(--ink);
   text-underline-offset: 3px;
@@ -127,7 +168,7 @@ a:hover {
 }
 
 :focus-visible {
-  outline: 2px solid var(--risk-low);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -158,5 +199,58 @@ a:hover {
     animation-duration: 0.001ms !important;
     animation-delay: 0ms !important;
     transition-duration: 0.001ms !important;
+    transition-delay: 0ms !important;
+  }
+}
+
+/* ── v3 glass utilities ── */
+.glass {
+  background: var(--glass-fill);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-2);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+/* shared error-state chrome — was duplicated (near-byte-identical) across
+   live-what-if-strip.module.css and what-if-panel.module.css; each caller
+   keeps a small per-component modifier class for its one differing rule. */
+.error-box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  color: var(--ink-soft);
+  background: var(--surface-raised);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  flex-wrap: wrap;
+}
+.btn-retry {
+  font: inherit;
+  font-weight: 600;
+  min-height: 40px;
+  padding: 6px 14px;
+  color: #fff;
+  background: var(--grad-accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+[data-theme="dark"] .btn-retry {
+  color: oklch(18% 0.03 275);
+}
+.grad-text {
+  background: var(--grad-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* defensive fallback: grad-text is now load-bearing on the homepage h1 —
+   browsers without background-clip:text support must still render legible text */
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .grad-text {
+    background: none;
+    color: var(--accent);
   }
 }

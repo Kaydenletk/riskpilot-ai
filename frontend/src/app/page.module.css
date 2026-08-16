@@ -14,16 +14,6 @@
   flex-wrap: wrap;
 }
 
-.brand {
-  font-size: var(--text-xl);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-.brandAccent {
-  color: var(--risk-high);
-  margin-left: 1px;
-}
-
 /* search row under the masthead — the entry point to single-ticker analysis */
 .searchRow {
   display: flex;
@@ -66,20 +56,20 @@
   color: var(--ink);
 }
 
-/* TIER 2 — instrument-panel tiles */
+/* TIER 2 — instrument-panel tiles. Section already carries `glass` (T1); the
+   grid stays a hairline layout but softened to a 6px gap of individually-
+   radiused cells rather than flat dividers so it doesn't double-wrap glass. */
 .metrics {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--rule);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
+  gap: 6px;
   overflow: hidden;
   margin-bottom: var(--space-3);
 }
 
 .tile {
-  background: var(--surface);
+  background: var(--surface-raised);
+  border-radius: 8px;
   padding: var(--space-2) var(--space-2) calc(var(--space-2) + 2px);
   display: flex;
   flex-direction: column;
@@ -87,24 +77,19 @@
 }
 
 .tileValue {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   font-size: 1.65rem;
   font-weight: 600;
   line-height: 1;
 }
 
 .allocation {
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
   padding: var(--space-3);
   margin-bottom: var(--space-3);
 }
 
 /* TIER 3 — explanation */
 .explain {
-  background: var(--surface-raised);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
   padding: var(--space-3);
 }
 
@@ -116,7 +101,7 @@
   color: var(--ink-soft);
   padding: 4px 10px 4px 8px;
   border-radius: 100px;
-  background: var(--risk-low-soft);
+  background: var(--accent-soft);
   margin-bottom: var(--space-2);
 }
 .check {
@@ -125,7 +110,7 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--risk-low);
+  background: var(--accent-strong);
   color: #fff;
   font-size: 10px;
   font-weight: 700;
@@ -215,7 +200,7 @@
   cursor: pointer;
   transition: background var(--dur-fast) var(--ease-out-expo);
 }
-.tileButton:hover { background: var(--surface-raised); }
+.tileButton:hover { background: color-mix(in oklch, var(--accent) 6%, var(--surface-raised)); }
 .factorFlash {
   animation: factorFlash 1.2s var(--ease-out-expo);
 }

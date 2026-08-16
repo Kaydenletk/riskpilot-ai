@@ -2,9 +2,9 @@
 // allow-list: anything outside the universe → notFound() (the injection/Scope-A
 // boundary — a bad "ticker" never reaches a model call).
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { Wordmark } from "@/components/layout/Wordmark";
 import { TickerView } from "@/components/ticker/TickerView";
 import { tickerDescription, tickerPath, tickerTitle } from "@/lib/seo";
 import { fetchTickerReport, fixtureUniverse } from "@/lib/ticker-backend";
@@ -57,9 +57,7 @@ export default async function TickerPage({
   return (
     <div className={styles.page}>
       <header className={`${styles.masthead} stage stage-1`}>
-        <Link href="/" className={styles.brand} style={{ textDecoration: "none" }}>
-          RiskPilot<span className={styles.brandAccent}>AI</span>
-        </Link>
+        <Wordmark />
         <div className="caption">single-instrument risk read · explains the math</div>
       </header>
       <TickerView report={report} />

@@ -1,0 +1,267 @@
+/* What-if simulator panel. Same instrument-panel voice as the report above it:
+   hairline rules, mono captions, display-face numbers. Accent = chrome only;
+   the target score wears its risk-band ink. */
+
+.panel {
+  margin-top: var(--space-4);
+  padding: var(--space-3);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.title {
+  margin: 0;
+  font-weight: 400;
+}
+
+.scoreLine {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-1);
+}
+.scoreFrom {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ink-faint);
+}
+.arrow {
+  color: var(--ink-faint);
+}
+.scoreTo {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.pending {
+  opacity: 0.4;
+}
+
+.reset {
+  font: inherit;
+  font-size: var(--text-sm);
+  min-height: 44px;
+  padding: 8px 14px;
+  margin-left: auto;
+  color: var(--ink);
+  background: none;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.reset:hover {
+  border-color: var(--ink-soft);
+}
+
+.intro {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  max-width: 60ch;
+}
+
+.deltas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin: var(--space-2) 0 0;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.delta {
+  background: var(--surface);
+  padding: var(--space-1) var(--space-2);
+}
+.delta dd {
+  margin: 2px 0 0;
+  font-weight: 600;
+}
+
+.sliders {
+  list-style: none;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+}
+.sliderRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+}
+.ticker {
+  font-weight: 700;
+  min-width: 5ch;
+}
+.slider {
+  flex: 1;
+  appearance: none;
+  background: transparent;
+  min-height: 44px;
+}
+/* progress fill: --fill is set inline from React on every drag (WhatIfPanel.tsx)
+   since a gradient stop can't be driven by var(--fill) without JS. The first
+   oklch stop below mirrors --grad-accent's own first stop — linear-gradient()
+   can't compose var(--grad-accent) with a percentage stop, so it's hardcoded
+   here as the one sanctioned exception to the token-only rule. */
+.slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, oklch(48% 0.24 275) var(--fill, 0%), var(--bg-grain) var(--fill, 0%));
+}
+.slider::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, oklch(48% 0.24 275) var(--fill, 0%), var(--bg-grain) var(--fill, 0%));
+}
+:global([data-theme="dark"]) .slider::-webkit-slider-runnable-track {
+  background: linear-gradient(to right, oklch(70% 0.17 275) var(--fill, 0%), var(--bg-grain) var(--fill, 0%));
+}
+:global([data-theme="dark"]) .slider::-moz-range-track {
+  background: linear-gradient(to right, oklch(70% 0.17 275) var(--fill, 0%), var(--bg-grain) var(--fill, 0%));
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  margin-top: -7px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  box-shadow: var(--shadow-1);
+}
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  box-shadow: var(--shadow-1);
+}
+.weight {
+  min-width: 5.5ch;
+  text-align: right;
+  color: var(--ink-soft);
+}
+.iconBtn {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.iconBtn:hover:not(:disabled) {
+  border-color: var(--rule-strong);
+}
+.iconBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.note {
+  margin: var(--space-2) 0 0;
+  color: var(--ink-soft);
+}
+
+.removedLine {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+.addBack {
+  font: inherit;
+  font-size: var(--text-sm);
+  min-height: 36px;
+  padding: 4px 10px;
+  color: var(--ink);
+  background: var(--accent-soft);
+  border: 1px solid var(--rule-strong);
+  border-radius: 100px;
+  cursor: pointer;
+}
+
+/* shared error-state chrome lives in globals.css as .error-box / .btn-retry;
+   this modifier only carries the one rule that differs from the strip's. */
+.errorBox {
+  margin-top: var(--space-2);
+}
+
+/* explain-this-version */
+.explainBtn {
+  font: inherit;
+  font-weight: 600;
+  min-height: 44px;
+  margin-top: var(--space-2);
+  padding: 10px 18px;
+  color: #fff;
+  background: var(--grad-accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: filter var(--dur-fast) var(--ease-out-expo);
+}
+.explainBtn:hover {
+  filter: brightness(0.92);
+}
+:global([data-theme="dark"]) .explainBtn {
+  color: oklch(18% 0.03 275);
+}
+.explainLoading {
+  margin: var(--space-2) 0 0;
+  color: var(--ink-soft);
+}
+.explainBox {
+  margin-top: var(--space-2);
+  background: color-mix(in oklch, var(--accent) 5%, var(--surface));
+  border: 1px solid color-mix(in oklch, var(--accent) 22%, var(--rule));
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3);
+}
+.explainHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.explainBack {
+  font: inherit;
+  font-size: var(--text-xs);
+  background: none;
+  border: none;
+  color: var(--ink-faint);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  padding: 0;
+}
+.explainText {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-lg);
+  line-height: 1.55;
+  max-width: 62ch;
+}
+.explainSource {
+  margin: var(--space-1) 0 0;
+}
+
+.foot {
+  margin: var(--space-3) 0 0;
+}

@@ -27,14 +27,26 @@
 }
 
 .score {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   font-weight: 700;
   line-height: 0.9;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
 }
 
-.band {
-  margin-top: 6px;
-  font-size: 0.8rem;
+.pctSign {
   font-weight: 600;
+  opacity: 0.55;
+  margin-left: 2px;
+}
+
+/* band as a soft pill — color carried by the band ink on a 12% tint */
+.bandChip {
+  margin-top: 8px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 100px;
 }
 
 @media (max-width: 480px) {

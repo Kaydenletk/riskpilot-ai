@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { WhatIfPanel } from "@/components/whatif/WhatIfPanel";
 import type { RiskReport } from "@/lib/types";
 
 import { AnalystView } from "./AnalystView";
@@ -50,6 +51,10 @@ export function Dashboard({ report }: { report: RiskReport }) {
       </div>
 
       {view === "coach" ? <CoachView report={report} /> : <AnalystView report={report} />}
+
+      {/* What-if simulator rides below whichever view is active — one wiring
+          point serves both the home sample and /analyze custom reports. */}
+      <WhatIfPanel report={report} />
     </>
   );
 }

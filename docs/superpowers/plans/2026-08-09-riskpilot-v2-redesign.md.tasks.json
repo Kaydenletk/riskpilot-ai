@@ -1,0 +1,116 @@
+{
+  "planPath": "docs/superpowers/plans/2026-08-09-riskpilot-v2-redesign.md",
+  "tasks": [
+    {
+      "id": 1,
+      "subject": "Task 1: Ultramarine token system + wordmark",
+      "status": "completed",
+      "description": "**Goal:** New palette (light+dark), RISK/PILOT wordmark, red demoted to risk data.\n\n```json:metadata\n{\"files\": [\"frontend/src/app/globals.css\", \"frontend/src/components/layout/Wordmark.tsx\", \"frontend/src/components/layout/Masthead.tsx\", \"frontend/src/app/icon.tsx\", \"frontend/src/app/opengraph-image.tsx\"], \"verifyCommand\": \"cd frontend && npx tsc --noEmit && npx playwright test e2e/theme.spec.ts e2e/redesign.spec.ts --reporter=line\", \"acceptanceCriteria\": [\"--accent ultramarine both themes\", \"risk ramp unchanged\", \"wordmark RISK/PILOT accent slash\", \"theme+redesign specs pass\"]}\n```"
+    },
+    {
+      "id": 2,
+      "subject": "Task 2: Story-first homepage",
+      "status": "completed",
+      "blockedBy": [
+        1
+      ],
+      "description": "**Goal:** Hero thesis+CTAs, sample demoted with kicker, what-if teaser, universe index sector groups+filter, hero owns h1.\n\n```json:metadata\n{\"files\": [\"frontend/src/components/home/Hero.tsx\", \"frontend/src/components/home/WhatIfTeaser.tsx\", \"frontend/src/app/page.tsx\", \"frontend/src/components/home/InstrumentIndex.tsx\", \"frontend/e2e/redesign.spec.ts\"], \"verifyCommand\": \"cd frontend && npx playwright test e2e/redesign.spec.ts --reporter=line\", \"acceptanceCriteria\": [\"above fold: headline+support+2 CTAs\", \"sample below with kicker\", \"teaser links /analyze\", \"exactly one h1\"]}\n```"
+    },
+    {
+      "id": 3,
+      "subject": "Task 3: Sector-block correlation + 100-asset universe",
+      "status": "completed",
+      "description": "**Goal:** universe.py asset table (~100), sector-block correlation builder, regenerate prices.csv, integrity tests.\n\n```json:metadata\n{\"files\": [\"backend/src/riskpilot/risk_engine/universe.py\", \"backend/src/riskpilot/risk_engine/dataset.py\", \"backend/tests/test_universe.py\", \"backend/data/prices.csv\", \"DATA_SOURCE.md\"], \"verifyCommand\": \"cd backend && python -m pytest tests/ -x -q\", \"acceptanceCriteria\": [\">=96 tickers + SPY, >=8 sectors\", \"PSD correlation\", \"deterministic regeneration\", \"full finite positive histories\"]}\n```"
+    },
+    {
+      "id": 4,
+      "subject": "Task 4: Weight-based engine input",
+      "status": "completed",
+      "blockedBy": [
+        3
+      ],
+      "description": "**Goal:** compute_report_from_weights: %-weights -> shares via latest price, 2-20 holdings, sum 100 +/- 0.5.\n\n```json:metadata\n{\"files\": [\"backend/src/riskpilot/risk_engine/portfolio.py\", \"backend/tests/test_portfolio_weights.py\"], \"verifyCommand\": \"cd backend && python -m pytest tests/test_portfolio_weights.py -x -q\", \"acceptanceCriteria\": [\"weights sum validation\", \"2-20 bound\", \"concentration matches input weights\"]}\n```"
+    },
+    {
+      "id": 5,
+      "subject": "Task 5: POST /score math-only fast path",
+      "status": "completed",
+      "blockedBy": [
+        4
+      ],
+      "description": "**Goal:** score_api.py + /score route, facts only, zero LLM imports enforced by import-lint.\n\n```json:metadata\n{\"files\": [\"backend/src/riskpilot/score_api.py\", \"backend/src/riskpilot/main.py\", \"backend/src/riskpilot/schema.py\", \"backend/tests/test_score_endpoint.py\", \"backend/tests/test_no_llm_in_engine.py\"], \"verifyCommand\": \"cd backend && python -m pytest tests/test_score_endpoint.py tests/test_no_llm_in_engine.py -x -q\", \"acceptanceCriteria\": [\"200 facts no explanation\", \"400/422/401 paths\", \"import-lint covers score_api\"]}\n```"
+    },
+    {
+      "id": 6,
+      "subject": "Task 6: Weights on POST /report + guardrail coverage",
+      "status": "completed",
+      "blockedBy": [
+        4
+      ],
+      "description": "**Goal:** PortfolioRequest accepts weighted xor holdings; build_report_from_weights; guardrail test on weighted path.\n\n```json:metadata\n{\"files\": [\"backend/src/riskpilot/main.py\", \"backend/src/riskpilot/report.py\", \"backend/tests/test_report_weights.py\"], \"verifyCommand\": \"cd backend && python -m pytest tests/test_report_weights.py tests/test_number_guardrail.py -x -q\", \"acceptanceCriteria\": [\"weighted -> full RiskReport\", \"shares path unchanged\", \"guardrail fail-closed on weighted\"]}\n```"
+    },
+    {
+      "id": 7,
+      "subject": "Task 7: Next proxies /api/score + weighted report, zod boundary",
+      "status": "completed",
+      "blockedBy": [
+        5,
+        6
+      ],
+      "description": "**Goal:** portfolio-schema.ts zod validation, /api/score route, weighted /api/report, scorePortfolio server fn.\n\n```json:metadata\n{\"files\": [\"frontend/src/lib/portfolio-schema.ts\", \"frontend/src/app/api/score/route.ts\", \"frontend/src/app/api/report/route.ts\", \"frontend/src/lib/backend.ts\", \"frontend/src/lib/__tests__/backend-validation.test.ts\"], \"verifyCommand\": \"cd frontend && npx vitest run src/lib/__tests__/backend-validation.test.ts && npx tsc --noEmit\", \"acceptanceCriteria\": [\"zod validates before engine\", \"engine down -> ok:false never fake numbers\", \"secret absent from client bundle\"]}\n```"
+    },
+    {
+      "id": 8,
+      "subject": "Task 8: Portfolio state library (TDD)",
+      "status": "completed",
+      "description": "**Goal:** Pure TS: addHolding equal-split, setWeight proportional rebalance with locks, URL serialize/parse, immutable.\n\n```json:metadata\n{\"files\": [\"frontend/src/lib/portfolio-state.ts\", \"frontend/src/lib/__tests__/portfolio-state.test.ts\"], \"verifyCommand\": \"cd frontend && npx vitest run src/lib/__tests__/portfolio-state.test.ts\", \"acceptanceCriteria\": [\"sum always 100\", \"locks never move\", \"round-trip URL\", \"garbage segments dropped\"]}\n```"
+    },
+    {
+      "id": 9,
+      "subject": "Task 9: /analyze rebuild - builder + run + report",
+      "status": "completed",
+      "blockedBy": [
+        7,
+        8
+      ],
+      "description": "**Goal:** Replace CSV paste with PortfolioBuilder; run -> Dashboard + YOUR PORTFOLIO banner; URL + localStorage state.\n\n```json:metadata\n{\"files\": [\"frontend/src/app/analyze/page.tsx\", \"frontend/src/components/analyze/PortfolioBuilder.tsx\", \"frontend/src/app/analyze/analyze.module.css\"], \"verifyCommand\": \"cd frontend && npx tsc --noEmit && npm run build\", \"acceptanceCriteria\": [\"universe-bounded add via search\", \"distinct 422/400/offline states\", \"URL cold-load restores\", \"44px targets both themes\"]}\n```"
+    },
+    {
+      "id": 10,
+      "subject": "Task 10: WhatIfPanel sliders on /score",
+      "status": "completed",
+      "blockedBy": [
+        9
+      ],
+      "description": "**Goal:** In-report sliders, debounced 250ms /api/score, delta pairs, stale-response guard, edge states.\n\n```json:metadata\n{\"files\": [\"frontend/src/components/whatif/WhatIfPanel.tsx\", \"frontend/src/hooks/useDebouncedScore.ts\", \"frontend/src/components/dashboard/CoachView.tsx\", \"frontend/src/components/dashboard/AnalystView.tsx\"], \"verifyCommand\": \"cd frontend && npx vitest run src/hooks/__tests__/useDebouncedScore.test.ts && npx tsc --noEmit\", \"acceptanceCriteria\": [\"debounce+abort+request-id guard\", \"delta colored by target band\", \"1-holding disabled\", \"failure -> retry, report intact\"]}\n```"
+    },
+    {
+      "id": 11,
+      "subject": "Task 11: Explain-this-version",
+      "status": "completed",
+      "blockedBy": [
+        10
+      ],
+      "description": "**Goal:** Dirty-check button fires weighted /api/report; swap prose labeled EXPLAINING YOUR WHAT-IF; back to original.\n\n```json:metadata\n{\"files\": [\"frontend/src/components/whatif/WhatIfPanel.tsx\"], \"verifyCommand\": \"cd frontend && npx tsc --noEmit && npm run build\", \"acceptanceCriteria\": [\"button only when dirty\", \"guardrail source label preserved\", \"failure -> retry + original restorable\"]}\n```"
+    },
+    {
+      "id": 12,
+      "subject": "Task 12: E2E + visual regression sweep",
+      "status": "completed",
+      "blockedBy": [
+        11
+      ],
+      "description": "**Goal:** analyze-flow + whatif specs (route-stubbed), /analyze added to visual.spec, snapshots refreshed, suite green.\n\n```json:metadata\n{\"files\": [\"frontend/e2e/analyze-flow.spec.ts\", \"frontend/e2e/whatif.spec.ts\", \"frontend/e2e/visual.spec.ts\"], \"verifyCommand\": \"cd frontend && npx playwright test --reporter=line\", \"acceptanceCriteria\": [\"full flow specs pass\", \"snapshots 320/768/1440 light+dark incl /analyze\"]}\n```"
+    },
+    {
+      "id": 13,
+      "subject": "Task 13: Docs + deploy checklist",
+      "status": "pending",
+      "blockedBy": [
+        12
+      ],
+      "description": "**Goal:** README/PLAN updates, Railway+Vercel deploy, live smoke, PR.\n\n```json:metadata\n{\"files\": [\"README.md\", \"PLAN.md\"], \"verifyCommand\": \"curl -s $BACKEND/health\", \"acceptanceCriteria\": [\"quickstart accurate\", \"live /analyze run succeeds\", \"PR opened\"]}\n```"
+    }
+  ],
+  "lastUpdated": "2026-08-11T13:37:36.052195+00:00"
+}

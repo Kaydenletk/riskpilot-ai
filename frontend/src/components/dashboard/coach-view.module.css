@@ -1,19 +1,34 @@
-.coach {
-  max-width: 680px;
-}
-
-/* lead: verdict is the star, gauge is supporting (smaller than Analyst view) */
+/* lead: full-width asymmetric hero — verdict left (the star), gauge right (support) */
 .lead {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--space-3);
   margin-bottom: var(--space-3);
   flex-wrap: wrap;
 }
+.verdictCol {
+  flex: 1;
+  min-width: 300px;
+}
+.leadCaption {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.howLink {
+  font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-decoration-color: var(--rule-strong);
+}
 .gaugeSmall {
-  transform: scale(0.78);
-  transform-origin: left center;
-  margin: -20px 0 -20px -10px;
+  transform: scale(0.9);
+  transform-origin: right center;
+  margin: -14px -6px;
   flex-shrink: 0;
 }
 
@@ -25,12 +40,9 @@
   max-width: 52ch;
 }
 
-/* calming takeaway card */
+/* calming takeaway — glass fill, color-mix border tint kept for the risk-low read */
 .takeaway {
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-left: 3px solid var(--risk-low);
-  border-radius: var(--radius);
+  border: 1px solid color-mix(in oklch, var(--risk-low) 22%, var(--rule));
   padding: var(--space-2) var(--space-3);
   margin-bottom: var(--space-3);
 }
@@ -38,54 +50,24 @@
   font-size: var(--text-lg);
   line-height: 1.55;
   margin: 8px 0 0;
+  max-width: 62ch;
 }
 
-/* jargon translated */
+/* jargon translated — instrument tiles, 3-up on desktop. Section already
+   carries `glass` (T1); the grid stays a 1px-conceptual hairline layout but
+   softened to a 6px gap of individually-radiused cells rather than flat
+   dividers so it doesn't double-wrap the glass treatment. */
 .stats {
   display: grid;
-  gap: 1px;
-  background: var(--rule);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
   overflow: hidden;
   margin-bottom: var(--space-3);
 }
-.stat {
-  background: var(--surface);
-  padding: var(--space-2) var(--space-3);
-}
-.statHead {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-2);
-}
-.statLabel {
-  font-weight: 600;
-  font-size: var(--text-base);
-}
-.statValue {
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-.statPlain {
-  font-size: var(--text-sm);
-  color: var(--ink-soft);
-  margin: 4px 0 0;
-  line-height: 1.5;
-}
-
 /* the discipline prompt — warm, prominent */
 .prompt {
   display: flex;
   gap: var(--space-2);
-  background: linear-gradient(
-    135deg,
-    color-mix(in oklch, var(--risk-mid) 10%, var(--surface)),
-    var(--surface)
-  );
-  border: 1px solid color-mix(in oklch, var(--risk-mid) 30%, var(--rule));
-  border-radius: var(--radius);
   padding: var(--space-3);
 }
 .promptIcon {
@@ -136,5 +118,8 @@
     transform: scale(0.7);
     margin: -24px auto -24px;
     transform-origin: center;
+  }
+  .stats {
+    grid-template-columns: 1fr;
   }
 }

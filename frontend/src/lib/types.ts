@@ -50,6 +50,15 @@ export interface TickerFacts {
   sector: string;
 }
 
+export interface SectorContext {
+  sector: string;
+  sector_median_volatility_pct: number;
+  sector_median_beta: number;
+  /** % of the universe LESS volatile than this ticker */
+  universe_volatility_percentile: number;
+  peers: string[];
+}
+
 export interface TickerReport {
   ticker: string;
   as_of: string;
@@ -57,4 +66,6 @@ export interface TickerReport {
   spark: number[];
   explanation: RiskExplanation;
   disclaimer: string;
+  /** optional: fixtures predating the field omit it */
+  context?: SectorContext | null;
 }

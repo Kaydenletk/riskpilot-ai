@@ -32,36 +32,76 @@ function tintStyle(key: MetricKey, r: TickerReport, reports: TickerReport[]): Re
   return {};
 }
 
+// Inline bar width (0-100) for a metric cell — normalized to the row's
+// largest "worse" magnitude across compared tickers. Reuses worseScore so
+// the longest bar always lines up with the tinted, highest-risk cell.
+function barWidth(key: MetricKey, r: TickerReport, reports: TickerReport[]): number {
+  if (reports.length === 0) return 0;
+  const max = Math.max(...reports.map((x) => worseScore(key, x)));
+  if (max <= 0) return 0;
+  return Math.max(0, (worseScore(key, r) / max) * 100);
+}
+
+// Decorative-only inline bar beneath a metric row; the number in the row
+// above remains the accessible source of truth.
+function MetricBar({ pct }: { pct: number }) {
+  return (
+    <span className={styles.bar} aria-hidden>
+      <span className={styles.barFill} style={{ width: `${pct}%` }} />
+    </span>
+  );
+}
+
 export function CompareGrid({ reports }: { reports: TickerReport[] }) {
   const cols = Math.max(1, reports.length);
+  // --cols lives on this wrapper, NOT on .grid itself: an inline style has
+  // higher priority than any stylesheet rule (including the @media(max-width)
+  // override below), so if it sat on .grid directly the mobile breakpoint
+  // could never win and the grid would never stack. Setting it one level up
+  // and letting .grid *inherit* the custom property means .grid's own
+  // (lower-priority, non-!important) media-query declaration still beats an
+  // inherited value — inheritance is only a last resort in the cascade.
   return (
-    <div className={styles.grid} style={{ ["--cols" as string]: cols }}>
-      {reports.map((r) => (
-        <div key={r.ticker} className={styles.col}>
-          <div className={`num ${styles.ticker}`} style={{ color: riskVar(r.facts.risk_band) }}>
-            {r.ticker}
+    <div style={{ ["--cols" as string]: cols }}>
+      <div className={styles.grid}>
+        {reports.map((r) => (
+          <div key={r.ticker} className={`glass ${styles.col}`}>
+            <div className={`num ${styles.ticker}`} style={{ color: riskVar(r.facts.risk_band) }}>
+              {r.ticker}
+            </div>
+            <RiskGauge score={r.facts.risk_score} band={r.facts.risk_band} size={170} />
+            <ul className={styles.facts}>
+              <li className={styles.fact} style={tintStyle("vol", r, reports)}>
+                <div className={styles.factRow}>
+                  <span className={styles.factLabel}>Volatility</span>
+                  <span className="num">{r.facts.volatility_annualized_pct}%</span>
+                </div>
+                <MetricBar pct={barWidth("vol", r, reports)} />
+              </li>
+              <li className={styles.fact} style={tintStyle("dd", r, reports)}>
+                <div className={styles.factRow}>
+                  <span className={styles.factLabel}>Worst drawdown</span>
+                  <span className="num">{r.facts.max_drawdown_pct}%</span>
+                </div>
+                <MetricBar pct={barWidth("dd", r, reports)} />
+              </li>
+              <li className={styles.fact} style={tintStyle("beta", r, reports)}>
+                <div className={styles.factRow}>
+                  <span className={styles.factLabel}>Beta</span>
+                  <span className="num">{r.facts.beta.toFixed(2)}</span>
+                </div>
+                <MetricBar pct={barWidth("beta", r, reports)} />
+              </li>
+              <li className={styles.fact}>
+                <div className={styles.factRow}>
+                  <span className={styles.factLabel}>Sector</span>
+                  <span>{r.facts.sector}</span>
+                </div>
+              </li>
+            </ul>
           </div>
-          <RiskGauge score={r.facts.risk_score} band={r.facts.risk_band} size={170} />
-          <ul className={styles.facts}>
-            <li className={styles.fact} style={tintStyle("vol", r, reports)}>
-              <span className={styles.factLabel}>Volatility</span>
-              <span className="num">{r.facts.volatility_annualized_pct}%</span>
-            </li>
-            <li className={styles.fact} style={tintStyle("dd", r, reports)}>
-              <span className={styles.factLabel}>Worst drawdown</span>
-              <span className="num">{r.facts.max_drawdown_pct}%</span>
-            </li>
-            <li className={styles.fact} style={tintStyle("beta", r, reports)}>
-              <span className={styles.factLabel}>Beta</span>
-              <span className="num">{r.facts.beta.toFixed(2)}</span>
-            </li>
-            <li className={styles.fact}>
-              <span className={styles.factLabel}>Sector</span>
-              <span>{r.facts.sector}</span>
-            </li>
-          </ul>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

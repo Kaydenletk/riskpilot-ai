@@ -9,6 +9,7 @@ import { GroundedText } from "@/components/dashboard/GroundedText";
 import { RiskGauge } from "@/components/dashboard/RiskGauge";
 import type { TickerReport } from "@/lib/types";
 
+import { DistributionStrip } from "./DistributionStrip";
 import { LiveContextPanel } from "./LiveContextPanel";
 import { Sparkline } from "./Sparkline";
 import styles from "./ticker-view.module.css";
@@ -17,8 +18,45 @@ function signed(n: number): string {
   return `${n > 0 ? "+" : ""}${n}`;
 }
 
+// Dual-bar widths for a "yours vs median" comparison: both normalized to
+// whichever magnitude is larger, so the bigger bar always reads as 100%.
+function compareWidths(yours: number, median: number): [number, number] {
+  const max = Math.max(Math.abs(yours), Math.abs(median));
+  if (max === 0) return [0, 0];
+  return [(Math.abs(yours) / max) * 100, (Math.abs(median) / max) * 100];
+}
+
+// Two 6px bars under a vs-median context cell — yours vs the sector median,
+// normalized to whichever is larger. aria-hidden: the values are already in
+// the text above.
+function CompareBars({ yours, median }: { yours: number; median: number }) {
+  const [yoursWidth, medianWidth] = compareWidths(yours, median);
+  return (
+    <div className={styles.compareBars} aria-hidden="true">
+      <span className={styles.compareBar}>
+        <span className={styles.compareBarFill} style={{ width: `${yoursWidth}%` }} />
+      </span>
+      <span className={styles.compareBar}>
+        <span
+          className={`${styles.compareBarFill} ${styles.compareBarMedian}`}
+          style={{ width: `${medianWidth}%` }}
+        />
+      </span>
+    </div>
+  );
+}
+
+// Prefill for the "size it in a portfolio" deep link: the ticker at a deliberately
+// concentrated 40% beside two nearest-vol peers — the resulting report demonstrates
+// the concentration coaching immediately.
+function sizingHref(ticker: string, peers: string[]): string {
+  const [a, b] = peers;
+  if (!a || !b) return "/analyze";
+  return `/analyze?p=${ticker}:40,${a}:30,${b}:30`;
+}
+
 export function TickerView({ report }: { report: TickerReport }) {
-  const { ticker, facts, spark, explanation, disclaimer } = report;
+  const { ticker, facts, spark, explanation, disclaimer, context } = report;
 
   const stats = [
     { label: "Volatility (annualized)", value: `${facts.volatility_annualized_pct}%` },
@@ -41,7 +79,7 @@ export function TickerView({ report }: { report: TickerReport }) {
         </div>
       </header>
 
-      <section className={`${styles.primary} stage stage-2`}>
+      <section className={`${styles.primary} glass stage stage-2`}>
         <div className={styles.gaugeCol}>
           <RiskGauge score={facts.risk_score} band={facts.risk_band} />
         </div>
@@ -58,7 +96,7 @@ export function TickerView({ report }: { report: TickerReport }) {
         </div>
       </section>
 
-      <section className={`${styles.chartCard} stage stage-3`} aria-labelledby="scored-series-h">
+      <section className={`${styles.chartCard} glass stage stage-3`} aria-labelledby="scored-series-h">
         <header className={styles.chartHead}>
           <h2 id="scored-series-h" className={`caption ${styles.chartTitle}`}>
             Scored price path
@@ -67,6 +105,63 @@ export function TickerView({ report }: { report: TickerReport }) {
         </header>
         <Sparkline values={spark} score={facts.risk_score} />
       </section>
+
+      {context && (
+        <section className={`${styles.context} stage stage-3`} aria-labelledby="context-h">
+          <h2 id="context-h" className={`caption ${styles.contextTitle}`}>
+            In context
+          </h2>
+          <dl className={styles.contextGrid}>
+            <div className={styles.contextCell}>
+              <dt className="caption">Volatility vs {context.sector}</dt>
+              <dd className="num">
+                {facts.volatility_annualized_pct}%{" "}
+                <span className={styles.contextRef}>vs {context.sector_median_volatility_pct}% median</span>
+                <CompareBars
+                  yours={facts.volatility_annualized_pct}
+                  median={context.sector_median_volatility_pct}
+                />
+              </dd>
+            </div>
+            <div className={styles.contextCell}>
+              <dt className="caption">Beta vs sector</dt>
+              <dd className="num">
+                {facts.beta}{" "}
+                <span className={styles.contextRef}>vs {context.sector_median_beta} median</span>
+                <CompareBars yours={facts.beta} median={context.sector_median_beta} />
+              </dd>
+            </div>
+            <div className={styles.contextCell}>
+              <dt className="caption">Universe rank</dt>
+              <dd>
+                <DistributionStrip percentile={context.universe_volatility_percentile} />
+                <p className={`caption ${styles.rankCaption}`}>
+                  more volatile than {context.universe_volatility_percentile}% of the universe
+                </p>
+              </dd>
+            </div>
+          </dl>
+          {context.peers.length > 0 && (
+            <div className={styles.peersRow}>
+              <span className="caption">Closest {context.sector} peers:</span>
+              {context.peers.map((p) => (
+                <Link key={p} href={`/ticker/${p}`} className={`num ${styles.peerChip}`}>
+                  {p}
+                </Link>
+              ))}
+              <Link
+                href={`/compare?t=${[ticker, ...context.peers.slice(0, 3)].join(",")}`}
+                className={styles.contextAction}
+              >
+                Compare side by side →
+              </Link>
+              <Link href={sizingHref(ticker, context.peers)} className={styles.contextAction}>
+                Size it in a portfolio →
+              </Link>
+            </div>
+          )}
+        </section>
+      )}
 
       <section className={`${styles.read} stage stage-3`} aria-labelledby="read-h">
         <h2 id="read-h" className={`caption ${styles.readTitle}`}>

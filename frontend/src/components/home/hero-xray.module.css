@@ -1,0 +1,44 @@
+.card {
+  padding: var(--space-3);
+}
+
+/* the card's headline — full width, band-inked, tight measure */
+.verdict {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.3rem);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin: var(--space-1) 0 var(--space-2);
+  text-wrap: balance;
+}
+
+.data {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--rule);
+}
+
+.gauge {
+  flex-shrink: 0;
+  /* RiskGauge (internals untouched) carries generous built-in whitespace at
+     small sizes — pull it in so the card row stays tight */
+  margin: -8px;
+}
+
+.bars {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 480px) {
+  .data {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .gauge {
+    align-self: center;
+  }
+}

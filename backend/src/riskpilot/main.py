@@ -11,10 +11,11 @@ from fastapi import Depends, FastAPI, Header, HTTPException
 from pydantic import BaseModel
 
 from .config import Config, load_config
-from .report import build_report_from_holdings, build_sample_report
+from .report import build_report_from_holdings, build_report_from_weights, build_sample_report
 from .risk_engine.portfolio import UnknownHolding
 from .risk_engine.ticker import UnknownTicker, available_tickers
-from .schema import Holding, RiskReport, TickerOption, TickerReport
+from .schema import Holding, RiskReport, ScoreResponse, TickerOption, TickerReport, WeightedHolding
+from .score_api import score_weights
 from .ticker_report import build_ticker_report
 
 MAX_HOLDINGS = 50
@@ -57,7 +58,8 @@ def sample_report(
 
 
 class PortfolioRequest(BaseModel):
-    holdings: list[Holding]
+    holdings: list[Holding] | None = None
+    weighted: list[WeightedHolding] | None = None
 
 
 @app.post("/report", response_model=RiskReport)
@@ -66,7 +68,27 @@ def report_from_holdings(
     _: None = Depends(require_internal_secret),
     config: Config = Depends(get_config),
 ) -> RiskReport:
-    """Score an uploaded portfolio. Unknown tickers -> 422 (allow-list boundary)."""
+    """Score an uploaded portfolio, from EITHER shares (`holdings`) or percent
+    weights (`weighted`) — exactly one of the two. Unknown tickers -> 422
+    (allow-list boundary)."""
+    if (body.holdings is None) == (body.weighted is None):
+        raise HTTPException(
+            status_code=400, detail={"error": "exactly_one_of_holdings_or_weighted"}
+        )
+
+    if body.weighted is not None:
+        weights = {h.ticker: h.weight_pct for h in body.weighted}
+        try:
+            return build_report_from_weights(config, weights)
+        except UnknownHolding as e:
+            raise HTTPException(
+                status_code=422, detail={"error": "unknown_tickers", "symbols": e.symbols}
+            ) from None
+        except ValueError as e:
+            raise HTTPException(
+                status_code=400, detail={"error": "invalid", "message": str(e)}
+            ) from None
+
     if not body.holdings:
         raise HTTPException(status_code=400, detail={"error": "empty"})
     if len(body.holdings) > MAX_HOLDINGS:
@@ -74,6 +96,27 @@ def report_from_holdings(
     shares = {h.ticker: h.shares for h in body.holdings}
     try:
         return build_report_from_holdings(config, shares)
+    except UnknownHolding as e:
+        raise HTTPException(
+            status_code=422, detail={"error": "unknown_tickers", "symbols": e.symbols}
+        ) from None
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail={"error": "invalid", "message": str(e)}) from None
+
+
+class ScoreRequest(BaseModel):
+    holdings: list[WeightedHolding]
+
+
+@app.post("/score", response_model=ScoreResponse)
+def score_portfolio(
+    body: ScoreRequest,
+    _: None = Depends(require_internal_secret),
+) -> ScoreResponse:
+    """Deterministic facts for the what-if simulator. No LLM in this path — powers
+    the slider, which can fire on every drag frame without a model round trip."""
+    try:
+        return score_weights(body.holdings)
     except UnknownHolding as e:
         raise HTTPException(
             status_code=422, detail={"error": "unknown_tickers", "symbols": e.symbols}

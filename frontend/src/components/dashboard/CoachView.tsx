@@ -5,6 +5,7 @@
 import type { RiskReport } from "@/lib/types";
 
 import { NumberCard } from "./NumberCard";
+import { RiskComposition } from "./RiskComposition";
 import { RiskGauge } from "./RiskGauge";
 import { VerdictHeadline } from "./VerdictHeadline";
 import styles from "./coach-view.module.css";
@@ -33,33 +34,43 @@ export function CoachView({ report }: { report: RiskReport }) {
 
   return (
     <div className={styles.coach}>
-      {/* lands anxious -> immediate plain verdict + the gauge as support, not the star */}
+      {/* lands anxious -> immediate plain verdict + the gauge as support, not the star.
+          Verdict left, gauge right — asymmetric, full-width. */}
       <section className={`${styles.lead} stage stage-2`}>
-        <div className={styles.gaugeSmall}>
-          <RiskGauge score={facts.risk_score} band={facts.risk_band} />
-        </div>
-        <div>
-          <div className="caption">Your read right now</div>
+        <div className={styles.verdictCol}>
+          <div className={styles.leadCaption}>
+            <span className="caption">Sample portfolio · your read right now</span>
+            <a className={styles.howLink} href="/#how-it-works">
+              how it works →
+            </a>
+          </div>
           <VerdictHeadline facts={facts} />
           <p className={styles.why}>{whyLine(report)}</p>
+        </div>
+        <div className={styles.gaugeSmall}>
+          <RiskGauge score={facts.risk_score} band={facts.risk_band} />
         </div>
       </section>
 
       {/* one calming, honest takeaway — the reframe from the AI, in plain words */}
-      <section className={`${styles.takeaway} stage stage-3`}>
+      <section className={`glass ${styles.takeaway} stage stage-3`}>
         <div className="caption">What this means for you</div>
         <p>{explanation.summary}</p>
       </section>
 
       {/* jargon translated inline — B half-understood these before */}
-      <section className={`${styles.stats} stage stage-3`}>
+      <section className={`glass ${styles.stats} stage stage-3`}>
         {plainStats(report).map((s) => (
           <NumberCard key={s.label} label={s.label} value={s.value} />
         ))}
       </section>
 
+      {/* self-validating: the actual point math behind the headline score.
+          Hidden entirely if the mirror ever disagrees with the engine. */}
+      <RiskComposition facts={facts} />
+
       {/* the discipline / FOMO moment — prominent for B, not buried last */}
-      <section className={`${styles.prompt} stage stage-4`}>
+      <section className={`glass ${styles.prompt} stage stage-4`}>
         <div className={styles.promptIcon} aria-hidden>
           ◆
         </div>

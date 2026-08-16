@@ -25,6 +25,13 @@ class Holding(BaseModel):
     market_value: float = Field(..., description="shares * current price, computed")
 
 
+class WeightedHolding(BaseModel):
+    """Builder input: percent weights. The engine converts to synthetic shares."""
+
+    ticker: str
+    weight_pct: float = Field(..., gt=0, le=100)
+
+
 class RiskFacts(BaseModel):
     """Deterministic numbers. Produced ONLY by risk_engine. The LLM never writes these."""
 
@@ -36,6 +43,15 @@ class RiskFacts(BaseModel):
     largest_sector: str
     largest_sector_pct: float = Field(..., ge=0, le=100)
     holdings_count: int = Field(..., ge=0)
+
+
+class ScoreResponse(BaseModel):
+    """Facts-only response for the what-if fast path. Deliberately NO explanation
+    field — this endpoint never touches the LLM."""
+
+    holdings: list[Holding]
+    facts: RiskFacts
+    score_version: str
 
 
 class ExplanationSource(str, Enum):
@@ -86,12 +102,28 @@ class TickerFacts(BaseModel):
     sector: str
 
 
+class SectorContext(BaseModel):
+    """Relative framing for a single ticker: raw volatility means nothing to a
+    newcomer until it stands next to the sector median. Deterministic, computed
+    over the committed universe only."""
+
+    sector: str
+    sector_median_volatility_pct: float = Field(..., ge=0)
+    sector_median_beta: float
+    universe_volatility_percentile: int = Field(
+        ..., ge=0, le=100, description="% of the universe LESS volatile than this ticker"
+    )
+    peers: list[str] = Field(..., description="same-sector tickers, nearest by volatility")
+
+
 class TickerReport(BaseModel):
     ticker: str
     as_of: str
     facts: TickerFacts
     spark: list[float] = Field(..., description="downsampled price series for a sparkline")
     explanation: RiskExplanation
+    # Optional so committed frontend fixtures predating the field stay valid.
+    context: SectorContext | None = None
     disclaimer: str = (
         "Educational risk coaching, not financial advice. No buy/sell recommendations. "
         "Illustrative sample data."

@@ -2,19 +2,19 @@
 // lands here — framed as a deliberate security property, not an error.
 import Link from "next/link";
 
+import { Wordmark } from "@/components/layout/Wordmark";
+
 import styles from "../../page.module.css";
 
 export default function TickerNotFound() {
   return (
     <div className={styles.page}>
       <header className={styles.masthead}>
-        <Link href="/" className={styles.brand} style={{ textDecoration: "none" }}>
-          RiskPilot<span className={styles.brandAccent}>AI</span>
-        </Link>
+        <Wordmark />
         <div className="caption">single-instrument risk read</div>
       </header>
 
-      <section className={styles.explain} style={{ marginTop: "var(--space-4)" }}>
+      <section className={`glass ${styles.explain}`} style={{ marginTop: "var(--space-4)" }}>
         <p className={styles.summary}>That symbol isn&apos;t in the demo universe.</p>
         <p style={{ color: "var(--ink-soft)", maxWidth: "60ch" }}>
           Search is bounded to a fixed, vetted list of instruments. That boundary

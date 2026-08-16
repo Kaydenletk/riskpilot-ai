@@ -1,6 +1,11 @@
 // Server Component: fetches the report, renders the masthead, hands the report to
 // the client Dashboard (which holds the Coach/Analyst view toggle).
 import { Dashboard } from "@/components/dashboard/Dashboard";
+import { Hero } from "@/components/home/Hero";
+import { HeroXray } from "@/components/home/HeroXray";
+import { HowItWorks } from "@/components/home/HowItWorks";
+import { InstrumentIndex } from "@/components/home/InstrumentIndex";
+import { LiveWhatIfStrip } from "@/components/home/LiveWhatIfStrip";
 import { Masthead } from "@/components/layout/Masthead";
 import { SearchWithCompare } from "@/components/search/SearchWithCompare";
 import { fetchSampleReport } from "@/lib/backend";
@@ -23,11 +28,23 @@ export default async function Home() {
   return (
     <div className={styles.page}>
       <Masthead caption="risk coaching · explains the math · never invents numbers" />
-      <div className={`${styles.searchRow} stage stage-1`}>
+      <Hero card={<HeroXray report={report} />} />
+      <div className={`${styles.searchRow} stage stage-2`}>
         <SearchWithCompare universe={universe} />
-        <span className="caption">{universe.length} instruments · type ⌘K to analyze any one</span>
+        <span className="caption">
+          {universe.length} instruments
+          <span className="fine-pointer-only"> · type ⌘K to analyze any one</span>
+        </span>
       </div>
-      <Dashboard report={report} />
+      <LiveWhatIfStrip report={report} />
+      <HowItWorks />
+      <section id="sample" className="stage stage-3">
+        <div className="caption" style={{ marginBottom: "var(--space-2)" }}>
+          Sample portfolio — live from the engine
+        </div>
+        <Dashboard report={report} />
+      </section>
+      <InstrumentIndex universe={universe} />
     </div>
   );
 }
@@ -36,7 +53,8 @@ function BackendOffline() {
   return (
     <div className={styles.page}>
       <Masthead caption="risk coaching · explains the math · never invents numbers" />
-      <section className={styles.explain}>
+      <Hero />
+      <section className={`glass ${styles.explain}`}>
         <p className={styles.summary}>
           The risk engine (a private Python service) isn&apos;t connected to this deployment
           yet. The frontend, topology, and the number-hallucination guardrail are live in the

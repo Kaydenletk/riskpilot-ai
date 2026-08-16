@@ -1,0 +1,161 @@
+/* Live what-if strip — the teaser is now the real thing: one slider, scored
+   by the engine on every drag. Same instrument-panel voice as the full
+   simulator (hairline rules, mono captions, display-face numbers), but
+   compressed to a single row so it reads as a strip, not another panel. */
+
+.strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding: var(--space-3);
+}
+
+.strip :global(.caption) {
+  flex: 0 0 auto;
+}
+
+.sliderRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1 1 220px;
+  min-height: 44px;
+}
+
+.ticker {
+  font-weight: 700;
+  min-width: 5ch;
+}
+
+.slider {
+  flex: 1;
+  appearance: none;
+  background: transparent;
+  min-height: 44px;
+}
+/* progress fill: --fill is set inline from React on every drag (LiveWhatIfStrip.tsx)
+   since a gradient stop can't be driven by var(--fill) without JS. The first
+   oklch stop below mirrors --grad-accent's own first stop — linear-gradient()
+   can't compose var(--grad-accent) with a percentage stop, so it's hardcoded
+   here as the one sanctioned exception to the token-only rule. */
+.slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, oklch(48% 0.24 275) var(--fill, 0%), var(--bg-grain) var(--fill, 0%));
+}
+.slider::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, oklch(48% 0.24 275) var(--fill, 0%), var(--bg-grain) var(--fill, 0%));
+}
+:global([data-theme="dark"]) .slider::-webkit-slider-runnable-track {
+  background: linear-gradient(to right, oklch(70% 0.17 275) var(--fill, 0%), var(--bg-grain) var(--fill, 0%));
+}
+:global([data-theme="dark"]) .slider::-moz-range-track {
+  background: linear-gradient(to right, oklch(70% 0.17 275) var(--fill, 0%), var(--bg-grain) var(--fill, 0%));
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  margin-top: -7px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  box-shadow: var(--shadow-1);
+}
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  box-shadow: var(--shadow-1);
+}
+
+.weight {
+  min-width: 5.5ch;
+  text-align: right;
+  color: var(--ink-soft);
+}
+
+.note {
+  margin: 0;
+  color: var(--ink-soft);
+  flex: 1 1 220px;
+}
+
+.scoreLine {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  flex: 0 0 auto;
+}
+.scoreFrom {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ink-faint);
+}
+.arrow {
+  color: var(--ink-faint);
+}
+.scoreTo {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.pending {
+  opacity: 0.4;
+}
+
+/* shared error-state chrome lives in globals.css as .error-box / .btn-retry;
+   this modifier only carries the one rule that differs from the panel's. */
+.errorBox {
+  flex: 1 1 100%;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 0 0 auto;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.simLink {
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+.simLink:hover {
+  color: var(--ink);
+}
+
+.buildLink {
+  font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none;
+}
+.buildLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 680px) {
+  .strip {
+    align-items: stretch;
+  }
+  .links {
+    margin-left: 0;
+    justify-content: space-between;
+    width: 100%;
+  }
+}

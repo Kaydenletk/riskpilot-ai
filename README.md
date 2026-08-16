@@ -15,6 +15,14 @@ fallback. Run locally for the full pipeline including the live guardrail.)_
 📊 **Reliability:** guardrail caught **2/2 injected hallucinations** on the committed fixture set (4 cases) → **0 hallucinated numbers in final output** by fail-closed fallback. This is a small proof-of-wiring set, not a statistical claim yet — a larger live benchmark (recall, false-positive rate, latency, cost) is in progress. See [`docs/RELIABILITY.md`](docs/RELIABILITY.md)
 🛡️ **Compliance:** educational risk coaching, never buy/sell advice — see [`COMPLIANCE.md`](COMPLIANCE.md)
 
+**What you can do (v2):**
+
+- **Analyze your own portfolio** at `/analyze` — build 3–20 weighted holdings from a
+  108-ticker synthetic universe; the engine scores it, the guardrailed LLM explains it.
+- **What-if simulator** on every report — drag weights, watch the risk score move.
+  Sliders hit a math-only `/score` path (zero LLM imports, enforced by a test);
+  the AI only writes prose when you explicitly ask it to.
+
 <!-- M2: drop a demo GIF here, above the fold. -->
 
 ## The idea in one diagram

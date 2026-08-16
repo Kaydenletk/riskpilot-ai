@@ -1,0 +1,83 @@
+/* HERO — above the fold: thesis + two CTAs on the left, optional live sample
+   card on the right. Owns the page's one h1. */
+
+.hero {
+  margin: var(--space-section) 0 var(--space-4);
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.copy {
+  flex: 1.2;
+  min-width: 300px;
+}
+
+.visual {
+  flex: 1;
+  min-width: 300px;
+}
+
+.headline {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(2.6rem, 1.6rem + 4.5vw, 4.6rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  max-width: 16ch;
+  text-wrap: balance;
+  margin: 0 0 var(--space-2);
+}
+
+.support {
+  font-size: var(--text-lg);
+  color: var(--ink-soft);
+  max-width: 44ch;
+  margin: 0;
+}
+.support strong {
+  color: var(--ink);
+}
+
+.ctas {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.primary,
+.secondary {
+  min-height: 44px;
+  padding: 12px 20px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-weight: 600;
+  transition: filter var(--dur-fast) var(--ease-out-expo), border-color var(--dur-fast) var(--ease-out-expo);
+}
+
+.primary {
+  /* light gradient's darkest stop is ≥48% L, so white text clears 4.5:1 */
+  background: var(--grad-accent);
+  color: #fff;
+}
+.primary:hover {
+  filter: brightness(0.92);
+}
+/* dark theme's gradient stops are lighter — near-black text keeps contrast */
+:global([data-theme="dark"]) .primary {
+  color: oklch(18% 0.03 275);
+}
+
+.secondary {
+  border: 1px solid var(--rule-strong);
+  color: var(--ink);
+  background: transparent;
+}
+.secondary:hover {
+  border-color: var(--ink-soft);
+}
