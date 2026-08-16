@@ -96,3 +96,12 @@ test("home strip rescores on slider drag", async ({ page }) => {
   await strip.locator('input[type="range"]').press("ArrowRight");
   await expect(strip.getByText("61")).toBeVisible();
 });
+
+test("home strip: score failure shows alert + retry", async ({ page }) => {
+  await page.route("**/api/score", (route) => route.abort());
+  await page.goto("/");
+  const strip = page.getByRole("region", { name: /drag it/i });
+  await strip.locator('input[type="range"]').press("ArrowRight");
+  await expect(strip.getByRole("alert")).toContainText(/reach the engine/i);
+  await expect(strip.getByRole("button", { name: "Retry" })).toBeVisible();
+});

@@ -40,7 +40,7 @@ export function LiveWhatIfStrip({ report }: { report: RiskReport }) {
 
   const dirty = serializePortfolio(rows) !== serializePortfolio(baseline);
   const simulatable = rows.length >= MIN_SIM_ROWS && top !== null;
-  const { state } = useDebouncedScore(rows, dirty && simulatable);
+  const { state, retry } = useDebouncedScore(rows, dirty && simulatable);
   const scored = state.kind === "scored" ? state.facts : null;
 
   const current = top ? (rows.find((r) => r.ticker === top.ticker) ?? top) : null;
@@ -90,6 +90,15 @@ export function LiveWhatIfStrip({ report }: { report: RiskReport }) {
         )}
         <span className="caption">risk score</span>
       </div>
+
+      {state.kind === "error" && (
+        <div className={styles.errorBox} role="alert">
+          <span>Couldn&apos;t reach the engine — drag again or retry.</span>
+          <button type="button" className={styles.retry} onClick={retry}>
+            Retry
+          </button>
+        </div>
+      )}
 
       <div className={styles.links}>
         <a href="#sample" className={styles.simLink}>
