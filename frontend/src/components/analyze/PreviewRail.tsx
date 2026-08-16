@@ -40,13 +40,20 @@ export function PreviewRail({ rows, universe }: PreviewRailProps) {
     [rows, sectorOf],
   );
 
-  // Retain the last scored facts across pending/error debounce cycles so the
-  // preview never blanks mid-edit — only the gauge dims while a fresh score
-  // is in flight; the sector mix is derived locally and always stays current.
+  // Retain the last scored facts across idle/pending/error debounce cycles so
+  // the preview never blanks mid-edit — the gauge dims for any non-"scored"
+  // state (fresh score in flight, or re-entering the debounce window after
+  // dropping below 3 holdings and back), never just "pending". The sector mix
+  // is derived locally from `rows` and always stays current regardless.
+  // `displayFacts` folds the current tick's facts in immediately (rather than
+  // waiting a render for the effect below) so a scored -> scored transition
+  // never flashes the placeholder for a frame.
   const [lastFacts, setLastFacts] = useState<RiskFacts | null>(null);
+  const scoredFacts = state.kind === "scored" ? state.facts : null;
   useEffect(() => {
-    if (state.kind === "scored") setLastFacts(state.facts);
-  }, [state]);
+    if (scoredFacts) setLastFacts(scoredFacts);
+  }, [scoredFacts]);
+  const displayFacts = scoredFacts ?? lastFacts;
 
   if (!enabled) {
     const remaining = MIN_PREVIEW_HOLDINGS - rows.length;
@@ -61,18 +68,32 @@ export function PreviewRail({ rows, universe }: PreviewRailProps) {
 
   return (
     <aside className={`glass ${styles.rail}`} aria-label="Risk preview">
-      {lastFacts && (
+      {displayFacts && (
         <>
-          <div
-            className={styles.gaugeWrap}
-            style={{ opacity: state.kind === "pending" ? 0.4 : 1 }}
-          >
-            <RiskGauge score={lastFacts.risk_score} band={lastFacts.risk_band} size={GAUGE_SIZE} />
+          <div className={styles.gaugeWrap} style={{ opacity: state.kind === "scored" ? 1 : 0.4 }}>
+            <RiskGauge
+              score={displayFacts.risk_score}
+              band={displayFacts.risk_band}
+              size={GAUGE_SIZE}
+            />
           </div>
           <SectorBars holdings={synthetic} />
-          <p className={`caption ${styles.message}`}>previewing · run for the full read</p>
+          {state.kind !== "error" && (
+            <p className={`caption ${styles.message}`}>previewing · run for the full read</p>
+          )}
         </>
       )}
+
+      {/* First-ever score for this session: nothing to show yet and nothing
+          failed — a bare glass shell would read as broken, so show a
+          scoring placeholder instead of leaving the card empty. */}
+      {!displayFacts && state.kind !== "error" && (
+        <div className={styles.placeholder} role="status" aria-label="Scoring your portfolio">
+          <p className={`caption ${styles.message}`}>scoring your mix…</p>
+          <div className={styles.skelBlock} />
+        </div>
+      )}
+
       {state.kind === "error" && (
         <p className={`caption ${styles.message}`} role="alert">
           engine unreachable — preview paused
