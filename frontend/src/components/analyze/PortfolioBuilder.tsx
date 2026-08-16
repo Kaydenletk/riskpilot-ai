@@ -64,7 +64,7 @@ export function PortfolioBuilder({
   }
 
   return (
-    <section className={styles.builder} aria-label="Portfolio builder">
+    <section className={`glass ${styles.builder}`} aria-label="Portfolio builder">
       <TickerTypeahead
         universe={universe}
         exclude={rows.map((r) => r.ticker)}

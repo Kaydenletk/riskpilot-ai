@@ -1,0 +1,30 @@
+/* Live preview rail beside the builder. Same instrument-panel voice as
+   HeroXray (gauge + sector bars in a glass card) but stacked, narrower, and
+   read-only — a teaser for Run the X-Ray, not a substitute for it. */
+
+.rail {
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+@media (min-width: 861px) {
+  .rail {
+    position: sticky;
+    top: var(--space-3);
+  }
+}
+
+.message {
+  text-align: center;
+}
+
+.gaugeWrap {
+  display: flex;
+  justify-content: center;
+  /* RiskGauge (internals untouched) carries generous built-in whitespace at
+     small sizes — pull it in so the card stays tight, matching HeroXray. */
+  margin: -8px 0;
+  transition: opacity var(--dur-normal) var(--ease-out-expo);
+}

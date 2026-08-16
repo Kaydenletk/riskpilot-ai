@@ -109,6 +109,20 @@
   cursor: pointer;
 }
 
+/* two-column builder: PortfolioBuilder (left) + PreviewRail (right); rail
+   drops below the builder once the columns can't breathe. */
+.builderGrid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--space-3);
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .builderGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* scoring skeleton — shapes echo the report layout */
 .skeleton {
   margin-top: var(--space-4);

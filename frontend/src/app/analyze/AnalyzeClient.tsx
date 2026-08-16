@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { PortfolioBuilder } from "@/components/analyze/PortfolioBuilder";
+import { PreviewRail } from "@/components/analyze/PreviewRail";
 import { Dashboard } from "@/components/dashboard/Dashboard";
 import { weightedPortfolio } from "@/lib/portfolio-schema";
 import {
@@ -145,6 +146,22 @@ export function AnalyzeClient({ universe }: { universe: TickerOption[] }) {
     );
   }
 
+  // Rendered once and reused below — the two-column grid (builder + live
+  // preview rail) only applies in the plain "builder" phase; scoring/rejected/
+  // offline keep the builder full-width, exactly as before this task.
+  const portfolioBuilder = (
+    <PortfolioBuilder
+      universe={universe}
+      rows={rows}
+      onRowsChange={(next) => {
+        setRows(next);
+        if (phase.kind !== "builder") setPhase({ kind: "builder" });
+      }}
+      onRun={run}
+      error={builderError}
+    />
+  );
+
   return (
     <div className="stage stage-2">
       {phase.kind === "builder" && rows.length === 0 && (
@@ -174,16 +191,14 @@ export function AnalyzeClient({ universe }: { universe: TickerOption[] }) {
         </div>
       )}
 
-      <PortfolioBuilder
-        universe={universe}
-        rows={rows}
-        onRowsChange={(next) => {
-          setRows(next);
-          if (phase.kind !== "builder") setPhase({ kind: "builder" });
-        }}
-        onRun={run}
-        error={builderError}
-      />
+      {phase.kind === "builder" ? (
+        <div className={styles.builderGrid}>
+          {portfolioBuilder}
+          <PreviewRail rows={rows} universe={universe} />
+        </div>
+      ) : (
+        portfolioBuilder
+      )}
 
       {phase.kind === "scoring" && (
         <div className={styles.skeleton} aria-label="Scoring your portfolio" role="status">

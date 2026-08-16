@@ -3,6 +3,7 @@
 
 .builder {
   margin-top: var(--space-3);
+  padding: var(--space-3);
 }
 
 /* ── typeahead ── */
