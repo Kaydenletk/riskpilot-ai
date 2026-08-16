@@ -9,6 +9,7 @@ import type { RiskReport } from "@/lib/types";
 import { AllocationBar } from "./AllocationBar";
 import { GroundedText } from "./GroundedText";
 import { HoldingsTable } from "./HoldingsTable";
+import { RiskComposition } from "./RiskComposition";
 import { RiskGauge } from "./RiskGauge";
 import styles from "../../app/page.module.css";
 
@@ -85,6 +86,10 @@ export function AnalystView({ report }: { report: RiskReport }) {
         <Metric label="Worst drawdown" value={`${facts.max_drawdown_pct}%`} onJump={() => jumpToFactor("Worst drawdown")} />
         <Metric label="Holdings" value={`${facts.holdings_count}`} onJump={() => jumpToFactor("Holdings")} />
       </section>
+
+      {/* self-validating: the actual point math behind the headline score.
+          Hidden entirely if the mirror ever disagrees with the engine. */}
+      <RiskComposition facts={facts} />
 
       <section className={`glass ${styles.allocation} stage stage-3`}>
         <AllocationBar

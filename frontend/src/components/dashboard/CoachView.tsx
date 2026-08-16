@@ -5,6 +5,7 @@
 import type { RiskReport } from "@/lib/types";
 
 import { NumberCard } from "./NumberCard";
+import { RiskComposition } from "./RiskComposition";
 import { RiskGauge } from "./RiskGauge";
 import { VerdictHeadline } from "./VerdictHeadline";
 import styles from "./coach-view.module.css";
@@ -63,6 +64,10 @@ export function CoachView({ report }: { report: RiskReport }) {
           <NumberCard key={s.label} label={s.label} value={s.value} />
         ))}
       </section>
+
+      {/* self-validating: the actual point math behind the headline score.
+          Hidden entirely if the mirror ever disagrees with the engine. */}
+      <RiskComposition facts={facts} />
 
       {/* the discipline / FOMO moment — prominent for B, not buried last */}
       <section className={`glass ${styles.prompt} stage stage-4`}>

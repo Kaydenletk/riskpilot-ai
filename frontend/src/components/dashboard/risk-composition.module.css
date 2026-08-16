@@ -1,0 +1,55 @@
+/* No glass — this sits directly on the page/section background, right under
+   a glass block, as a small self-contained instrument reading. */
+.composition {
+  margin: var(--space-2) 0 var(--space-3);
+}
+
+.bar {
+  display: flex;
+  width: 100%;
+  height: 10px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--rule);
+  box-shadow: inset 0 0 0 1px var(--rule-strong);
+}
+
+.seg {
+  height: 100%;
+  background: var(--accent);
+  /* hairline separators between segments, same treatment as AllocationBar */
+  box-shadow: inset -1px 0 0 oklch(100% 0 0 / 0.5);
+}
+
+.legend {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--text-sm);
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.legendLabel {
+  color: var(--ink-soft);
+}
+
+.legendValue {
+  color: var(--ink);
+  font-weight: 600;
+}
