@@ -2,7 +2,13 @@
 .head { display: flex; justify-content: space-between; align-items: baseline; margin: var(--space-3) 0; flex-wrap: wrap; gap: var(--space-2); }
 /* each column is now its own glass card (className approach — glass supplies
    background/border/radius/shadow), so the grid separates cards with a real
-   gap instead of the old 1px-hairline-on-shared-background trick. */
+   gap instead of the old 1px-hairline-on-shared-background trick.
+   --cols is set inline on a WRAPPER around this element (see CompareGrid.tsx)
+   and inherited here, rather than inline on .grid itself, so the mobile
+   override below (a normal, non-!important declaration on .grid) still wins
+   over the inherited value — inline styles always beat stylesheet rules on
+   the SAME element, but inheritance is only a last resort and loses to any
+   explicit declaration on the element itself. */
 .grid {
   display: grid;
   grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr));
