@@ -82,3 +82,17 @@ test("score failure grays the panel, report stays intact", async ({ page }) => {
   // the report above still renders its verdict
   await expect(page.getByRole("heading", { level: 2 }).first()).toBeVisible();
 });
+
+test("home strip rescores on slider drag", async ({ page }) => {
+  await page.route("**/api/score", (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ ok: true, holdings: [], facts: SCORED_FACTS, score_version: "v1" }),
+    }),
+  );
+  await page.goto("/");
+  const strip = page.getByRole("region", { name: /drag it/i });
+  await strip.locator('input[type="range"]').press("ArrowRight");
+  await expect(strip.getByText("61")).toBeVisible();
+});

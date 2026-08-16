@@ -5,7 +5,7 @@ import { Hero } from "@/components/home/Hero";
 import { HeroXray } from "@/components/home/HeroXray";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { InstrumentIndex } from "@/components/home/InstrumentIndex";
-import { WhatIfTeaser } from "@/components/home/WhatIfTeaser";
+import { LiveWhatIfStrip } from "@/components/home/LiveWhatIfStrip";
 import { Masthead } from "@/components/layout/Masthead";
 import { SearchWithCompare } from "@/components/search/SearchWithCompare";
 import { fetchSampleReport } from "@/lib/backend";
@@ -42,7 +42,7 @@ export default async function Home() {
         </div>
         <Dashboard report={report} />
       </section>
-      <WhatIfTeaser />
+      <LiveWhatIfStrip report={report} />
       <HowItWorks />
       <InstrumentIndex universe={universe} />
     </div>

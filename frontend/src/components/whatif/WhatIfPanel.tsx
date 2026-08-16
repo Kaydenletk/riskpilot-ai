@@ -9,6 +9,7 @@ import { useDebouncedScore } from "@/hooks/useDebouncedScore";
 import { riskInkVar } from "@/lib/risk-color";
 import {
   removeHolding,
+  rowsFromHoldings,
   setWeight,
   serializePortfolio,
   totalWeight,
@@ -30,20 +31,8 @@ const SLIDER_STEP = 0.5;
 // The engine's floor: below 2 holdings there is nothing to rebalance.
 const MIN_SIM_ROWS = 2;
 
-// Derive percent weights from the report's computed market values. Rounded to
-// 0.1 — well inside the /score sum tolerance of ±0.5.
-function baselineRows(report: RiskReport): PortfolioRow[] {
-  const total = report.holdings.reduce((sum, h) => sum + h.market_value, 0);
-  if (total <= 0) return [];
-  return report.holdings.map((h) => ({
-    ticker: h.ticker,
-    weightPct: Math.round((h.market_value / total) * 1000) / 10,
-    locked: false,
-  }));
-}
-
 export function WhatIfPanel({ report }: { report: RiskReport }) {
-  const baseline = useMemo(() => baselineRows(report), [report]);
+  const baseline = useMemo(() => rowsFromHoldings(report.holdings), [report]);
   const [rows, setRows] = useState<PortfolioRow[]>(baseline);
 
   const dirty = serializePortfolio(rows) !== serializePortfolio(baseline);

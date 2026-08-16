@@ -12,6 +12,8 @@
 // leftover rounding drift is absorbed into the largest UNLOCKED row (or the
 // largest row overall in the rare case nothing is unlocked) via absorbDrift.
 
+import type { Holding } from "./types";
+
 export interface PortfolioRow {
   ticker: string;
   weightPct: number;
@@ -185,4 +187,18 @@ export function parsePortfolio(s: string): PortfolioRow[] {
 
 export function totalWeight(rows: readonly PortfolioRow[]): number {
   return sum(rows.map((r) => r.weightPct));
+}
+
+// Derives percent weights from a report's computed market values. Rounded to
+// 0.1 — well inside the /score sum tolerance of ±0.5. Shared by the /analyze
+// what-if panel and the homepage live strip so both start from an identical
+// baseline for the same report.
+export function rowsFromHoldings(holdings: readonly Holding[]): PortfolioRow[] {
+  const total = holdings.reduce((sumVal, h) => sumVal + h.market_value, 0);
+  if (total <= 0) return [];
+  return holdings.map((h) => ({
+    ticker: h.ticker,
+    weightPct: Math.round((h.market_value / total) * 1000) / 10,
+    locked: false,
+  }));
 }

@@ -1,0 +1,115 @@
+/* Live what-if strip — the teaser is now the real thing: one slider, scored
+   by the engine on every drag. Same instrument-panel voice as the full
+   simulator (hairline rules, mono captions, display-face numbers), but
+   compressed to a single row so it reads as a strip, not another panel. */
+
+.strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding: var(--space-3);
+}
+
+.strip :global(.caption) {
+  flex: 0 0 auto;
+}
+
+.sliderRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1 1 220px;
+  min-height: 44px;
+}
+
+.ticker {
+  font-weight: 700;
+  min-width: 5ch;
+}
+
+.slider {
+  flex: 1;
+  accent-color: var(--accent);
+  min-height: 44px;
+}
+
+.weight {
+  min-width: 5.5ch;
+  text-align: right;
+  color: var(--ink-soft);
+}
+
+.note {
+  margin: 0;
+  color: var(--ink-soft);
+  flex: 1 1 220px;
+}
+
+.scoreLine {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  flex: 0 0 auto;
+}
+.scoreFrom {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ink-faint);
+}
+.arrow {
+  color: var(--ink-faint);
+}
+.scoreTo {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.pending {
+  opacity: 0.4;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 0 0 auto;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.simLink {
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+.simLink:hover {
+  color: var(--ink);
+}
+
+.buildLink {
+  font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none;
+}
+.buildLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 680px) {
+  .strip {
+    align-items: stretch;
+  }
+  .links {
+    margin-left: 0;
+    justify-content: space-between;
+    width: 100%;
+  }
+}

@@ -4,6 +4,7 @@ import {
   addHolding,
   parsePortfolio,
   removeHolding,
+  rowsFromHoldings,
   serializePortfolio,
   setWeight,
   toggleLock,
@@ -186,6 +187,17 @@ test("fuzz: 200 random ops keep totalWeight ~100 (seeded LCG)", () => {
       expect(totalWeight(rows)).toBeCloseTo(100, 6);
     }
   }
+});
+
+test("rowsFromHoldings derives rounded percent weights", () => {
+  const rows = rowsFromHoldings([
+    { ticker: "NVDA", sector: "T", shares: 1, market_value: 600 },
+    { ticker: "KO", sector: "S", shares: 1, market_value: 400 },
+  ]);
+  expect(rows).toEqual([
+    { ticker: "NVDA", weightPct: 60, locked: false },
+    { ticker: "KO", weightPct: 40, locked: false },
+  ]);
 });
 
 describe("totalWeight", () => {
