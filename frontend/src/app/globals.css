@@ -218,3 +218,11 @@ a:hover {
   background-clip: text;
   color: transparent;
 }
+/* defensive fallback: grad-text is now load-bearing on the homepage h1 —
+   browsers without background-clip:text support must still render legible text */
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .grad-text {
+    background: none;
+    color: var(--accent);
+  }
+}
