@@ -1,7 +1,22 @@
-/* HERO — above the fold: thesis + two CTAs, no dashboard. Owns the page's one h1. */
+/* HERO — above the fold: thesis + two CTAs on the left, optional live sample
+   card on the right. Owns the page's one h1. */
 
 .hero {
   margin: var(--space-section) 0 var(--space-4);
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.copy {
+  flex: 1.2;
+  min-width: 300px;
+}
+
+.visual {
+  flex: 1;
+  min-width: 300px;
 }
 
 .headline {

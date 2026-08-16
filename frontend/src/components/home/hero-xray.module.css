@@ -1,0 +1,11 @@
+.card { padding: var(--space-3); display: grid; gap: var(--space-2); }
+.top { display: flex; align-items: center; gap: var(--space-2); }
+.gauge { flex-shrink: 0; }
+.verdict {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 0;
+  text-wrap: balance;
+}

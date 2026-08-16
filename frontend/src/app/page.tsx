@@ -2,6 +2,7 @@
 // the client Dashboard (which holds the Coach/Analyst view toggle).
 import { Dashboard } from "@/components/dashboard/Dashboard";
 import { Hero } from "@/components/home/Hero";
+import { HeroXray } from "@/components/home/HeroXray";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { InstrumentIndex } from "@/components/home/InstrumentIndex";
 import { WhatIfTeaser } from "@/components/home/WhatIfTeaser";
@@ -27,7 +28,7 @@ export default async function Home() {
   return (
     <div className={styles.page}>
       <Masthead caption="risk coaching · explains the math · never invents numbers" />
-      <Hero />
+      <Hero card={<HeroXray report={report} />} />
       <div className={`${styles.searchRow} stage stage-2`}>
         <SearchWithCompare universe={universe} />
         <span className="caption">
