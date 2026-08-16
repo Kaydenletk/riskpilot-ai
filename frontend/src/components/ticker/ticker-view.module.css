@@ -78,14 +78,11 @@
   color: var(--ink);
 }
 
-/* scored series chart card */
+/* scored series chart card — background/border/shadow come from the `glass`
+   utility applied alongside this class; no double-background. */
 .chartCard {
   margin-top: var(--space-3);
   padding: var(--space-3);
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  box-shadow: 0 1px 2px oklch(20% 0.012 264 / 0.04), 0 6px 18px oklch(20% 0.012 264 / 0.04);
 }
 .chartHead {
   display: flex;
@@ -219,12 +216,46 @@
 }
 .contextCell dd {
   margin: 4px 0 0;
+}
+.contextCell dd.num {
   font-weight: 600;
 }
 .contextRef {
   font-weight: 400;
   font-size: var(--text-sm);
   color: var(--ink-faint);
+}
+
+/* dual bars under a vs-median cell: yours (accent) vs sector median (faint),
+   widths normalized to whichever value is larger. Decorative — aria-hidden,
+   the numbers are already in the text above. */
+.compareBars {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: var(--space-1);
+}
+.compareBar {
+  display: block;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--rule);
+  overflow: hidden;
+}
+.compareBarFill {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--accent);
+}
+.compareBarMedian {
+  background: var(--ink-faint);
+}
+
+/* universe-rank cell: DistributionStrip replaces the sentence; the sentence
+   moves beneath it as a caption. */
+.rankCaption {
+  margin: var(--space-1) 0 0;
 }
 .peersRow {
   display: flex;

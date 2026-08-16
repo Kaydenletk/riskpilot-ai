@@ -1,0 +1,29 @@
+/* Universe-rank band: a calm→wild ramp with a marker at this ticker's
+   percentile. The gradient is data-coloring, not decoration — the axis IS
+   risk, so it borrows the shared risk-ramp tokens rather than accent/ink. */
+.strip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.end {
+  flex-shrink: 0;
+}
+.band {
+  position: relative;
+  flex: 1;
+  height: 10px;
+  border-radius: 5px;
+  background: linear-gradient(to right, var(--risk-low), var(--risk-mid), var(--risk-high));
+  opacity: 0.85;
+}
+.marker {
+  position: absolute;
+  top: -4px;
+  width: 4px;
+  height: 18px;
+  border-radius: 2px;
+  background: var(--ink);
+  transform: translateX(-50%);
+  box-shadow: var(--shadow-1);
+}
