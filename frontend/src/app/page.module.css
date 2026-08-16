@@ -61,9 +61,6 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1px;
-  background: var(--rule);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
   overflow: hidden;
   margin-bottom: var(--space-3);
 }
@@ -84,18 +81,12 @@
 }
 
 .allocation {
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
   padding: var(--space-3);
   margin-bottom: var(--space-3);
 }
 
 /* TIER 3 — explanation */
 .explain {
-  background: var(--surface-raised);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
   padding: var(--space-3);
 }
 

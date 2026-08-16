@@ -45,10 +45,6 @@
   margin: 4px 0 0;
   padding: 4px;
   list-style: none;
-  background: var(--surface);
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--radius-sm);
-  box-shadow: 0 8px 24px oklch(0% 0 0 / 0.12);
 }
 .option {
   display: flex;
@@ -80,9 +76,6 @@
   padding: 12px 14px;
   font-size: var(--text-sm);
   color: var(--ink-soft);
-  background: var(--surface);
-  border: 1px dashed var(--rule-strong);
-  border-radius: var(--radius-sm);
 }
 
 .legend {
@@ -194,7 +187,7 @@
   min-height: 44px;
   padding: 10px 20px;
   color: #fff;
-  background: var(--accent-strong);
+  background: var(--grad-accent);
   border: none;
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -206,4 +199,7 @@
 .run:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+:global([data-theme="dark"]) .run {
+  color: oklch(18% 0.03 275);
 }

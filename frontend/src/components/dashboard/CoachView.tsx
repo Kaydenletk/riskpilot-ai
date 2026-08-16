@@ -52,20 +52,20 @@ export function CoachView({ report }: { report: RiskReport }) {
       </section>
 
       {/* one calming, honest takeaway — the reframe from the AI, in plain words */}
-      <section className={`${styles.takeaway} stage stage-3`}>
+      <section className={`glass ${styles.takeaway} stage stage-3`}>
         <div className="caption">What this means for you</div>
         <p>{explanation.summary}</p>
       </section>
 
       {/* jargon translated inline — B half-understood these before */}
-      <section className={`${styles.stats} stage stage-3`}>
+      <section className={`glass ${styles.stats} stage stage-3`}>
         {plainStats(report).map((s) => (
           <NumberCard key={s.label} label={s.label} value={s.value} />
         ))}
       </section>
 
       {/* the discipline / FOMO moment — prominent for B, not buried last */}
-      <section className={`${styles.prompt} stage stage-4`}>
+      <section className={`glass ${styles.prompt} stage stage-4`}>
         <div className={styles.promptIcon} aria-hidden>
           ◆
         </div>

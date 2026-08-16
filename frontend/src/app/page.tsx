@@ -53,7 +53,7 @@ function BackendOffline() {
     <div className={styles.page}>
       <Masthead caption="risk coaching · explains the math · never invents numbers" />
       <Hero />
-      <section className={styles.explain}>
+      <section className={`glass ${styles.explain}`}>
         <p className={styles.summary}>
           The risk engine (a private Python service) isn&apos;t connected to this deployment
           yet. The frontend, topology, and the number-hallucination guardrail are live in the

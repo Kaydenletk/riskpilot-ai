@@ -14,7 +14,7 @@ export default function TickerNotFound() {
         <div className="caption">single-instrument risk read</div>
       </header>
 
-      <section className={styles.explain} style={{ marginTop: "var(--space-4)" }}>
+      <section className={`glass ${styles.explain}`} style={{ marginTop: "var(--space-4)" }}>
         <p className={styles.summary}>That symbol isn&apos;t in the demo universe.</p>
         <p style={{ color: "var(--ink-soft)", maxWidth: "60ch" }}>
           Search is bounded to a fixed, vetted list of instruments. That boundary

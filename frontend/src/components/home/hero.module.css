@@ -46,12 +46,16 @@
 }
 
 .primary {
-  /* --accent-strong keeps white text ≥4.5:1 in dark theme (dark --accent is too light) */
-  background: var(--accent-strong);
+  /* light gradient's darkest stop is ≥48% L, so white text clears 4.5:1 */
+  background: var(--grad-accent);
   color: #fff;
 }
 .primary:hover {
   filter: brightness(0.92);
+}
+/* dark theme's gradient stops are lighter — near-black text keeps contrast */
+:global([data-theme="dark"]) .primary {
+  color: oklch(18% 0.03 275);
 }
 
 .secondary {

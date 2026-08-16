@@ -40,11 +40,9 @@
   max-width: 52ch;
 }
 
-/* calming takeaway — tinted surface, no template left-border accent */
+/* calming takeaway — glass fill, color-mix border tint kept for the risk-low read */
 .takeaway {
-  background: color-mix(in oklch, var(--risk-low) 5%, var(--surface));
   border: 1px solid color-mix(in oklch, var(--risk-low) 22%, var(--rule));
-  border-radius: var(--radius);
   padding: var(--space-2) var(--space-3);
   margin-bottom: var(--space-3);
 }
@@ -60,9 +58,6 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1px;
-  background: var(--rule);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
   overflow: hidden;
   margin-bottom: var(--space-3);
 }
@@ -96,13 +91,6 @@
 .prompt {
   display: flex;
   gap: var(--space-2);
-  background: linear-gradient(
-    135deg,
-    color-mix(in oklch, var(--risk-mid) 10%, var(--surface)),
-    var(--surface)
-  );
-  border: 1px solid color-mix(in oklch, var(--risk-mid) 30%, var(--rule));
-  border-radius: var(--radius);
   padding: var(--space-3);
 }
 .promptIcon {

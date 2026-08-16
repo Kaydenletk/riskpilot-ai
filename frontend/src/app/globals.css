@@ -5,8 +5,6 @@
 
 :root {
   /* ── surfaces & ink (near-monochrome, paper-like) ── */
-  --bg: oklch(97.8% 0.003 250);
-  --bg-grain: oklch(96.2% 0.003 250);
   --surface: oklch(100% 0 0);
   --surface-raised: oklch(99% 0.002 250);
   --ink: oklch(19% 0.014 268);
@@ -31,6 +29,18 @@
   --accent: oklch(45% 0.26 265);
   --accent-soft: oklch(45% 0.26 265 / 0.09);
   --accent-strong: oklch(45% 0.26 265);
+
+  /* ── v3 glass system ── */
+  --bg: oklch(97.5% 0.008 275);              /* indigo-tinted near-white */
+  --bg-grain: oklch(95.8% 0.01 275);
+  --glass-fill: oklch(100% 0 0 / 0.62);
+  --glass-border: oklch(100% 0 0 / 0.85);
+  --glass-blur: 14px;
+  --shadow-1: 0 2px 10px oklch(45% 0.12 275 / 0.08);
+  --shadow-2: 0 10px 30px oklch(45% 0.12 275 / 0.12);
+  --shadow-3: 0 24px 60px oklch(45% 0.12 275 / 0.16);
+  --grad-accent: linear-gradient(120deg, oklch(48% 0.24 275), oklch(55% 0.22 295));
+  --radius-card: 14px;
 
   /* ── type scale (fluid, editorial contrast) ── */
   --text-xs: 0.75rem;
@@ -60,8 +70,8 @@
 /* Opt-in dark theme — surfaces/ink invert; the risk ramp hues stay (they read
    on both). Light remains the default (no [data-theme] / [data-theme=light]). */
 [data-theme="dark"] {
-  --bg: oklch(21% 0.012 264);
-  --bg-grain: oklch(24% 0.012 264);
+  --bg: oklch(18% 0.03 275);
+  --bg-grain: oklch(21% 0.035 275);
   --surface: oklch(26% 0.012 264);
   --surface-raised: oklch(29% 0.012 264);
   --ink: oklch(94% 0.004 250);
@@ -78,11 +88,14 @@
   --accent-soft: oklch(72% 0.17 265 / 0.16);
   /* darker than --accent: white ✓ glyphs need ≥4.5:1, --accent's 72% L only clears ~2.6:1 */
   --accent-strong: oklch(50% 0.22 265);
-}
 
-/* Explicit dark body wash — deliberately visible-but-subtle depth (Δ from bg L0.20 to 0.30) */
-[data-theme="dark"] body {
-  background-image: radial-gradient(140% 90% at 50% -20%, oklch(30% 0.012 264), transparent 60%);
+  /* ── v3 glass system (dark) ── */
+  --glass-fill: oklch(30% 0.04 275 / 0.45);
+  --glass-border: oklch(85% 0.02 275 / 0.22);
+  --shadow-1: 0 2px 10px oklch(5% 0.05 275 / 0.5);
+  --shadow-2: 0 10px 30px oklch(5% 0.05 275 / 0.6);
+  --shadow-3: 0 24px 60px oklch(35% 0.18 275 / 0.35);
+  --grad-accent: linear-gradient(120deg, oklch(70% 0.17 275), oklch(75% 0.15 295));
 }
 
 * {
@@ -100,12 +113,17 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* atmospheric background: one calm wash, top-anchored. Modern + simple —
-   no grid, no competing radial. Just a near-flat paper field. */
+/* atmospheric background: v3 glass wash — two soft indigo/blue radials, top-anchored. */
 body {
   background-image:
-    radial-gradient(140% 90% at 50% -20%, var(--surface), transparent 60%);
+    radial-gradient(120% 70% at 15% -10%, oklch(90% 0.05 285 / 0.55), transparent 55%),
+    radial-gradient(100% 60% at 100% 0%, oklch(92% 0.04 255 / 0.45), transparent 50%);
   background-attachment: fixed;
+}
+[data-theme="dark"] body {
+  background-image:
+    radial-gradient(120% 70% at 15% -10%, oklch(30% 0.08 285 / 0.6), transparent 55%),
+    radial-gradient(100% 60% at 100% 0%, oklch(26% 0.07 255 / 0.5), transparent 50%);
 }
 
 /* tabular figures for every number in a finance grid (non-negotiable) */
@@ -182,4 +200,20 @@ a:hover {
     animation-delay: 0ms !important;
     transition-duration: 0.001ms !important;
   }
+}
+
+/* ── v3 glass utilities ── */
+.glass {
+  background: var(--glass-fill);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-2);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+.grad-text {
+  background: var(--grad-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }

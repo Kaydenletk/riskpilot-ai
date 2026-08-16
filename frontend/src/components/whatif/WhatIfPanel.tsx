@@ -85,7 +85,7 @@ export function WhatIfPanel({ report }: { report: RiskReport }) {
   }
 
   return (
-    <section className={styles.panel} aria-labelledby="whatif-h">
+    <section className={`glass ${styles.panel}`} aria-labelledby="whatif-h">
       <div className={styles.head}>
         <h2 id="whatif-h" className={`caption ${styles.title}`}>
           What if

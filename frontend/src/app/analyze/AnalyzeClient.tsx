@@ -198,7 +198,7 @@ export function AnalyzeClient({ universe }: { universe: TickerOption[] }) {
       )}
 
       {phase.kind === "rejected" && (
-        <div className={styles.panel} role="alert">
+        <div className={`glass ${styles.panel}`} role="alert">
           <p className={styles.panelText}>{phase.message}</p>
           {phase.symbols.length > 0 && (
             <button
@@ -216,7 +216,7 @@ export function AnalyzeClient({ universe }: { universe: TickerOption[] }) {
       )}
 
       {phase.kind === "offline" && (
-        <div className={styles.panel} role="alert">
+        <div className={`glass ${styles.panel}`} role="alert">
           <p className={styles.panelText}>
             The risk engine isn&apos;t reachable right now. Your holdings are safe in the URL —
             nothing was lost.

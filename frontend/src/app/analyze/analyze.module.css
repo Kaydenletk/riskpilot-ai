@@ -139,9 +139,6 @@
 /* rejected / offline panels */
 .panel {
   margin-top: var(--space-3);
-  background: var(--surface-raised);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
   padding: var(--space-3);
 }
 .panelText {
@@ -155,11 +152,14 @@
   min-height: 44px;
   padding: 10px 18px;
   color: #fff;
-  background: var(--accent-strong);
+  background: var(--grad-accent);
   border: none;
   border-radius: var(--radius-sm);
   cursor: pointer;
 }
 .panelBtn:hover {
   filter: brightness(0.92);
+}
+:global([data-theme="dark"]) .panelBtn {
+  color: oklch(18% 0.03 275);
 }

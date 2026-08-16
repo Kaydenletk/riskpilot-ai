@@ -110,7 +110,7 @@ export function TickerTypeahead({ universe, exclude, onPick, atCapacity }: Ticke
       )}
       {open && results.length > 0 && (
         <ul
-          className={styles.dropdown}
+          className={`glass ${styles.dropdown}`}
           id="builder-search-results"
           role="listbox"
           aria-label="Matching instruments"
@@ -133,7 +133,7 @@ export function TickerTypeahead({ universe, exclude, onPick, atCapacity }: Ticke
         </ul>
       )}
       {open && results.length === 0 && (
-        <div className={styles.noMatch} role="status">
+        <div className={`glass ${styles.noMatch}`} role="status">
           &ldquo;{query}&rdquo; isn&apos;t in the universe — search is bounded to the vetted list.
         </div>
       )}
