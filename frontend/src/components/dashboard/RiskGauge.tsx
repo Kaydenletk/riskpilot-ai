@@ -12,7 +12,7 @@ interface RiskGaugeProps {
   size?: number; // px, default 260
 }
 
-const STROKE_RATIO = 18 / 260; // keep the original 18px stroke at size 260
+const STROKE_RATIO = 12 / 260; // v3: thinner arc — the number is the star
 const SWEEP = 0.75; // 270° arc (quarter gap at the bottom)
 
 export function RiskGauge({ score, band, size = 260 }: RiskGaugeProps) {
@@ -46,13 +46,13 @@ export function RiskGauge({ score, band, size = 260 }: RiskGaugeProps) {
       className={styles.wrap}
       style={{ width: SIZE, height: SIZE }}
       role="img"
-      aria-label={`Risk score ${score} of 100, ${band}`}
+      aria-label={`Risk score ${Math.round(score)} percent — ${band}`}
     >
       <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} className={styles.svg}>
         <g transform={`rotate(${rotation} ${SIZE / 2} ${SIZE / 2})`}>
           <circle
             cx={SIZE / 2} cy={SIZE / 2} r={RADIUS} fill="none"
-            stroke="var(--rule-strong)" strokeWidth={STROKE} strokeLinecap="round"
+            stroke="var(--rule)" strokeWidth={STROKE} strokeLinecap="round"
             strokeDasharray={`${ARC_LEN} ${GAP_LEN}`}
           />
           <circle
@@ -65,14 +65,23 @@ export function RiskGauge({ score, band, size = 260 }: RiskGaugeProps) {
       </svg>
 
       <div className={styles.center}>
-        <div className={`num ${styles.score}`} style={{ color: riskVar(band), fontSize: `${SIZE / 3.82}px` }}>
+        {/* percent framing (score is /100 by construction) — "80%" reads instantly;
+            the old "risk score / 100" caption became redundant and was cut */}
+        <div className={`num ${styles.score}`} style={{ color: riskVar(band), fontSize: `${SIZE / 4}px` }}>
           {Math.round(shown)}
+          <span className={styles.pctSign} style={{ fontSize: `${SIZE / 9}px` }}>
+            %
+          </span>
         </div>
-        <div className={`caption ${styles.band}`} style={{ color: riskVar(band) }}>
-          {band}
-        </div>
-        <div className="caption" style={{ marginTop: 2, opacity: 0.7 }}>
-          risk score / 100
+        <div
+          className={`caption ${styles.bandChip}`}
+          style={{
+            color: riskVar(band),
+            background: `color-mix(in oklch, ${riskVar(band)} 12%, transparent)`,
+            fontSize: `${Math.max(9, SIZE / 22)}px`,
+          }}
+        >
+          {band} risk
         </div>
       </div>
     </div>
