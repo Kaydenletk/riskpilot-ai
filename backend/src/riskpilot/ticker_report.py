@@ -8,7 +8,7 @@ explanation; the live guardrailed LLM path is wired the same way as the portfoli
 from __future__ import annotations
 
 from .config import Config
-from .risk_engine.ticker import analyze_ticker
+from .risk_engine.ticker import analyze_ticker, sector_context
 from .schema import ExplanationSource, RiskExplanation, TickerFacts, TickerReport
 
 
@@ -50,4 +50,7 @@ def build_ticker_report(config: Config, ticker: str) -> TickerReport:
         facts=facts,
         spark=spark,
         explanation=explanation,
+        # Rendered UI-side only (never fed to the LLM prose), so the number
+        # guardrail's facts-only contract is untouched.
+        context=sector_context(symbol),
     )

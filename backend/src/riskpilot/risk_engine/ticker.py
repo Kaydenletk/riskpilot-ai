@@ -8,13 +8,17 @@ review flagged (a "ticker" of 'ignore previous instructions' never reaches the m
 
 from __future__ import annotations
 
-from ..schema import RiskBand, TickerFacts, TickerOption
+from functools import lru_cache
+from statistics import median
+
+from ..schema import RiskBand, SectorContext, TickerFacts, TickerOption
 from . import metrics as m
 from . import score as sc
 from .dataset import load_prices, sector_of
 
 MARKET_INDEX = "SPY"
 SPARK_POINTS = 48  # downsample the price series for a compact sparkline
+MAX_PEERS = 4
 
 
 class UnknownTicker(ValueError):
@@ -67,3 +71,45 @@ def analyze_ticker(ticker: str) -> tuple[TickerFacts, list[float]]:
         sector=sector_of(symbol),
     )
     return facts, _downsample(prices, SPARK_POINTS)
+
+
+@lru_cache(maxsize=1)
+def _universe_stats() -> dict[str, tuple[float, float]]:
+    """ticker -> (annualized vol, beta) across the whole allow-list. Cached:
+    the committed dataset is immutable within a process."""
+    series = load_prices()
+    market = series[MARKET_INDEX]
+    return {
+        t: (m.annualized_volatility(series[t]), m.beta(series[t], market))
+        for t in series
+        if t != MARKET_INDEX
+    }
+
+
+def sector_context(ticker: str) -> SectorContext:
+    """Relative framing: sector medians, universe percentile, nearest-vol peers.
+    Same allow-list boundary as analyze_ticker."""
+    symbol = ticker.strip().upper()
+    stats = _universe_stats()
+    if symbol not in stats:
+        raise UnknownTicker(symbol)
+
+    vol, _ = stats[symbol]
+    sector = sector_of(symbol)
+    sector_stats = {t: s for t, s in stats.items() if sector_of(t) == sector}
+
+    less_volatile = sum(1 for t, (v, _) in stats.items() if t != symbol and v < vol)
+    percentile = round(100 * less_volatile / (len(stats) - 1)) if len(stats) > 1 else 0
+
+    peers = sorted(
+        (t for t in sector_stats if t != symbol),
+        key=lambda t: abs(sector_stats[t][0] - vol),
+    )[:MAX_PEERS]
+
+    return SectorContext(
+        sector=sector,
+        sector_median_volatility_pct=round(median(v for v, _ in sector_stats.values()) * 100, 1),
+        sector_median_beta=round(median(b for _, b in sector_stats.values()), 2),
+        universe_volatility_percentile=percentile,
+        peers=peers,
+    )
