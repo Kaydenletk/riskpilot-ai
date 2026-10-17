@@ -1,0 +1,471 @@
+/* Brand #245b43; semantic surface tokens inherit the workspace theme.
+   Chart colors and the 8/16/24/32 spacing scale follow ui-design-system. */
+.visuals {
+  --chart-primary: #245b43;
+  --chart-secondary: #6e8fc5;
+  --chart-tertiary: #b78b56;
+  --chart-track: #e7eee7;
+  --visual-radius: 16px;
+  --visual-gap: 16px;
+  margin-top: 24px;
+  font-variant-numeric: tabular-nums;
+}
+:global([data-theme="dark"]) .visuals {
+  --chart-primary: #a6d6a7;
+  --chart-secondary: #91afe1;
+  --chart-tertiary: #d7b17d;
+  --chart-track: #32443a;
+}
+.overviewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.eyebrow {
+  display: block;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 1.3px;
+  color: var(--rp-green);
+  margin-bottom: 8px;
+}
+.overviewHeader h3 {
+  font-size: 24px;
+  letter-spacing: -0.5px;
+  font-weight: 600;
+}
+.period {
+  padding: 8px 12px;
+  border: 1px solid var(--rp-line);
+  border-radius: 24px;
+  color: var(--rp-muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.metricGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--visual-gap);
+  margin-bottom: 16px;
+}
+.metric {
+  padding: 24px;
+  background: var(--rp-card);
+  border: 1px solid var(--rp-line);
+  border-radius: var(--visual-radius);
+  min-width: 0;
+}
+.metricLabel {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  color: var(--rp-muted);
+  margin-bottom: 16px;
+}
+.metricSourceValue > strong {
+  display: block;
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 600;
+  letter-spacing: -1.6px;
+  line-height: 1.1;
+  color: var(--rp-text);
+  white-space: nowrap;
+}
+.metric strong small {
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0;
+  margin-left: 8px;
+  color: var(--rp-muted);
+}
+.metric p {
+  margin-top: 12px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--rp-muted);
+}
+.profitTrack {
+  height: 5px;
+  margin-top: 12px;
+  border-radius: 4px;
+  background: var(--chart-track);
+  overflow: hidden;
+}
+.profitTrack span {
+  display: block;
+  height: 100%;
+  background: var(--chart-primary);
+}
+.chartGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--visual-gap);
+}
+.chartCard {
+  padding: 24px;
+  border: 1px solid var(--rp-line);
+  border-radius: var(--visual-radius);
+  background: var(--rp-card);
+  min-width: 0;
+}
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.step {
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  background: var(--rp-soft);
+  color: var(--rp-green);
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+.cardHeader h4 {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.cardHeader p {
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--rp-muted);
+  margin-top: 4px;
+}
+.shareHeadline {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.shareValueButton strong {
+  font-size: 52px;
+  letter-spacing: -2px;
+  line-height: 1;
+  font-weight: 550;
+}
+.shareValueButton strong > span {
+  font-size: 28px;
+  letter-spacing: -1px;
+}
+.shareHeadline > div {
+  display: grid;
+  gap: 6px;
+}
+.shareHeadline b {
+  font-size: 14px;
+  font-weight: 550;
+}
+.shareHeadline div span {
+  font-size: 11px;
+  color: var(--rp-muted);
+  line-height: 1.5;
+}
+.stackedBar {
+  display: flex;
+  height: 24px;
+  gap: 2px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.stackedBar button {
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+.series0 {
+  background: var(--chart-primary);
+}
+.series1 {
+  background: var(--chart-secondary);
+}
+.series2 {
+  background: var(--chart-tertiary);
+}
+.mixLegend {
+  display: grid;
+  gap: 4px;
+}
+.mixLegend button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  text-align: left;
+  background: transparent;
+  padding: 10px 8px;
+  color: var(--rp-text);
+  font-size: 12px;
+}
+.mixLegend button[aria-pressed="true"] {
+  background: var(--rp-soft);
+  border-color: var(--rp-line);
+}
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.mixLegend button > span:nth-child(2) {
+  flex: 1;
+}
+.mixLegend small {
+  display: block;
+  margin-top: 4px;
+  font-size: 10px;
+  color: var(--rp-muted);
+}
+.mixLegend strong {
+  font-size: 13px;
+}
+.chartTakeaway {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding-top: 16px;
+  margin-top: 16px !important;
+  border-top: 1px solid var(--rp-line);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.chartTakeaway svg {
+  margin-top: 2px;
+  color: var(--rp-green);
+}
+.chartFootnote {
+  display: block;
+  color: var(--rp-muted);
+  font-size: 10px;
+  line-height: 1.6;
+  margin-top: 8px;
+}
+.trendHeadline {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.trendHeadline strong {
+  font-size: 36px;
+  font-weight: 550;
+  letter-spacing: -1px;
+}
+.trendHeadline span {
+  font-size: 11px;
+  color: var(--rp-muted);
+}
+.revenueChart {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.gridLine {
+  stroke: var(--rp-line);
+  stroke-dasharray: 3 4;
+}
+.axisLabel {
+  fill: var(--rp-muted);
+  font-size: 11px;
+}
+.barValue {
+  fill: var(--rp-text);
+  font-size: 12px;
+  font-weight: 600;
+}
+.latestBar {
+  fill: var(--chart-primary);
+}
+.pastBar {
+  fill: var(--chart-primary);
+  opacity: 0.35;
+}
+.metricSourceValue > strong.negative,
+.trendHeadline .negative {
+  color: var(--rp-amber);
+}
+.dataDetails {
+  margin: 16px 0 24px;
+  border: 1px solid var(--rp-line);
+  border-radius: 8px;
+  color: var(--rp-muted);
+  font-size: 11px;
+}
+.dataDetails summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  cursor: pointer;
+  list-style: none;
+}
+.dataDetails summary::-webkit-details-marker {
+  display: none;
+}
+.dataDetails summary > svg:last-child {
+  margin-left: auto;
+}
+.dataDetails[open] summary > svg:last-child {
+  transform: rotate(90deg);
+}
+.dataBody {
+  padding: 0 16px 16px;
+  line-height: 1.7;
+}
+.dataBody p {
+  margin-bottom: 12px;
+}
+.dataBody a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--rp-green);
+  margin-bottom: 16px;
+}
+.dataBody table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  color: var(--rp-text);
+}
+.dataBody caption {
+  text-align: left;
+  font-weight: 600;
+  padding-bottom: 8px;
+}
+.dataBody th,
+.dataBody td {
+  text-align: left;
+  border-bottom: 1px solid var(--rp-line);
+  padding: 8px 4px;
+}
+.dataBody td {
+  text-align: right;
+}
+@media (max-width: 1250px) {
+  .metric {
+    padding: 16px;
+  }
+  .chartGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 760px) {
+  .overviewHeader h3 {
+    font-size: 22px;
+  }
+  .metricGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .metric {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 8px;
+    align-items: center;
+  }
+  .metricLabel {
+    margin-bottom: 0;
+    font-size: 11px;
+  }
+  .metricSourceValue > strong {
+    font-size: 30px;
+    letter-spacing: -1px;
+  }
+  .metric p {
+    grid-column: 1 / -1;
+    margin-top: 4px;
+  }
+  .metric strong small {
+    font-size: 11px;
+    margin-left: 4px;
+  }
+  .profitTrack {
+    display: none;
+  }
+  .chartCard {
+    padding: 20px 16px;
+  }
+  .cardHeader {
+    gap: 8px;
+  }
+  .cardHeader h4 {
+    font-size: 14px;
+  }
+  .shareValueButton strong {
+    font-size: 46px;
+  }
+  .dataBody th,
+  .dataBody td {
+    font-size: 10px;
+    overflow-wrap: anywhere;
+  }
+}
+
+.shareValueButton {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  color: var(--rp-text);
+}
+.shareValueButton strong {
+  display: block;
+}
+.shareValueButton small {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 9px;
+  color: var(--rp-green);
+}
+.stackedBar {
+  gap: 0;
+}
+.stackedBar button + button {
+  box-shadow: inset 2px 0 var(--rp-card);
+}
+.stackedBar button:focus-visible {
+  outline-offset: -3px;
+}
+
+.metricSourceValue {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  text-align: left;
+  color: var(--rp-text);
+}
+.metricSourceValue > span,
+.metricSourceLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--rp-green);
+  font-size: 10px;
+}
+.metricSourceValue > span {
+  margin-top: 8px;
+}
+.metricSourceLink {
+  border: 0;
+  background: transparent;
+  padding: 8px 0 12px;
+}
+@media (max-width: 760px) {
+  .metricSourceValue { text-align: right; }
+}

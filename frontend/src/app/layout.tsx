@@ -9,25 +9,25 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(CANONICAL_ORIGIN),
   title: {
-    default: "RiskPilot AI — Portfolio Risk Management Coach",
+    default: "RiskPilot — Your Investing Second Brain",
     template: "%s | RiskPilot AI",
   },
   description:
-    "Portfolio risk analysis for investors: deterministic risk scores, volatility and drawdown metrics, explained in plain English by an AI that cannot invent numbers.",
+    "Understand public companies, inspect source evidence, and keep your own investment research and reasoning.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     siteName: "RiskPilot AI",
-    title: "RiskPilot AI — Portfolio Risk Management Coach",
+    title: "RiskPilot — Your Investing Second Brain",
     description:
-      "Portfolio risk analysis for investors: deterministic risk scores, volatility and drawdown metrics, explained in plain English by an AI that cannot invent numbers.",
+      "Understand public companies, inspect source evidence, and keep your own investment research and reasoning.",
     url: CANONICAL_ORIGIN,
   },
   twitter: {
     card: "summary_large_image",
-    title: "RiskPilot AI — Portfolio Risk Management Coach",
+    title: "RiskPilot — Your Investing Second Brain",
     description:
-      "Investment risk analysis you can verify. AI explanations that cannot invent the numbers.",
+      "Explore company fundamentals and disclosed risks with source-linked research. Build your own understanding.",
   },
 };
 
@@ -43,13 +43,13 @@ const JSON_LD = {
     },
     {
       "@type": "WebApplication",
-      name: "RiskPilot AI — Portfolio Risk X-Ray",
-      url: `${CANONICAL_ORIGIN}/analyze`,
+      name: "RiskPilot — Guided Stock Research",
+      url: CANONICAL_ORIGIN,
       applicationCategory: "FinanceApplication",
       operatingSystem: "Web",
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
       description:
-        "Build a weighted portfolio and get an instant investment risk analysis — concentration, volatility, worst drawdown — with plain-English risk coaching. Educational, never buy/sell advice.",
+        "A guided research workspace with company maps, historical source notes, personal understanding and a decision journal. Educational research; no buy/sell recommendations.",
     },
   ],
 };
@@ -59,9 +59,18 @@ const JSON_LD = {
 // Key is rp-theme (matches ThemeToggle + the e2e/theme spec).
 const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem('rp-theme');if(t!=='dark'&&t!=='light'){t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`;
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en" data-theme="light" className={spaceGrotesk.variable} suppressHydrationWarning>
+    <html
+      lang="en"
+      data-theme="light"
+      className={spaceGrotesk.variable}
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
         <script

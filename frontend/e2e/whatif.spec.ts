@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-// What-if simulator on the home sample report. /api/score and /api/report are
+// What-if simulator on the preserved /portfolio sample report. /api/score and /api/report are
 // route-stubbed — deterministic, no Python backend needed in CI.
 
 const SCORED_FACTS = {
@@ -20,7 +20,8 @@ const WHATIF_REPORT = {
   holdings: [],
   facts: SCORED_FACTS,
   explanation: {
-    summary: "Trimming the top position lowers concentration risk meaningfully.",
+    summary:
+      "Trimming the top position lowers concentration risk meaningfully.",
     top_risk_factors: [],
     review_checklist: [],
     source: "template_fallback",
@@ -33,10 +34,15 @@ test("slider change scores the what-if via /api/score", async ({ page }) => {
     route.fulfill({
       status: 200,
       contentType: "application/json",
-      body: JSON.stringify({ ok: true, holdings: [], facts: SCORED_FACTS, score_version: "v1" }),
+      body: JSON.stringify({
+        ok: true,
+        holdings: [],
+        facts: SCORED_FACTS,
+        score_version: "v1",
+      }),
     }),
   );
-  await page.goto("/");
+  await page.goto("/portfolio");
   const panel = page.getByRole("region", { name: /what if/i });
   await expect(panel).toBeVisible();
   await panel.locator('input[type="range"]').first().press("ArrowRight");
@@ -44,12 +50,19 @@ test("slider change scores the what-if via /api/score", async ({ page }) => {
   await expect(panel.getByText(/Concentration/i)).toBeVisible();
 });
 
-test("explain-this-version fetches guardrailed prose on demand", async ({ page }) => {
+test("explain-this-version fetches guardrailed prose on demand", async ({
+  page,
+}) => {
   await page.route("**/api/score", (route) =>
     route.fulfill({
       status: 200,
       contentType: "application/json",
-      body: JSON.stringify({ ok: true, holdings: [], facts: SCORED_FACTS, score_version: "v1" }),
+      body: JSON.stringify({
+        ok: true,
+        holdings: [],
+        facts: SCORED_FACTS,
+        score_version: "v1",
+      }),
     }),
   );
   await page.route("**/api/report", (route) =>
@@ -61,7 +74,7 @@ test("explain-this-version fetches guardrailed prose on demand", async ({ page }
         })
       : route.fallback(),
   );
-  await page.goto("/");
+  await page.goto("/portfolio");
   const panel = page.getByRole("region", { name: /what if/i });
   await panel.locator('input[type="range"]').first().press("ArrowRight");
   await panel.getByRole("button", { name: /Explain this version/ }).click();
@@ -74,15 +87,19 @@ test("explain-this-version fetches guardrailed prose on demand", async ({ page }
 
 test("score failure grays the panel, report stays intact", async ({ page }) => {
   await page.route("**/api/score", (route) => route.abort());
-  await page.goto("/");
+  await page.goto("/portfolio");
   const panel = page.getByRole("region", { name: /what if/i });
   await panel.locator('input[type="range"]').first().press("ArrowRight");
-  await expect(panel.getByRole("alert")).toContainText(/report above is untouched/i);
+  await expect(panel.getByRole("alert")).toContainText(
+    /report above is untouched/i,
+  );
   await expect(panel.getByRole("button", { name: "Retry" })).toBeVisible();
   // the report above still renders its verdict (scoped to #sample: CoachView's
   // VerdictHeadline always precedes WhatIfPanel's own h2 there, regardless of
   // where #sample sits in the homepage section order)
-  await expect(page.locator("#sample").getByRole("heading", { level: 2 }).first()).toBeVisible();
+  await expect(
+    page.locator("#sample").getByRole("heading", { level: 2 }).first(),
+  ).toBeVisible();
 });
 
 test("home strip rescores on slider drag", async ({ page }) => {
@@ -90,10 +107,15 @@ test("home strip rescores on slider drag", async ({ page }) => {
     route.fulfill({
       status: 200,
       contentType: "application/json",
-      body: JSON.stringify({ ok: true, holdings: [], facts: SCORED_FACTS, score_version: "v1" }),
+      body: JSON.stringify({
+        ok: true,
+        holdings: [],
+        facts: SCORED_FACTS,
+        score_version: "v1",
+      }),
     }),
   );
-  await page.goto("/");
+  await page.goto("/portfolio");
   const strip = page.getByRole("region", { name: /drag it/i });
   await strip.locator('input[type="range"]').press("ArrowRight");
   await expect(strip.getByText("61")).toBeVisible();
@@ -101,7 +123,7 @@ test("home strip rescores on slider drag", async ({ page }) => {
 
 test("home strip: score failure shows alert + retry", async ({ page }) => {
   await page.route("**/api/score", (route) => route.abort());
-  await page.goto("/");
+  await page.goto("/portfolio");
   const strip = page.getByRole("region", { name: /drag it/i });
   await strip.locator('input[type="range"]').press("ArrowRight");
   await expect(strip.getByRole("alert")).toContainText(/reach the engine/i);
