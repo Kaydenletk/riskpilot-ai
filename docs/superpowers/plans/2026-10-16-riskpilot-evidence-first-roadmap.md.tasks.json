@@ -1,0 +1,80 @@
+{
+  "planPath": "docs/superpowers/plans/2026-10-16-riskpilot-evidence-first-roadmap.md",
+  "planType": "product-ux-learning-roadmap",
+  "implementationStarted": true,
+  "tasks": [
+    {
+      "id": 1,
+      "subject": "1 — Xác nhận bottleneck bằng discovery",
+      "status": "pending",
+      "blockedBy": [],
+      "description": "**Outputs:** `docs/research/riskpilot-discovery-protocol.md`, `docs/research/riskpilot-discovery-synthesis.md` khi thực hiện; notes ẩn danh ngoài public repo.\n\n- [ ] Tuyển 8 người với trải nghiệm gần đây; ghi thị trường, ngôn ngữ và độ quen thuộc.\n- [ ] Dùng protocol trong research report, xem cách họ đã làm trước khi giới thiệu sản phẩm.\n- [ ] Tổng hợp hành vi và workaround theo các nhóm: không biết bắt đầu; khó kiểm chứng; thiếu cơ chế risk; quên rationale.\n- [ ] Ghi bằng chứng ngược: người không cần sản phẩm, người muốn recommendation hoặc chỉ xem giá.\n\n**Acceptance:** Mỗi bottleneck ưu tiên có sự kiện/tài liệu quan sát được; không tạo quote/persona giả. Chọn claim-first hoặc map-first dựa trên hành vi. Nếu chưa tuyển được, đánh dấu assumption chưa kiểm chứng và dùng prototype cho thử nghiệm, không claim validated.\n\n**Học:** interviewing, observation, phân biệt problem và feature request."
+    },
+    {
+      "id": 2,
+      "subject": "2 — Prototype hành trình, chưa nối model",
+      "status": "in_progress",
+      "blockedBy": [
+        1
+      ],
+      "description": "**Outputs:** `docs/research/riskpilot-prototype-scenarios.md`; `rebuild/prototype/index.html` khi được triển khai.\n\n- [ ] Tạo một case factual đúng, một sai và một chưa đủ từ corpus tuyển chọn.\n- [ ] Company Map có business, nguồn doanh thu, growth và risk cards.\n- [ ] Evidence Panel có claim, excerpt, URL, kỳ/ngày và diễn giải riêng.\n- [ ] My Understanding có business bằng lời mình, rủi ro, nguồn và unknowns.\n- [ ] Có empty/loading/source-unavailable states; người dùng có thể bỏ qua hoặc sửa draft.\n- [ ] Test 6–8 người, debrief mọi seeded error; chọn entry point.\n\n**Acceptance:** Người dùng hoàn thành nhiệm vụ nghiên cứu mà không cần tự nghĩ prompt; ghi nơi mắc và thay đổi thiết kế. Chưa coi usability thành bằng chứng WTP.\n\n**Học:** HTML/CSS, component states, information architecture, usability testing."
+    },
+    {
+      "id": 3,
+      "subject": "3 — Vertical slice chạy local với dữ liệu cố định",
+      "status": "completed",
+      "blockedBy": [
+        2
+      ],
+      "description": "**Proposed files:** `rebuild/frontend/src/app/research/[symbol]/page.tsx`, `rebuild/frontend/src/components/research/CompanyMap.tsx`, `EvidencePanel.tsx`, `UnderstandingEditor.tsx`, `rebuild/frontend/src/lib/research-types.ts`, `session-store.ts`, `rebuild/backend/src/riskpilot_research/main.py`, `schemas.py`, `corpus.py`, `rebuild/corpus/manifest.json`.\n\n- [ ] Khởi tạo mới dưới `rebuild/` khi bắt đầu execution; giữ app cũ tham khảo.\n- [ ] Định nghĩa SourceDocument, EvidenceChunk, Claim, UserUnderstanding, ResearchSession.\n- [ ] API trả company map/excerpts cố định cho company được hỗ trợ; ticker khác trả 404 rõ ràng.\n- [ ] Browser lưu session local có export/delete; reload giữ nguyên nội dung người dùng.\n- [ ] Kèm hướng dẫn chạy hai service và giải thích đường request từ browser tới API.\n\n**Acceptance:** Một người hoàn thành Map → Evidence → Understanding → lưu → reload → mở đúng nguồn, không cần model key. Ghi rõ dữ liệu ở browser, không sync, không bảo đảm lưu vĩnh viễn.\n\n**Học:** TypeScript, React, HTTP, FastAPI, validation, persistence cơ bản. Người học tự giải thích được từng boundary trước task sau."
+    },
+    {
+      "id": 4,
+      "subject": "4 — Retrieval trước generation",
+      "status": "in_progress",
+      "blockedBy": [
+        3
+      ],
+      "description": "**Proposed files:** `rebuild/backend/src/riskpilot_research/ingest.py`, `retrieve.py`, `rebuild/backend/tests/test_retrieve.py`, `rebuild/eval/retrieval-cases.json`.\n\n- [ ] Chia đoạn theo section, giữ company/source/period/chunk ID.\n- [ ] Viết baseline lexical search và xem trực tiếp top results; sau đó so với embeddings khi baseline bộc lộ lỗi paraphrase.\n- [ ] Dùng corpus/version và embedding model identifier để phát hiện index không khớp; không embed lại mỗi lần hỏi.\n- [ ] Tạo 30 case: 10 trực tiếp, 10 paraphrase, 5 khác công ty/kỳ, 5 không có nguồn hỗ trợ; gold chunks do người kiểm tra.\n- [ ] Đo tìm được relevant chunk trong top-k; kiểm tra company/period filter và chi phí ingest/query.\n\n**Acceptance:** Không trả nguồn công ty khác; tất cả ID truy được excerpt gốc; report baseline và semantic search trên cùng bộ case, nêu lỗi còn lại. Không đặt ngưỡng similarity tùy ý thành “độ chắc chắn”.\n\n**Học:** parsing, chunking, search, embeddings, reproducible evaluation. Không cần tự viết math embeddings."
+    },
+    {
+      "id": 5,
+      "subject": "5 — Sinh giải thích có căn cứ và giới hạn rõ",
+      "status": "in_progress",
+      "blockedBy": [
+        4
+      ],
+      "description": "**Proposed files:** `rebuild/backend/src/riskpilot_research/explain.py`, `validate.py`, `rebuild/backend/tests/test_explain.py`, `rebuild/eval/claim-cases.json`.\n\n- [ ] Schema gồm claim, explanation, evidence IDs, relation-to-evidence và unanswered questions.\n- [ ] Model chỉ được tham chiếu chunk IDs được retrieve; app dựng URL từ manifest, không lấy URL tự sinh của model.\n- [ ] Tách reported fact, forecast/assumption và AI interpretation; không biến forecast thành fact.\n- [ ] Test unknown citation ID, đúng nguồn nhưng không hỗ trợ claim, nhầm kỳ/đơn vị, thiếu context, tài liệu chứa chỉ dẫn lạ và API timeout.\n- [ ] Unknown ID/schema invalid bị chặn. Khi không đủ nguồn, trả excerpts và giới hạn; không bịa lời giải thích để lấp chỗ trống.\n- [ ] Human audit semantic support theo claim. Validator ID không được mô tả thành bảo đảm factual correctness.\n\n**Acceptance:** Failures có trạng thái người dùng hiểu được; eval tách retrieval error, grounding error và comprehension error. Demo vẫn dùng được qua fixture ghi nhãn khi model không sẵn sàng.\n\n**Học:** LLM API, structured output, prompt, error handling, evaluation."
+    },
+    {
+      "id": 6,
+      "subject": "6 — Đo hiểu biết, kiểm chứng giá trị phiên đầu",
+      "status": "in_progress",
+      "blockedBy": [
+        5
+      ],
+      "description": "**Outputs:** `rebuild/eval/understanding-rubric.md`, `docs/research/riskpilot-usability-results.md`.\n\n- [ ] So sánh workspace và summary chat cùng nội dung/corpus; counterbalance task/company/order.\n- [ ] Đánh giá explanation bằng lời người dùng, source–claim matching, nhận diện unknown và chấp nhận/từ chối claim đúng/sai.\n- [ ] Đo confidence riêng cùng accuracy; ghi time, dropout và yêu cầu hỗ trợ.\n- [ ] Kiểm tra lại sau một tuần; lưu raw counts, số người và limitations, không chỉ phần trăm.\n\n**Acceptance:** Có evidence về cách người dùng làm, cả thất bại và thành công. Nếu chỉ tăng confidence mà không tăng chất lượng hiểu, sửa UX trước mở rộng.\n\n**Học:** rubric, study design, phân tích định tính/định lượng cơ bản, không suy luận quá mẫu nhỏ."
+    },
+    {
+      "id": 7,
+      "subject": "7 — Thesis Memory & Review, có điều kiện",
+      "status": "in_progress",
+      "blockedBy": [
+        6
+      ],
+      "description": "**Dependency:** Task 6 cho thấy giá trị phiên đầu và người dùng có nhu cầu quay lại rationale.\n\n**Proposed files:** `rebuild/frontend/src/components/research/ThesisJournal.tsx`, `rebuild/frontend/src/lib/thesis-history.ts`, `thesis-history.test.ts`, `rebuild/corpus/revisions/`.\n\n- [ ] Lưu thesis version, user-confirmed rationale, source IDs và ngày nghiên cứu.\n- [ ] Dùng hai phiên bản tài liệu tuyển chọn để test “what changed”; chưa cần ingestion tự động.\n- [ ] Cho người dùng đối chiếu và cập nhật; không ghi đè lịch sử hoặc tự đổi quan điểm.\n- [ ] Người dùng tự chọn review date; thử review thủ công trước notification.\n\n**Acceptance:** Tìm lại được lý do và nguồn cũ, phân biệt tài liệu thay đổi với giá thay đổi. Không dùng returns để chấm reasoning.\n\n**Học:** versioning, data modeling, diff, state transitions."
+    },
+    {
+      "id": 8,
+      "subject": "8 — Pilot và business validation",
+      "status": "pending",
+      "blockedBy": [
+        7
+      ],
+      "description": "**Outputs:** `docs/research/riskpilot-pilot-results.md`, README/demo mới khi readiness được xác nhận.\n\n- [ ] Supervised/local pilot nhóm nhỏ hai tuần. Nếu cần account/cloud sync, viết scope auth/data isolation riêng trước lưu dữ liệu cá nhân lên cloud.\n- [ ] Public demo chỉ dùng hồ sơ mẫu/read-only cho đến khi có identity và access control.\n- [ ] Theo dõi dùng lại có mục đích, công ty thứ hai, cập nhật hiểu biết/thesis; không tối ưu số giao dịch.\n- [ ] Thử đề nghị pilot trả phí cụ thể với người đã nhận giá trị; ghi chấp nhận/từ chối và lý do, không tự thu phí hoặc gửi thông điệp khi chưa được user giao.\n- [ ] Viết case study nêu vấn đề, quyết định thiết kế, lỗi, sửa và số liệu thực đo.\n\n**Acceptance:** Tách kết quả học, usability, retention và commercial signal. Nêu rõ phần chưa chứng minh. Không claim PMF chỉ từ nhóm thử nhỏ.\n\n**Học:** deployment khi cần, product instrumentation, customer validation, technical storytelling."
+    }
+  ],
+  "lastUpdated": "2026-10-16",
+  "implementationNotes": "2026-10-16: User requested implementation before customer interviews. Existing frontend rebuilt in place; old homepage moved to /portfolio. New Next.js research API, three curated historical company packs, lexical retrieval, optional consented model explanation, per-company browser notebooks and immutable snapshot journal. No customer validation, vector retrieval, full-document ingestion, cloud accounts or production deployment completed.",
+  "verificationNote": "See docs/RESEARCH_WORKSPACE.md and frontend test suites; customer research tasks remain pending."
+}
