@@ -3,8 +3,12 @@ import { NextResponse } from "next/server";
 
 import { analyzePortfolio, analyzeWeighted, fetchSampleReport } from "@/lib/backend";
 import { MAX_HOLDINGS } from "@/lib/parse-holdings";
-import { weightedPortfolio } from "@/lib/portfolio-schema";
+import { portfolioGoal, weightedPortfolio } from "@/lib/portfolio-schema";
 import type { Holding } from "@/lib/types";
+
+// The weighted branch holds a live LLM call (explain pass) — keep the function
+// alive past the default serverless budget so it can't abort a healthy request.
+export const maxDuration = 60;
 
 export async function GET() {
   try {
@@ -55,7 +59,8 @@ export async function POST(req: Request) {
   // Builder / what-if flow: percent weights instead of shares. Routed on the
   // presence of `weighted` so the two input modes can share this endpoint.
   if (body && typeof body === "object" && "weighted" in (body as Record<string, unknown>)) {
-    return handleWeighted((body as { weighted: unknown }).weighted);
+    const record = body as { weighted: unknown; goal?: unknown };
+    return handleWeighted(record.weighted, record.goal);
   }
 
   const v = validateHoldings(body);
@@ -80,7 +85,7 @@ export async function POST(req: Request) {
 // Weighted (percent) branch: zod-validated at this boundary BEFORE the engine
 // ever sees it (defense in depth — the engine re-validates independently).
 // Engine-down = 503, matching the shares branch above and /api/score.
-async function handleWeighted(value: unknown) {
+async function handleWeighted(value: unknown, goalValue?: unknown) {
   const parsed = weightedPortfolio.safeParse(value);
   if (!parsed.success) {
     return NextResponse.json(
@@ -88,7 +93,14 @@ async function handleWeighted(value: unknown) {
       { status: 400 },
     );
   }
-  const result = await analyzeWeighted(parsed.data);
+  const parsedGoal = goalValue === undefined ? undefined : portfolioGoal.safeParse(goalValue);
+  if (parsedGoal && !parsedGoal.success) {
+    return NextResponse.json(
+      { error: "invalid_goal", errors: ["goal must be growth, balanced, or income"] },
+      { status: 400 },
+    );
+  }
+  const result = await analyzeWeighted(parsed.data, parsedGoal?.data);
   if (result.ok) return NextResponse.json(result.report);
   if (result.reason === "unknown_tickers") {
     return NextResponse.json(

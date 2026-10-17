@@ -6,27 +6,41 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import { GoalPicker } from "@/components/analyze/GoalPicker";
 import { PortfolioBuilder } from "@/components/analyze/PortfolioBuilder";
 import { PreviewRail } from "@/components/analyze/PreviewRail";
 import { Dashboard } from "@/components/dashboard/Dashboard";
-import { weightedPortfolio } from "@/lib/portfolio-schema";
+import { portfolioGoal, weightedPortfolio } from "@/lib/portfolio-schema";
 import {
   parsePortfolio,
   removeHolding,
   serializePortfolio,
   type PortfolioRow,
 } from "@/lib/portfolio-state";
-import type { RiskReport, TickerOption } from "@/lib/types";
+import type { PortfolioGoal, RiskReport, TickerOption } from "@/lib/types";
 
 import styles from "./analyze.module.css";
 
 const LAST_PORTFOLIO_KEY = "rp-last-portfolio";
 const URL_SYNC_DEBOUNCE_MS = 300;
 
-// One-click starting point for first-timers: teaches the builder by showing a
-// filled state instead of explaining an empty one. Tech-heavy on purpose — the
-// resulting report demonstrates the concentration coaching immediately.
-const EXAMPLE_PORTFOLIO = "NVDA:30,AAPL:20,MSFT:15,AMZN:15,KO:10,JNJ:10";
+const DEFAULT_GOAL: PortfolioGoal = "balanced";
+
+// One-click starting points for first-timers: teach the builder by showing a
+// filled state instead of explaining an empty one. Each goal gets its own mix
+// so the example immediately demonstrates the goal-fit coaching — the growth
+// one is tech-heavy on purpose (concentration coaching), the income one leans
+// on the sectors income portfolios typically draw from.
+const EXAMPLE_PORTFOLIOS: Record<PortfolioGoal, string> = {
+  growth: "NVDA:30,AAPL:20,MSFT:15,AMZN:15,KO:10,JNJ:10",
+  balanced: "NVDA:15,MSFT:15,AMZN:10,JPM:15,KO:15,DUK:15,JNJ:15",
+  income: "KO:15,PG:10,JNJ:10,XOM:15,DUK:15,SO:10,AMT:10,JPM:15",
+};
+
+function parseGoal(value: string | null): PortfolioGoal {
+  const parsed = portfolioGoal.safeParse(value);
+  return parsed.success ? parsed.data : DEFAULT_GOAL;
+}
 
 type Phase =
   | { kind: "builder" }
@@ -40,6 +54,7 @@ export function AnalyzeClient({ universe }: { universe: TickerOption[] }) {
   const params = useSearchParams();
 
   const [rows, setRows] = useState<PortfolioRow[]>(() => parsePortfolio(params.get("p") ?? ""));
+  const [goal, setGoal] = useState<PortfolioGoal>(() => parseGoal(params.get("goal")));
   const [phase, setPhase] = useState<Phase>({ kind: "builder" });
   const [builderError, setBuilderError] = useState<string | null>(null);
   const [resumeAvailable, setResumeAvailable] = useState(false);
@@ -58,19 +73,24 @@ export function AnalyzeClient({ universe }: { universe: TickerOption[] }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Keep the portfolio shareable: rows -> ?p=, debounced so typing in a weight
-  // field doesn't spam history (replace, not push — back button stays sane).
+  // Keep the portfolio shareable: rows -> ?p=, goal -> ?goal= (omitted at the
+  // default so plain links stay clean), debounced so typing in a weight field
+  // doesn't spam history (replace, not push — back button stays sane).
   const syncTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     if (syncTimer.current) clearTimeout(syncTimer.current);
     syncTimer.current = setTimeout(() => {
+      const query = new URLSearchParams();
       const serialized = serializePortfolio(rows);
-      router.replace(serialized ? `/analyze?p=${serialized}` : "/analyze", { scroll: false });
+      if (serialized) query.set("p", serialized);
+      if (goal !== DEFAULT_GOAL) query.set("goal", goal);
+      const qs = query.toString();
+      router.replace(qs ? `/analyze?${qs}` : "/analyze", { scroll: false });
     }, URL_SYNC_DEBOUNCE_MS);
     return () => {
       if (syncTimer.current) clearTimeout(syncTimer.current);
     };
-  }, [rows, router]);
+  }, [rows, goal, router]);
 
   const run = useCallback(
     async (current: PortfolioRow[]) => {
@@ -88,7 +108,7 @@ export function AnalyzeClient({ universe }: { universe: TickerOption[] }) {
         const res = await fetch("/api/report", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ weighted: parsed.data }),
+          body: JSON.stringify({ weighted: parsed.data, goal }),
         });
         if (res.ok) {
           const report = (await res.json()) as RiskReport;
@@ -115,7 +135,7 @@ export function AnalyzeClient({ universe }: { universe: TickerOption[] }) {
       }
       setPhase({ kind: "offline" });
     },
-    [],
+    [goal],
   );
 
   function resumeLast() {
@@ -164,14 +184,24 @@ export function AnalyzeClient({ universe }: { universe: TickerOption[] }) {
 
   return (
     <div className="stage stage-2">
+      <GoalPicker
+        goal={goal}
+        onGoalChange={(next) => {
+          setGoal(next);
+          // A goal change invalidates a rendered read — drop back to the
+          // builder so the next run re-scores against the new goal.
+          if (phase.kind !== "builder") setPhase({ kind: "builder" });
+        }}
+      />
+
       {phase.kind === "builder" && rows.length === 0 && (
         <div className={styles.starterRow}>
           <button
             type="button"
             className={styles.starterBtn}
-            onClick={() => setRows(parsePortfolio(EXAMPLE_PORTFOLIO))}
+            onClick={() => setRows(parsePortfolio(EXAMPLE_PORTFOLIOS[goal]))}
           >
-            Try an example portfolio →
+            Try an example {goal} portfolio →
           </button>
           {resumeAvailable && (
             <div className={styles.resumeChip}>

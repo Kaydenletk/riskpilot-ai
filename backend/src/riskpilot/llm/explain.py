@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import logging
 
-from ..schema import ExplanationSource, RiskExplanation, RiskFacts
+from ..schema import ExplanationSource, GoalFit, RiskExplanation, RiskFacts
 from .number_guardrail import find_ungrounded_numbers
 from .openai_client import LLMError, LLMExplanationDraft, call_openai
 from .template import build_template_explanation
@@ -22,9 +22,10 @@ log = logging.getLogger("riskpilot.explain")
 MAX_LLM_RETRIES = 1  # one regeneration attempt, then fail closed. NEVER loop.
 
 
-def _fact_values(facts: RiskFacts) -> list[float]:
-    """The numbers the guardrail treats as grounded."""
-    return [
+def _fact_values(facts: RiskFacts, goal_fit: GoalFit | None = None) -> list[float]:
+    """The numbers the guardrail treats as grounded. Goal-fit numbers join the
+    whitelist ONLY when the request carried a goal — mirror of _facts_block."""
+    values = [
         facts.risk_score,
         facts.concentration_pct_top3,
         facts.volatility_annualized_pct,
@@ -33,6 +34,18 @@ def _fact_values(facts: RiskFacts) -> list[float]:
         facts.largest_sector_pct,
         float(facts.holdings_count),
     ]
+    if goal_fit is not None:
+        values.extend(
+            [
+                goal_fit.income_orientation_pct,
+                goal_fit.growth_orientation_pct,
+                goal_fit.fit_score,
+                goal_fit.income_yield_proxy_pct,
+            ]
+        )
+        for suggestion in goal_fit.sector_suggestions:
+            values.extend([suggestion.current_pct, suggestion.typical_yield_pct])
+    return values
 
 
 def _draft_prose(draft: LLMExplanationDraft) -> str:
@@ -49,21 +62,27 @@ def _to_explanation(draft: LLMExplanationDraft, source: ExplanationSource) -> Ri
     )
 
 
-def explain(config, facts: RiskFacts, *, client: object | None = None) -> RiskExplanation:
+def explain(
+    config,
+    facts: RiskFacts,
+    goal_fit: GoalFit | None = None,
+    *,
+    client: object | None = None,
+) -> RiskExplanation:
     """Produce a grounded explanation. Live model when configured, else template."""
     if not config.has_live_llm:
-        expl = build_template_explanation(facts)
+        expl = build_template_explanation(facts, goal_fit)
         expl.source = ExplanationSource.demo_fixture if config.demo_mode else ExplanationSource.template_fallback
         return expl
 
-    fact_values = _fact_values(facts)
+    fact_values = _fact_values(facts, goal_fit)
 
     # Attempt 1: model.
     try:
-        draft = call_openai(config, facts, client=client)
+        draft = call_openai(config, facts, goal_fit=goal_fit, client=client)
     except LLMError as e:
         log.warning("LLM call failed (%s) -> template fallback", e)
-        return _to_explanation_from_template(facts)
+        return _to_explanation_from_template(facts, goal_fit)
 
     ungrounded = find_ungrounded_numbers(_draft_prose(draft), fact_values)
     if not ungrounded:
@@ -76,20 +95,24 @@ def explain(config, facts: RiskFacts, *, client: object | None = None) -> RiskEx
         "Rewrite using ONLY the provided facts. Do not introduce any other number."
     )
     try:
-        draft2 = call_openai(config, facts, correction=correction, client=client)
+        draft2 = call_openai(
+            config, facts, correction=correction, goal_fit=goal_fit, client=client
+        )
     except LLMError as e:
         log.warning("regeneration failed (%s) -> template fallback", e)
-        return _to_explanation_from_template(facts)
+        return _to_explanation_from_template(facts, goal_fit)
 
     if not find_ungrounded_numbers(_draft_prose(draft2), fact_values):
         return _to_explanation(draft2, ExplanationSource.model_regenerated)
 
     # Still hallucinating after one retry: fail closed to the grounded template.
     log.warning("LLM still ungrounded after retry -> template fallback")
-    return _to_explanation_from_template(facts)
+    return _to_explanation_from_template(facts, goal_fit)
 
 
-def _to_explanation_from_template(facts: RiskFacts) -> RiskExplanation:
-    expl = build_template_explanation(facts)
+def _to_explanation_from_template(
+    facts: RiskFacts, goal_fit: GoalFit | None = None
+) -> RiskExplanation:
+    expl = build_template_explanation(facts, goal_fit)
     expl.source = ExplanationSource.template_fallback
     return expl

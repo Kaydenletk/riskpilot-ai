@@ -45,6 +45,47 @@ class RiskFacts(BaseModel):
     holdings_count: int = Field(..., ge=0)
 
 
+class PortfolioGoal(str, Enum):
+    """What the investor says the portfolio is FOR. Chosen in the builder UI."""
+
+    growth = "growth"
+    balanced = "balanced"
+    income = "income"
+
+
+class FitBand(str, Enum):
+    aligned = "aligned"
+    partial = "partial"
+    misaligned = "misaligned"
+
+
+class SectorSuggestion(BaseModel):
+    """One sector that typically serves the chosen goal — educational context,
+    never a buy list. `example_tickers` are demo-universe names not already held."""
+
+    sector: str
+    current_pct: float = Field(..., ge=0, le=100, description="current portfolio weight")
+    typical_yield_pct: float = Field(
+        ..., ge=0, description="illustrative sector yield proxy (synthetic universe)"
+    )
+    example_tickers: list[str]
+
+
+class GoalFit(BaseModel):
+    """Deterministic goal-alignment facts. Produced ONLY by risk_engine.goal —
+    the LLM may reference these numbers (they join the guardrail whitelist)."""
+
+    goal: PortfolioGoal
+    income_orientation_pct: float = Field(..., ge=0, le=100)
+    growth_orientation_pct: float = Field(..., ge=0, le=100)
+    fit_score: float = Field(..., ge=0, le=100)
+    fit_band: FitBand
+    income_yield_proxy_pct: float = Field(
+        ..., ge=0, description="weighted illustrative yield proxy, NOT a real yield"
+    )
+    sector_suggestions: list[SectorSuggestion]
+
+
 class ScoreResponse(BaseModel):
     """Facts-only response for the what-if fast path. Deliberately NO explanation
     field — this endpoint never touches the LLM."""
@@ -78,6 +119,9 @@ class RiskReport(BaseModel):
     holdings: list[Holding]
     facts: RiskFacts
     explanation: RiskExplanation
+    # Present only when the request named a portfolio goal. Optional so committed
+    # frontend fixtures predating the field stay valid.
+    goal_fit: GoalFit | None = None
     disclaimer: str = (
         "Educational risk coaching, not financial advice. No buy/sell recommendations. "
         "Illustrative sample data."

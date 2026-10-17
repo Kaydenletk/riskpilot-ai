@@ -43,3 +43,13 @@ export const simulatorPortfolio = z
       WEIGHT_SUM_TOLERANCE,
     { message: "weights must sum to 100" },
   );
+
+// Stated portfolio goal — optional companion to the weighted body. Mirrors
+// backend PortfolioGoal; the engine computes goal-fit facts when present.
+// `satisfies` pins this enum to lib/types.ts PortfolioGoal (single source of
+// truth) — drifting either side is a compile error.
+export const portfolioGoal = z.enum([
+  "growth",
+  "balanced",
+  "income",
+]) satisfies z.ZodType<import("./types").PortfolioGoal>;
