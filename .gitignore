@@ -10,6 +10,9 @@ venv/
 # Node / Next
 node_modules/
 .next/
+.next-verify/
+frontend/test-results/
+frontend/playwright-report/
 out/
 .turbo/
 *.tsbuildinfo
@@ -42,3 +45,6 @@ build/
 
 .gstack/
 .superpowers/
+
+# Locally generated embedding indexes
+.research/
