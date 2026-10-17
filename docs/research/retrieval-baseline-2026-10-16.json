@@ -1,0 +1,411 @@
+{
+  "corpusVersion": "sha256:d62ee493ce82218d3803481cb3d7219786e3827e3fd2edf45e4d528eba6b18c1",
+  "retrievalVersion": "research-retrieval-v1",
+  "strategy": "lexical",
+  "caseCount": 30,
+  "categories": {
+    "direct": {
+      "total": 10,
+      "passed": 10
+    },
+    "paraphrase": {
+      "total": 10,
+      "passed": 2
+    },
+    "out_of_scope": {
+      "total": 5,
+      "passed": 5
+    },
+    "unanswerable": {
+      "total": 5,
+      "passed": 4
+    }
+  },
+  "definition": "Answerable: at least one expected note in top 3. Other: zero retrieved notes. No generation scoring.",
+  "limitation": "30 manually authored development cases; not user interviews or an independent held-out benchmark. Semantic provider not evaluated.",
+  "cases": [
+    {
+      "id": "direct-01",
+      "category": "direct",
+      "symbol": "NVDA",
+      "query": "export restrictions China",
+      "expectedIds": [
+        "nvda-export"
+      ],
+      "retrievedIds": [
+        "nvda-export"
+      ],
+      "passed": true,
+      "abstentionReason": null
+    },
+    {
+      "id": "direct-02",
+      "category": "direct",
+      "symbol": "NVDA",
+      "query": "data center AI demand",
+      "expectedIds": [
+        "nvda-demand"
+      ],
+      "retrievedIds": [
+        "nvda-demand",
+        "nvda-export"
+      ],
+      "passed": true,
+      "abstentionReason": null
+    },
+    {
+      "id": "direct-03",
+      "category": "direct",
+      "symbol": "NVDA",
+      "query": "manufacturing supply partners",
+      "expectedIds": [
+        "nvda-supply"
+      ],
+      "retrievedIds": [
+        "nvda-supply"
+      ],
+      "passed": true,
+      "abstentionReason": null
+    },
+    {
+      "id": "direct-04",
+      "category": "direct",
+      "symbol": "NVDA",
+      "query": "business revenue products",
+      "expectedIds": [
+        "nvda-business"
+      ],
+      "retrievedIds": [
+        "nvda-business",
+        "nvda-demand",
+        "nvda-supply"
+      ],
+      "passed": true,
+      "abstentionReason": null
+    },
+    {
+      "id": "direct-05",
+      "category": "direct",
+      "symbol": "MSFT",
+      "query": "cloud Azure demand",
+      "expectedIds": [
+        "msft-demand"
+      ],
+      "retrievedIds": [
+        "msft-demand",
+        "msft-business",
+        "msft-competition"
+      ],
+      "passed": true,
+      "abstentionReason": null
+    },
+    {
+      "id": "direct-06",
+      "category": "direct",
+      "symbol": "MSFT",
+      "query": "capital expenditure infrastructure investment",
+      "expectedIds": [
+        "msft-demand"
+      ],
+      "retrievedIds": [
+        "msft-demand"
+      ],
+      "passed": true,
+      "abstentionReason": null
+    },
+    {
+      "id": "direct-07",
+      "category": "direct",
+      "symbol": "MSFT",
+      "query": "competition cloud products",
+      "expectedIds": [
+        "msft-competition"
+      ],
+      "retrievedIds": [
+        "msft-business",
+        "msft-competition",
+        "msft-demand"
+      ],
+      "passed": true,
+      "abstentionReason": null
+    },
+    {
+      "id": "direct-08",
+      "category": "direct",
+      "symbol": "AAPL",
+      "query": "manufacturing outsourcing components",
+      "expectedIds": [
+        "aapl-supply"
+      ],
+      "retrievedIds": [
+        "aapl-supply"
+      ],
+      "passed": true,
+      "abstentionReason": null
+    },
+    {
+      "id": "direct-09",
+      "category": "direct",
+      "symbol": "AAPL",
+      "query": "competition product transitions",
+      "expectedIds": [
+        "aapl-competition"
+      ],
+      "retrievedIds": [
+        "aapl-competition",
+        "aapl-demand"
+      ],
+      "passed": true,
+      "abstentionReason": null
+    },
+    {
+      "id": "direct-10",
+      "category": "direct",
+      "symbol": "AAPL",
+      "query": "revenue iphone services",
+      "expectedIds": [
+        "aapl-business"
+      ],
+      "retrievedIds": [
+        "aapl-business",
+        "aapl-demand"
+      ],
+      "passed": true,
+      "abstentionReason": null
+    },
+    {
+      "id": "paraphrase-01",
+      "category": "paraphrase",
+      "symbol": "NVDA",
+      "query": "Can Washington stop chips reaching Chinese buyers?",
+      "expectedIds": [
+        "nvda-export"
+      ],
+      "retrievedIds": [
+        "nvda-business"
+      ],
+      "passed": false,
+      "abstentionReason": null
+    },
+    {
+      "id": "paraphrase-02",
+      "category": "paraphrase",
+      "symbol": "NVDA",
+      "query": "Who actually fabricates its processors?",
+      "expectedIds": [
+        "nvda-supply"
+      ],
+      "retrievedIds": [],
+      "passed": false,
+      "abstentionReason": "no_matching_notes"
+    },
+    {
+      "id": "paraphrase-03",
+      "category": "paraphrase",
+      "symbol": "NVDA",
+      "query": "Why are customers spending on machine intelligence?",
+      "expectedIds": [
+        "nvda-demand"
+      ],
+      "retrievedIds": [],
+      "passed": false,
+      "abstentionReason": "no_matching_notes"
+    },
+    {
+      "id": "paraphrase-04",
+      "category": "paraphrase",
+      "symbol": "MSFT",
+      "query": "Does constructing server farms create costs before payback?",
+      "expectedIds": [
+        "msft-demand"
+      ],
+      "retrievedIds": [],
+      "passed": false,
+      "abstentionReason": "no_matching_notes"
+    },
+    {
+      "id": "paraphrase-05",
+      "category": "paraphrase",
+      "symbol": "MSFT",
+      "query": "What if rival offerings win buyers?",
+      "expectedIds": [
+        "msft-competition"
+      ],
+      "retrievedIds": [
+        "msft-competition"
+      ],
+      "passed": true,
+      "abstentionReason": null
+    },
+    {
+      "id": "paraphrase-06",
+      "category": "paraphrase",
+      "symbol": "MSFT",
+      "query": "Which hosted computing activities support expansion?",
+      "expectedIds": [
+        "msft-demand"
+      ],
+      "retrievedIds": [
+        "msft-business",
+        "msft-demand",
+        "msft-competition"
+      ],
+      "passed": true,
+      "abstentionReason": null
+    },
+    {
+      "id": "paraphrase-07",
+      "category": "paraphrase",
+      "symbol": "AAPL",
+      "query": "Who assembles the devices abroad?",
+      "expectedIds": [
+        "aapl-supply"
+      ],
+      "retrievedIds": [
+        "aapl-business"
+      ],
+      "passed": false,
+      "abstentionReason": null
+    },
+    {
+      "id": "paraphrase-08",
+      "category": "paraphrase",
+      "symbol": "AAPL",
+      "query": "Could a bad launch hurt the firm?",
+      "expectedIds": [
+        "aapl-competition"
+      ],
+      "retrievedIds": [],
+      "passed": false,
+      "abstentionReason": "no_matching_notes"
+    },
+    {
+      "id": "paraphrase-09",
+      "category": "paraphrase",
+      "symbol": "AAPL",
+      "query": "Where does the cash coming in originate?",
+      "expectedIds": [
+        "aapl-business"
+      ],
+      "retrievedIds": [],
+      "passed": false,
+      "abstentionReason": "no_matching_notes"
+    },
+    {
+      "id": "paraphrase-10",
+      "category": "paraphrase",
+      "symbol": "AAPL",
+      "query": "Why would buyers want another generation?",
+      "expectedIds": [
+        "aapl-demand"
+      ],
+      "retrievedIds": [],
+      "passed": false,
+      "abstentionReason": "no_matching_notes"
+    },
+    {
+      "id": "out_of_scope-01",
+      "category": "out_of_scope",
+      "symbol": "NVDA",
+      "query": "current stock price",
+      "expectedIds": [],
+      "retrievedIds": [],
+      "passed": true,
+      "abstentionReason": "unsupported_time"
+    },
+    {
+      "id": "out_of_scope-02",
+      "category": "out_of_scope",
+      "symbol": "NVDA",
+      "query": "revenue in 2026",
+      "expectedIds": [],
+      "retrievedIds": [],
+      "passed": true,
+      "abstentionReason": "unsupported_time"
+    },
+    {
+      "id": "out_of_scope-03",
+      "category": "out_of_scope",
+      "symbol": "NVDA",
+      "query": "should I buy NVDA",
+      "expectedIds": [],
+      "retrievedIds": [],
+      "passed": true,
+      "abstentionReason": "outside_scope"
+    },
+    {
+      "id": "out_of_scope-04",
+      "category": "out_of_scope",
+      "symbol": "NVDA",
+      "query": "latest export restrictions",
+      "expectedIds": [],
+      "retrievedIds": [],
+      "passed": true,
+      "abstentionReason": "unsupported_time"
+    },
+    {
+      "id": "out_of_scope-05",
+      "category": "out_of_scope",
+      "symbol": "NVDA",
+      "query": "price target next year",
+      "expectedIds": [],
+      "retrievedIds": [],
+      "passed": true,
+      "abstentionReason": "outside_scope"
+    },
+    {
+      "id": "unanswerable-01",
+      "category": "unanswerable",
+      "symbol": "NVDA",
+      "query": "banana recipe",
+      "expectedIds": [],
+      "retrievedIds": [],
+      "passed": true,
+      "abstentionReason": "no_matching_notes"
+    },
+    {
+      "id": "unanswerable-02",
+      "category": "unanswerable",
+      "symbol": "MSFT",
+      "query": "office cafeteria menu",
+      "expectedIds": [],
+      "retrievedIds": [],
+      "passed": true,
+      "abstentionReason": "no_matching_notes"
+    },
+    {
+      "id": "unanswerable-03",
+      "category": "unanswerable",
+      "symbol": "AAPL",
+      "query": "employee parking policy",
+      "expectedIds": [],
+      "retrievedIds": [],
+      "passed": true,
+      "abstentionReason": "no_matching_notes"
+    },
+    {
+      "id": "unanswerable-04",
+      "category": "unanswerable",
+      "symbol": "NVDA",
+      "query": "exact China revenue percentage",
+      "expectedIds": [],
+      "retrievedIds": [
+        "nvda-business",
+        "nvda-demand",
+        "nvda-export"
+      ],
+      "passed": false,
+      "abstentionReason": null
+    },
+    {
+      "id": "unanswerable-05",
+      "category": "unanswerable",
+      "symbol": "AAPL",
+      "query": "CEO compensation amount",
+      "expectedIds": [],
+      "retrievedIds": [],
+      "passed": true,
+      "abstentionReason": "no_matching_notes"
+    }
+  ]
+}

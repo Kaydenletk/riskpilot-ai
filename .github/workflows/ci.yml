@@ -20,6 +20,11 @@ jobs:
       - name: Test (no OpenAI key — DEMO_MODE)
         working-directory: backend
         run: pytest -q
+      - name: Check generated research snapshot and diagnostic baseline
+        working-directory: backend
+        run: |
+          python -m riskpilot.research.cli export --check --output ../frontend/src/lib/research/companies.json
+          python -m riskpilot.research.cli evaluate --check --output ../docs/research/retrieval-baseline-2026-10-16.json
       - name: Eval (reliability, runs on fixtures)
         working-directory: backend
         run: python -m riskpilot.eval.run
@@ -34,6 +39,9 @@ jobs:
       - name: Install
         working-directory: frontend
         run: npm install
+      - name: Unit and API tests
+        working-directory: frontend
+        run: npm test
       - name: Build
         working-directory: frontend
         run: npm run build

@@ -1,0 +1,353 @@
+{
+  "schemaVersion": 1,
+  "companies": [
+    {
+      "symbol": "NVDA",
+      "name": "NVIDIA",
+      "monogram": "N",
+      "sector": "Semiconductors",
+      "description": "Accelerated computing, from AI infrastructure to graphics.",
+      "color": "#76b900",
+      "source": "NVIDIA FY2025 Form 10-K",
+      "period": "FY2025",
+      "evidence": [
+        {
+          "id": "nvda-business",
+          "topic": "business",
+          "title": "How NVIDIA makes money",
+          "summary": "NVIDIA sells accelerated computing platforms: chips, networking, systems and software. Its reported segments are Compute & Networking and Graphics.",
+          "question": "Who buys these platforms, and what problem do they solve?",
+          "keywords": "revenue business money gpu chips graphics platform segments doanh thu kiem tien",
+          "section": "Item 1 · Business",
+          "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581025000023/nvda-20250126.htm",
+          "period": "FY2025 · ended Jan 26, 2025",
+          "filed": "Feb 26, 2025",
+          "periodEnd": "2025-01-26",
+          "publishedAt": "2025-02-26",
+          "retrievedAt": "2026-10-16",
+          "contentKind": "curated_summary"
+        },
+        {
+          "id": "nvda-demand",
+          "topic": "growth",
+          "title": "The demand behind the story",
+          "summary": "The filing attributes Data Center growth to demand for accelerated computing and AI. Historical demand does not establish future growth or stock returns.",
+          "question": "What would you need to see to believe demand can continue?",
+          "keywords": "growth demand ai datacenter data center revenue tang truong nhu cau",
+          "section": "Item 7 · Management’s discussion",
+          "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581025000023/nvda-20250126.htm",
+          "period": "FY2025 · ended Jan 26, 2025",
+          "filed": "Feb 26, 2025",
+          "periodEnd": "2025-01-26",
+          "publishedAt": "2025-02-26",
+          "retrievedAt": "2026-10-16",
+          "contentKind": "curated_summary"
+        },
+        {
+          "id": "nvda-supply",
+          "topic": "risk",
+          "title": "A supply chain to understand",
+          "summary": "NVIDIA relies on outside suppliers for wafer fabrication, assembly, testing and packaging. Supply constraints or disruptions can affect its ability to deliver products.",
+          "question": "How could a supplier disruption affect the business?",
+          "keywords": "risk supply chain manufacturing supplier fabrication packaging rui ro cung ung",
+          "section": "Item 1A · Supply and manufacturing risks",
+          "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581025000023/nvda-20250126.htm",
+          "period": "FY2025 · ended Jan 26, 2025",
+          "filed": "Feb 26, 2025",
+          "periodEnd": "2025-01-26",
+          "publishedAt": "2025-02-26",
+          "retrievedAt": "2026-10-16",
+          "contentKind": "curated_summary"
+        },
+        {
+          "id": "nvda-export",
+          "topic": "risk",
+          "title": "Export restrictions",
+          "summary": "The company describes export controls as a constraint on sales to certain markets, including China. Changes can affect demand, distribution and its competitive position.",
+          "question": "Which part of this risk is documented, and what remains uncertain?",
+          "keywords": "risk export restrictions controls china regulation xuat khau trung quoc",
+          "section": "Item 1A · Regulatory risks",
+          "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581025000023/nvda-20250126.htm",
+          "period": "FY2025 · ended Jan 26, 2025",
+          "filed": "Feb 26, 2025",
+          "periodEnd": "2025-01-26",
+          "publishedAt": "2025-02-26",
+          "retrievedAt": "2026-10-16",
+          "contentKind": "curated_summary"
+        }
+      ],
+      "financials": {
+        "unit": "USD_millions",
+        "revenueHistory": [
+          {
+            "year": 2023,
+            "amount": 26974
+          },
+          {
+            "year": 2024,
+            "amount": 60922
+          },
+          {
+            "year": 2025,
+            "amount": 130497
+          }
+        ],
+        "netIncome": 72880,
+        "mixBasis": "end_market",
+        "sourceSection": "Consolidated Statements of Income; Note 16 — Revenue by End Market",
+        "revenueMix": [
+          {
+            "id": "data-center",
+            "label": "Data Center",
+            "explanation": "Computing and networking for data centers, including AI workloads.",
+            "amount": 115186
+          },
+          {
+            "id": "gaming",
+            "label": "Gaming",
+            "explanation": "Graphics hardware for games.",
+            "amount": 11350
+          },
+          {
+            "id": "other",
+            "label": "Other markets",
+            "explanation": "Professional visualization, automotive, OEM and other markets combined.",
+            "amount": 3961
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "MSFT",
+      "name": "Microsoft",
+      "monogram": "M",
+      "sector": "Software & cloud",
+      "description": "Productivity software, cloud infrastructure and personal computing.",
+      "color": "#527fc5",
+      "source": "Microsoft FY2025 Annual Report",
+      "period": "FY2025",
+      "evidence": [
+        {
+          "id": "msft-business",
+          "topic": "business",
+          "title": "How Microsoft makes money",
+          "summary": "Microsoft reports Productivity and Business Processes, Intelligent Cloud, and More Personal Computing. Products span Microsoft 365, Azure, Windows, gaming and other services.",
+          "question": "How do subscriptions differ from one-time product sales?",
+          "keywords": "revenue business money cloud azure software subscriptions segments doanh thu kiem tien",
+          "section": "Part I · Business",
+          "url": "https://www.microsoft.com/investor/reports/ar25/",
+          "period": "FY2025 · ended Jun 30, 2025",
+          "filed": "Jul 30, 2025",
+          "periodEnd": "2025-06-30",
+          "publishedAt": "2025-07-30",
+          "retrievedAt": "2026-10-16",
+          "contentKind": "curated_summary"
+        },
+        {
+          "id": "msft-demand",
+          "topic": "growth",
+          "title": "Cloud and AI demand",
+          "summary": "Microsoft describes cloud and AI services as growth areas. The report also discusses investment in infrastructure needed to support these services.",
+          "question": "How would you distinguish demand growth from profitable growth?",
+          "keywords": "growth demand ai cloud azure infrastructure investment tang truong nhu cau",
+          "section": "Management’s discussion · Cloud services",
+          "url": "https://www.microsoft.com/investor/reports/ar25/",
+          "period": "FY2025 · ended Jun 30, 2025",
+          "filed": "Jul 30, 2025",
+          "periodEnd": "2025-06-30",
+          "publishedAt": "2025-07-30",
+          "retrievedAt": "2026-10-16",
+          "contentKind": "curated_summary"
+        },
+        {
+          "id": "msft-competition",
+          "topic": "risk",
+          "title": "Competition across the stack",
+          "summary": "Azure competes with other cloud providers and open-source offerings. Microsoft's AI competitors include hyperscalers and emerging providers, some of which are also partners.",
+          "question": "What evidence would help you assess a durable advantage?",
+          "keywords": "risk competition competitors cloud azure open source rui ro canh tranh",
+          "section": "Part I · Competition",
+          "url": "https://www.microsoft.com/investor/reports/ar25/",
+          "period": "FY2025 · ended Jun 30, 2025",
+          "filed": "Jul 30, 2025",
+          "periodEnd": "2025-06-30",
+          "publishedAt": "2025-07-30",
+          "retrievedAt": "2026-10-16",
+          "contentKind": "curated_summary"
+        },
+        {
+          "id": "msft-security",
+          "topic": "risk",
+          "title": "Security and trust",
+          "summary": "The report identifies cybersecurity threats and service disruption as business risks. Failures can affect customers, reputation and operations.",
+          "question": "How might a loss of customer trust affect recurring business?",
+          "keywords": "risk security cybersecurity trust disruption customers rui ro bao mat",
+          "section": "Risk factors · Cybersecurity",
+          "url": "https://www.microsoft.com/investor/reports/ar25/",
+          "period": "FY2025 · ended Jun 30, 2025",
+          "filed": "Jul 30, 2025",
+          "periodEnd": "2025-06-30",
+          "publishedAt": "2025-07-30",
+          "retrievedAt": "2026-10-16",
+          "contentKind": "curated_summary"
+        }
+      ],
+      "financials": {
+        "unit": "USD_millions",
+        "revenueHistory": [
+          {
+            "year": 2023,
+            "amount": 211915
+          },
+          {
+            "year": 2024,
+            "amount": 245122
+          },
+          {
+            "year": 2025,
+            "amount": 281724
+          }
+        ],
+        "netIncome": 101832,
+        "mixBasis": "reportable_segment",
+        "sourceSection": "Income Statements; Note 18 — Segment Information",
+        "revenueMix": [
+          {
+            "id": "productivity",
+            "label": "Productivity & Business",
+            "explanation": "Microsoft 365, LinkedIn and Dynamics; report name: Productivity and Business Processes.",
+            "amount": 120810
+          },
+          {
+            "id": "cloud",
+            "label": "Intelligent Cloud",
+            "explanation": "Server products, Azure and enterprise services.",
+            "amount": 106265
+          },
+          {
+            "id": "personal",
+            "label": "Personal Computing",
+            "explanation": "Windows, devices, gaming and search; report name: More Personal Computing.",
+            "amount": 54649
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "AAPL",
+      "name": "Apple",
+      "monogram": "A",
+      "sector": "Consumer technology",
+      "description": "Devices and services built around an integrated ecosystem.",
+      "color": "#8b7ab9",
+      "source": "Apple FY2025 Form 10-K",
+      "period": "FY2025",
+      "evidence": [
+        {
+          "id": "aapl-business",
+          "topic": "business",
+          "title": "How Apple makes money",
+          "summary": "Apple sells iPhone, Mac, iPad, wearables and accessories, alongside services including digital content, cloud services, payment services and advertising.",
+          "question": "How are product revenue and services revenue different?",
+          "keywords": "revenue business money iphone services products devices doanh thu kiem tien",
+          "section": "Item 1 · Business",
+          "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm",
+          "period": "FY2025 · ended Sep 27, 2025",
+          "filed": "Oct 31, 2025",
+          "periodEnd": "2025-09-27",
+          "publishedAt": "2025-10-31",
+          "retrievedAt": "2026-10-16",
+          "contentKind": "curated_summary"
+        },
+        {
+          "id": "aapl-demand",
+          "topic": "growth",
+          "title": "Products and services",
+          "summary": "Apple's product and services offerings are linked through its ecosystem. Its report discusses the importance of introducing products and services that appeal to customers.",
+          "question": "What evidence would show customers want the next generation?",
+          "keywords": "growth demand ecosystem products services innovation customers tang truong nhu cau",
+          "section": "Item 1 · Products and services",
+          "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm",
+          "period": "FY2025 · ended Sep 27, 2025",
+          "filed": "Oct 31, 2025",
+          "periodEnd": "2025-09-27",
+          "publishedAt": "2025-10-31",
+          "retrievedAt": "2026-10-16",
+          "contentKind": "curated_summary"
+        },
+        {
+          "id": "aapl-supply",
+          "topic": "risk",
+          "title": "Manufacturing dependencies",
+          "summary": "Apple relies on outsourcing partners for manufacturing and logistics, many outside the U.S. It also relies on single-source partners for many components.",
+          "question": "How could this dependence affect product availability?",
+          "keywords": "risk supply chain manufacturing outsourcing partners components rui ro cung ung",
+          "section": "Item 1A · Manufacturing and logistics",
+          "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm",
+          "period": "FY2025 · ended Sep 27, 2025",
+          "filed": "Oct 31, 2025",
+          "periodEnd": "2025-09-27",
+          "publishedAt": "2025-10-31",
+          "retrievedAt": "2026-10-16",
+          "contentKind": "curated_summary"
+        },
+        {
+          "id": "aapl-competition",
+          "topic": "risk",
+          "title": "Competition and product transitions",
+          "summary": "The company describes intense competition and risks around product introductions and transitions. An unsuccessful transition can affect its business and financial results.",
+          "question": "What would challenge the idea that a familiar brand is always a safe investment?",
+          "keywords": "risk competition transitions innovation products rui ro canh tranh",
+          "section": "Item 1A · Competition and transitions",
+          "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm",
+          "period": "FY2025 · ended Sep 27, 2025",
+          "filed": "Oct 31, 2025",
+          "periodEnd": "2025-09-27",
+          "publishedAt": "2025-10-31",
+          "retrievedAt": "2026-10-16",
+          "contentKind": "curated_summary"
+        }
+      ],
+      "financials": {
+        "unit": "USD_millions",
+        "revenueHistory": [
+          {
+            "year": 2023,
+            "amount": 383285
+          },
+          {
+            "year": 2024,
+            "amount": 391035
+          },
+          {
+            "year": 2025,
+            "amount": 416161
+          }
+        ],
+        "netIncome": 112010,
+        "mixBasis": "product_category",
+        "sourceSection": "Consolidated Statements of Operations; Note 2 — Revenue",
+        "revenueMix": [
+          {
+            "id": "iphone",
+            "label": "iPhone",
+            "explanation": "iPhone products.",
+            "amount": 209586
+          },
+          {
+            "id": "services",
+            "label": "Services",
+            "explanation": "Services including advertising, the App Store and cloud services.",
+            "amount": 109158
+          },
+          {
+            "id": "other",
+            "label": "Other products",
+            "explanation": "Mac, iPad, Wearables, Home and Accessories combined.",
+            "amount": 97417
+          }
+        ]
+      }
+    }
+  ]
+}

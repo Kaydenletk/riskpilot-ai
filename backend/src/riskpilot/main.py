@@ -11,6 +11,7 @@ from fastapi import Depends, FastAPI, Header, HTTPException
 from pydantic import BaseModel
 
 from .config import Config, load_config
+from .research.api import create_research_router
 from .report import build_report_from_holdings, build_report_from_weights, build_sample_report
 from .risk_engine.portfolio import UnknownHolding
 from .risk_engine.ticker import UnknownTicker, available_tickers
@@ -157,3 +158,7 @@ def analyze(
             status_code=404,
             detail=f"'{ticker.strip().upper()}' is not in the demo universe.",
         ) from None
+
+
+# Research is additive: existing portfolio endpoints keep their contracts.
+app.include_router(create_research_router(require_internal_secret))

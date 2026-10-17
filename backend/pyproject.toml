@@ -32,3 +32,6 @@ pythonpath = ["src"]
 [tool.ruff]
 line-length = 100
 src = ["src"]
+
+[tool.setuptools.package-data]
+riskpilot = ["research/data/*.json"]
