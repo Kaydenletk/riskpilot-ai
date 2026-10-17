@@ -1,0 +1,162 @@
+/* Goal-fit panel. Split bar uses two accent-family fills (income = solid
+   accent, growth = soft accent) — the fit VERDICT is the only place the
+   semantic risk ramp appears (band pill), so color keeps meaning. */
+
+.panel {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  display: grid;
+  gap: var(--space-2);
+}
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.bandPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+.bandDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* ── orientation split bar ── */
+.split {
+  display: grid;
+  gap: 10px;
+}
+.splitTrack {
+  display: flex;
+  height: 14px;
+  border-radius: 7px;
+  overflow: hidden;
+  background: var(--bg-grain);
+}
+.splitIncome {
+  display: block;
+  height: 100%;
+  background: var(--grad-accent);
+  transition: width var(--dur-normal) var(--ease-out-expo);
+}
+.splitGrowth {
+  display: block;
+  height: 100%;
+  background: color-mix(in oklch, var(--accent) 22%, var(--bg-grain));
+  transition: width var(--dur-normal) var(--ease-out-expo);
+}
+.splitLegend {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+.legendItem {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  align-self: center;
+}
+.dotIncome {
+  background: var(--grad-accent);
+}
+.dotGrowth {
+  background: color-mix(in oklch, var(--accent) 22%, var(--bg-grain));
+}
+.yieldProxy {
+  margin-left: auto;
+  color: var(--ink-faint);
+}
+
+/* ── goal-sector context bars ── */
+.suggestions {
+  display: grid;
+  gap: var(--space-1);
+  border-top: 1px solid var(--rule);
+  padding-top: var(--space-2);
+}
+.suggestionsHead {
+  margin-bottom: 2px;
+}
+.sectorList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.sectorRow {
+  display: grid;
+  grid-template-columns: minmax(90px, 24%) 1fr auto auto;
+  grid-template-areas:
+    "name track pct yield"
+    "name examples examples examples";
+  align-items: center;
+  column-gap: 10px;
+  row-gap: 2px;
+}
+.sectorName {
+  grid-area: name;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sectorTrack {
+  grid-area: track;
+  height: 6px;
+  background: var(--bg-grain);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.sectorFill {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--grad-accent);
+  transition: width var(--dur-normal) var(--ease-out-expo);
+}
+.sectorPct {
+  grid-area: pct;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.sectorYield {
+  grid-area: yield;
+  font-size: var(--text-sm);
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+.examples {
+  grid-area: examples;
+  color: var(--ink-faint);
+}
+
+@media (max-width: 640px) {
+  .sectorRow {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "name pct"
+      "track track"
+      "yield yield"
+      "examples examples";
+  }
+  .yieldProxy {
+    margin-left: 0;
+  }
+}

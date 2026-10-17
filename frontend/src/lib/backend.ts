@@ -4,10 +4,17 @@ import "server-only";
 
 import demoReport from "./demo-report.json";
 import type { WeightedHolding } from "./portfolio-schema";
-import type { Holding, RiskFacts, RiskReport } from "./types";
+import type { Holding, PortfolioGoal, RiskFacts, RiskReport } from "./types";
 
 const BACKEND_URL = process.env.BACKEND_INTERNAL_URL ?? "http://localhost:8000";
 const SECRET = process.env.INTERNAL_SHARED_SECRET_FRONTEND ?? "dev-local-secret-change-me";
+
+// Full-report calls run the grounded explain pass, which in live mode holds an
+// OpenAI call with its own 20s timeout (openai_client.py) plus one possible
+// guardrail regeneration. The old 4000ms budget aborted healthy live-mode
+// requests and surfaced as a false "engine unreachable" — so the report budget
+// must comfortably exceed the LLM's worst case.
+const REPORT_TIMEOUT_MS = 45_000;
 
 // Committed snapshot of the real computed report. Lets the dashboard render on
 // Vercel with NO backend (DX no-key DEMO_MODE applied to deploy). When the Python
@@ -42,8 +49,6 @@ export type AnalyzeResult =
 // POSTs validated holdings to the private engine. The shared secret stays here
 // (server-only). No fixture fallback: scoring arbitrary user holdings requires
 // the real engine — we never fabricate numbers for a portfolio we can't compute.
-// 4000ms (vs the 2500ms sample/ticker reads) because fresh scoring + the grounded
-// explain pass is slower than returning the cached sample.
 export async function analyzePortfolio(holdings: Holding[]): Promise<AnalyzeResult> {
   try {
     const res = await fetch(`${BACKEND_URL}/report`, {
@@ -51,7 +56,7 @@ export async function analyzePortfolio(holdings: Holding[]): Promise<AnalyzeResu
       headers: { "x-internal-secret": SECRET, "content-type": "application/json" },
       body: JSON.stringify({ holdings }),
       cache: "no-store",
-      signal: AbortSignal.timeout(4000),
+      signal: AbortSignal.timeout(REPORT_TIMEOUT_MS),
     });
     if (res.ok) {
       return { ok: true, report: (await res.json()) as RiskReport };
@@ -105,15 +110,19 @@ export async function scorePortfolio(holdings: WeightedHolding[]): Promise<Score
 
 // POSTs percent weights to /report for the full (LLM-explained) weighted
 // report. Same union/timeout contract as analyzePortfolio's shares path —
-// the engine picks the `weighted` branch instead of `holdings`.
-export async function analyzeWeighted(weighted: WeightedHolding[]): Promise<AnalyzeResult> {
+// the engine picks the `weighted` branch instead of `holdings`. An optional
+// stated goal rides along; the engine answers with goal-fit facts.
+export async function analyzeWeighted(
+  weighted: WeightedHolding[],
+  goal?: PortfolioGoal,
+): Promise<AnalyzeResult> {
   try {
     const res = await fetch(`${BACKEND_URL}/report`, {
       method: "POST",
       headers: { "x-internal-secret": SECRET, "content-type": "application/json" },
-      body: JSON.stringify({ weighted }),
+      body: JSON.stringify(goal ? { weighted, goal } : { weighted }),
       cache: "no-store",
-      signal: AbortSignal.timeout(4000),
+      signal: AbortSignal.timeout(REPORT_TIMEOUT_MS),
     });
     if (res.ok) {
       return { ok: true, report: (await res.json()) as RiskReport };

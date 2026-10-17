@@ -10,7 +10,7 @@ from __future__ import annotations
 from pydantic import BaseModel, Field
 
 from ..config import Config
-from ..schema import RiskFacts
+from ..schema import GoalFit, PortfolioGoal, RiskFacts
 
 
 class LLMError(Exception):
@@ -31,9 +31,19 @@ class LLMExplanationDraft(BaseModel):
     )
 
 
-def _facts_block(facts: RiskFacts) -> str:
-    """The ONLY numbers the model is allowed to reference, in plain language."""
-    return (
+# Verbose prompt-facing labels — template.py keeps its own terse set
+# (_GOAL_LABELS_SHORT); the two are independent by design.
+_GOAL_LABELS_PROMPT = {
+    PortfolioGoal.growth: "growth (long-term appreciation)",
+    PortfolioGoal.balanced: "balanced (a mix of growth and income)",
+    PortfolioGoal.income: "income (dividends and stability)",
+}
+
+
+def _facts_block(facts: RiskFacts, goal_fit: GoalFit | None = None) -> str:
+    """The ONLY numbers the model is allowed to reference, in plain language.
+    Mirror of explain._fact_values — update both together."""
+    block = (
         f"- Risk score: {facts.risk_score} out of 100 ({facts.risk_band.value})\n"
         f"- The top 3 holdings make up {facts.concentration_pct_top3}% of the portfolio\n"
         f"- Estimated annualized volatility: {facts.volatility_annualized_pct}%\n"
@@ -41,6 +51,23 @@ def _facts_block(facts: RiskFacts) -> str:
         f"- Largest sector: {facts.largest_sector}, at {facts.largest_sector_pct}% of the portfolio\n"
         f"- Number of holdings: {facts.holdings_count}"
     )
+    if goal_fit is None:
+        return block
+
+    goal_lines = (
+        f"\n- Stated portfolio goal: {_GOAL_LABELS_PROMPT[goal_fit.goal]}\n"
+        f"- Income-oriented share of the portfolio: {goal_fit.income_orientation_pct}%\n"
+        f"- Growth-oriented share of the portfolio: {goal_fit.growth_orientation_pct}%\n"
+        f"- Goal-fit score: {goal_fit.fit_score} out of 100 ({goal_fit.fit_band.value})\n"
+        f"- Illustrative income yield proxy: {goal_fit.income_yield_proxy_pct}% "
+        "(synthetic, not a real yield)"
+    )
+    for s in goal_fit.sector_suggestions:
+        goal_lines += (
+            f"\n- {s.sector} currently sits at {s.current_pct}% of the portfolio; "
+            f"its illustrative typical yield is {s.typical_yield_pct}%"
+        )
+    return block + goal_lines
 
 
 SYSTEM_PROMPT = (
@@ -57,11 +84,20 @@ SYSTEM_PROMPT = (
 )
 
 
-def build_messages(facts: RiskFacts, correction: str | None = None) -> list[dict[str, str]]:
-    user = (
-        "Explain the risk of this portfolio in plain language for a retail investor.\n\n"
-        f"FACTS (the only numbers you may use):\n{_facts_block(facts)}"
-    )
+def build_messages(
+    facts: RiskFacts,
+    correction: str | None = None,
+    goal_fit: GoalFit | None = None,
+) -> list[dict[str, str]]:
+    task = "Explain the risk of this portfolio in plain language for a retail investor."
+    if goal_fit is not None:
+        task += (
+            " The investor stated a portfolio goal — also explain how well the current "
+            "mix lines up with that goal and which sectors typically serve it, using "
+            "ONLY the goal facts below. Frame sector context as education, never as an "
+            "instruction to buy or sell."
+        )
+    user = f"{task}\n\nFACTS (the only numbers you may use):\n{_facts_block(facts, goal_fit)}"
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
         {"role": "user", "content": user},
@@ -75,6 +111,7 @@ def call_openai(
     config: Config,
     facts: RiskFacts,
     correction: str | None = None,
+    goal_fit: GoalFit | None = None,
     *,
     client: object | None = None,
 ) -> LLMExplanationDraft:
@@ -90,7 +127,7 @@ def call_openai(
             raise LLMError(f"openai sdk unavailable: {e}") from e
         client = OpenAI(api_key=config.openai_api_key, timeout=20.0)
 
-    messages = build_messages(facts, correction)
+    messages = build_messages(facts, correction, goal_fit)
     # Newer models (gpt-5.x) only accept the default temperature, so we don't pass
     # one. Determinism for the demo comes from the pinned model + the guardrail,
     # not from temperature=0.

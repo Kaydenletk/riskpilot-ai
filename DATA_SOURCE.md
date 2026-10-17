@@ -64,3 +64,13 @@ any of the math.
 Because the data is synthetic, the resulting risk numbers describe a *plausible*
 portfolio, not a real one. The point of the project is to demonstrate a correct,
 tested, guardrailed risk-analysis pipeline — not to publish real market analysis.
+
+## Goal-fit sector profiles (also synthetic)
+
+The portfolio-goal feature (`backend/src/riskpilot/risk_engine/goal.py`) scores
+how a mix lines up with a stated goal (growth / balanced / income) using
+**sector-level heuristics**: each of the 11 sectors carries an `income_factor`
+(0 = growth profile, 1 = income profile) and an illustrative `yield_proxy_pct`
+(rough typical dividend yield for the sector). These are **hand-set educational
+constants, not market data** — the universe carries no dividend series. Every
+surface that shows a yield labels it as an illustrative proxy.

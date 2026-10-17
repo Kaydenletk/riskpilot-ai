@@ -7,6 +7,7 @@ import type { RiskReport } from "@/lib/types";
 
 import { AnalystView } from "./AnalystView";
 import { CoachView } from "./CoachView";
+import { GoalFitPanel } from "./GoalFitPanel";
 import styles from "./dashboard.module.css";
 
 type View = "coach" | "analyst";
@@ -51,6 +52,10 @@ export function Dashboard({ report }: { report: RiskReport }) {
       </div>
 
       {view === "coach" ? <CoachView report={report} /> : <AnalystView report={report} />}
+
+      {/* Goal fit rides below whichever view is active (same single wiring
+          point as the what-if panel) — present only when a goal was stated. */}
+      {report.goal_fit && <GoalFitPanel goalFit={report.goal_fit} />}
 
       {/* What-if simulator rides below whichever view is active — one wiring
           point serves both the home sample and /analyze custom reports. */}

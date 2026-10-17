@@ -11,7 +11,7 @@ from __future__ import annotations
 from .config import Config
 from .llm import explain
 from .risk_engine import compute_sample_report
-from .schema import RiskReport
+from .schema import PortfolioGoal, RiskReport
 
 
 def build_sample_report(config: Config) -> RiskReport:
@@ -32,35 +32,60 @@ def build_sample_report(config: Config) -> RiskReport:
     )
 
 
-def build_report_from_holdings(config: Config, shares: dict[str, float]) -> RiskReport:
+def build_report_from_holdings(
+    config: Config,
+    shares: dict[str, float],
+    goal: PortfolioGoal | None = None,
+) -> RiskReport:
     """Score an uploaded portfolio. Raises UnknownHolding / ValueError on bad input;
     the API layer maps those to 422 / 400. Reuses the same grounded explain pipeline
-    as the sample report, so the number-hallucination guardrail still applies."""
+    as the sample report, so the number-hallucination guardrail still applies.
+
+    Goal fit mirrors the weighted branch: computed over market-value weights so
+    a stated goal is never silently dropped whichever input mode the client used."""
     from .risk_engine import compute_report
+    from .risk_engine.goal import compute_goal_fit
 
     holdings, facts = compute_report(shares)
-    explanation = explain(config, facts)
+    goal_fit = (
+        compute_goal_fit({h.ticker: h.market_value for h in holdings}, goal)
+        if goal is not None
+        else None
+    )
+    explanation = explain(config, facts, goal_fit)
     return RiskReport(
         portfolio_name="Your portfolio",
         as_of="illustrative sample data",
         holdings=holdings,
         facts=facts,
         explanation=explanation,
+        goal_fit=goal_fit,
     )
 
 
-def build_report_from_weights(config: Config, weights_pct: dict[str, float]) -> RiskReport:
+def build_report_from_weights(
+    config: Config,
+    weights_pct: dict[str, float],
+    goal: PortfolioGoal | None = None,
+) -> RiskReport:
     """Weighted variant of build_report_from_holdings — same grounded explain
     pipeline, so the number-hallucination guardrail applies unchanged. Raises
-    UnknownHolding / ValueError on bad input; the API layer maps those to 422 / 400."""
+    UnknownHolding / ValueError on bad input; the API layer maps those to 422 / 400.
+
+    When the builder states a portfolio goal, deterministic goal-fit facts ride
+    the report and join the guardrail whitelist — computed AFTER the universe
+    check inside compute_report_from_weights, so unknown tickers still 422."""
+    from .risk_engine.goal import compute_goal_fit
     from .risk_engine.portfolio import compute_report_from_weights
 
     holdings, facts = compute_report_from_weights(weights_pct)
-    explanation = explain(config, facts)
+    goal_fit = compute_goal_fit(weights_pct, goal) if goal is not None else None
+    explanation = explain(config, facts, goal_fit)
     return RiskReport(
         portfolio_name="Your portfolio",
         as_of="synthetic illustrative data",
         holdings=holdings,
         facts=facts,
         explanation=explanation,
+        goal_fit=goal_fit,
     )

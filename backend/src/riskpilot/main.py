@@ -11,10 +11,19 @@ from fastapi import Depends, FastAPI, Header, HTTPException
 from pydantic import BaseModel
 
 from .config import Config, load_config
+from .research.api import create_research_router
 from .report import build_report_from_holdings, build_report_from_weights, build_sample_report
 from .risk_engine.portfolio import UnknownHolding
 from .risk_engine.ticker import UnknownTicker, available_tickers
-from .schema import Holding, RiskReport, ScoreResponse, TickerOption, TickerReport, WeightedHolding
+from .schema import (
+    Holding,
+    PortfolioGoal,
+    RiskReport,
+    ScoreResponse,
+    TickerOption,
+    TickerReport,
+    WeightedHolding,
+)
 from .score_api import score_weights
 from .ticker_report import build_ticker_report
 
@@ -60,6 +69,9 @@ def sample_report(
 class PortfolioRequest(BaseModel):
     holdings: list[Holding] | None = None
     weighted: list[WeightedHolding] | None = None
+    # Optional stated portfolio goal (growth / balanced / income) — honored by
+    # BOTH input branches, never silently dropped.
+    goal: PortfolioGoal | None = None
 
 
 @app.post("/report", response_model=RiskReport)
@@ -79,7 +91,7 @@ def report_from_holdings(
     if body.weighted is not None:
         weights = {h.ticker: h.weight_pct for h in body.weighted}
         try:
-            return build_report_from_weights(config, weights)
+            return build_report_from_weights(config, weights, body.goal)
         except UnknownHolding as e:
             raise HTTPException(
                 status_code=422, detail={"error": "unknown_tickers", "symbols": e.symbols}
@@ -95,7 +107,7 @@ def report_from_holdings(
         raise HTTPException(status_code=400, detail={"error": "too_many", "max": MAX_HOLDINGS})
     shares = {h.ticker: h.shares for h in body.holdings}
     try:
-        return build_report_from_holdings(config, shares)
+        return build_report_from_holdings(config, shares, body.goal)
     except UnknownHolding as e:
         raise HTTPException(
             status_code=422, detail={"error": "unknown_tickers", "symbols": e.symbols}
@@ -146,3 +158,7 @@ def analyze(
             status_code=404,
             detail=f"'{ticker.strip().upper()}' is not in the demo universe.",
         ) from None
+
+
+# Research is additive: existing portfolio endpoints keep their contracts.
+app.include_router(create_research_router(require_internal_secret))

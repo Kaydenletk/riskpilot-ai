@@ -35,11 +35,15 @@ else
   err "node not found. Fix: install Node 20+ (nvm install 20)."
 fi
 
-# .env
-if [ -f .env ]; then
-  ok ".env present"
+# env — prefer .env.local (private live-mode overrides), else .env. Same
+# precedence make dev uses, so this report matches what actually loads.
+ENV_FILE=""
+[ -f .env.local ] && ENV_FILE=.env.local
+[ -z "$ENV_FILE" ] && [ -f .env ] && ENV_FILE=.env
+if [ -n "$ENV_FILE" ]; then
+  ok "$ENV_FILE present (make dev loads this)"
   # shellcheck disable=SC1091
-  set -a; . ./.env 2>/dev/null; set +a
+  set -a; . "./$ENV_FILE" 2>/dev/null; set +a
   if [ -z "${OPENAI_API_KEY:-}" ]; then
     warn "OPENAI_API_KEY unset -> running in DEMO_MODE (cached fixture reports). This is fine."
   else
@@ -49,7 +53,7 @@ if [ -f .env ]; then
     warn "INTERNAL_SHARED_SECRET is the default. Fine for local; change before deploy."
   fi
 else
-  warn ".env missing. Fix: cp .env.example .env  (defaults run with no key)."
+  warn "no env file. Fix: cp .env.example .env  (defaults run with no key)."
 fi
 
 echo

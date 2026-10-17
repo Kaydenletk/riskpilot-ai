@@ -4,6 +4,12 @@
 .DEFAULT_GOAL := help
 .PHONY: help dev dev-backend dev-frontend install test eval seed doctor build clean
 
+# Single root env file feeds BOTH services. Prefer .env.local (your private
+# live-mode overrides: DEMO_MODE=0 + a real key) when present, else .env (demo).
+# Recipes `set -a; . ./$(ENV_FILE)` so every var is exported into the child
+# process — os.getenv (backend) and process.env (Next) both see them.
+ENV_FILE := $(shell [ -f .env.local ] && echo .env.local || echo .env)
+
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2}'
@@ -12,25 +18,28 @@ install: ## Install backend + frontend deps
 	cd backend && python3 -m venv .venv && . .venv/bin/activate && pip install -e ".[dev]"
 	cd frontend && npm install
 
-dev: ## Run backend + frontend together (no OpenAI key needed)
-	@echo "Starting RiskPilot AI in DEMO_MODE (no OpenAI key needed)..."
+dev: ## Run backend + frontend together (loads $(ENV_FILE); no key -> DEMO_MODE)
+	@echo "Starting RiskPilot AI (env: $(ENV_FILE))..."
 	@trap 'kill 0' EXIT; \
 	$(MAKE) dev-backend & \
 	$(MAKE) dev-frontend & \
 	wait
 
 dev-backend: ## Run the private Python math+LLM service
-	cd backend && . .venv/bin/activate && \
+	set -a; [ -f $(ENV_FILE) ] && . ./$(ENV_FILE); set +a; \
+		cd backend && . .venv/bin/activate && \
 		uvicorn riskpilot.main:app --reload --port $${BACKEND_PORT:-8000}
 
 dev-frontend: ## Run the public Next.js app
-	cd frontend && npm run dev
+	set -a; [ -f $(ENV_FILE) ] && . ./$(ENV_FILE); set +a; \
+		cd frontend && npm run dev
 
 test: ## Run the test suite (NO OpenAI key required — uses fixtures)
 	cd backend && . .venv/bin/activate && pytest -q
 
-eval: ## Run the LLM-reliability eval harness (stub: prints fixture-based numbers)
-	cd backend && . .venv/bin/activate && python -m riskpilot.eval.run
+eval: ## Run the LLM-reliability eval harness (loads $(ENV_FILE); live if key set)
+	set -a; [ -f $(ENV_FILE) ] && . ./$(ENV_FILE); set +a; \
+		cd backend && . .venv/bin/activate && python -m riskpilot.eval.run
 
 seed: ## (M2) load the sample portfolio dataset — placeholder in M1
 	@echo "M1: sample portfolio is the committed fixture. seed lands in M2."

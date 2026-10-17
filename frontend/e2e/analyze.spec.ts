@@ -74,6 +74,62 @@ test("portfolio URL cold-load restores rows", async ({ page }) => {
   await expect(page.getByLabel("NVDA weight percent")).toHaveValue("40");
 });
 
+// Minimal-but-complete RiskReport for the goal flow: the panel renders purely
+// from goal_fit, so the rest mirrors SCORED_FACTS.
+const GOAL_REPORT = {
+  portfolio_name: "Your portfolio",
+  as_of: "synthetic illustrative data",
+  holdings: [],
+  facts: SCORED_FACTS,
+  explanation: {
+    summary: "stub",
+    top_risk_factors: [],
+    review_checklist: [],
+    source: "template_fallback",
+  },
+  disclaimer: "Educational risk coaching, not financial advice.",
+  goal_fit: {
+    goal: "income",
+    income_orientation_pct: 21.8,
+    growth_orientation_pct: 78.2,
+    fit_score: 21.8,
+    fit_band: "misaligned",
+    income_yield_proxy_pct: 1.0,
+    sector_suggestions: [
+      {
+        sector: "Utilities",
+        current_pct: 0,
+        typical_yield_pct: 3.4,
+        example_tickers: ["NEE", "DUK", "SO"],
+      },
+    ],
+  },
+};
+
+test("stated goal rides the report request and renders the goal-fit panel", async ({ page }) => {
+  await stubScore(page);
+  let sentGoal: unknown = null;
+  await page.route("**/api/report", (route) => {
+    sentGoal = route.request().postDataJSON()?.goal ?? null;
+    return route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(GOAL_REPORT),
+    });
+  });
+  await page.goto("/analyze?p=NVDA:40,KO:30,JNJ:30");
+  await page.getByRole("radio", { name: /income/i }).click();
+  await expect(page).toHaveURL(/goal=income/);
+  await page.getByRole("button", { name: "Run the X-Ray" }).click();
+
+  expect(sentGoal).toBe("income");
+  const panel = page.getByRole("region", { name: /goal fit/i });
+  await expect(panel).toBeVisible();
+  await expect(panel.getByText("21.8/100 · off target")).toBeVisible();
+  await expect(panel.getByText(/Utilities/)).toBeVisible();
+  await expect(panel.getByText(/NEE · DUK · SO/)).toBeVisible();
+});
+
 test("unknown tickers get a remove-and-continue path", async ({ page }) => {
   await stubScore(page);
   await page.route("**/api/report", (route) =>

@@ -2,14 +2,14 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "RiskPilot AI — Portfolio Risk Coach",
+    name: "RiskPilot — Your Investing Second Brain",
     short_name: "RiskPilot",
     description:
-      "Deterministic risk math, explained by a guardrailed LLM that never invents numbers.",
+      "Source-linked stock research, personal understanding, and a journal of your reasoning.",
     start_url: "/",
     display: "standalone",
-    background_color: "#0a0a0a",
-    theme_color: "#0a0a0a",
+    background_color: "#162a23",
+    theme_color: "#162a23",
     icons: [{ src: "/icon", sizes: "any", type: "image/png" }],
   };
 }

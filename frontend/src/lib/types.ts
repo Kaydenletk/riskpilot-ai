@@ -25,6 +25,30 @@ export interface RiskExplanation {
   source: "model" | "model_regenerated" | "template_fallback" | "demo_fixture";
 }
 
+// ── portfolio goal (mirrors schema.py PortfolioGoal/FitBand/GoalFit) ──
+
+export type PortfolioGoal = "growth" | "balanced" | "income";
+
+export type FitBand = "aligned" | "partial" | "misaligned";
+
+export interface SectorSuggestion {
+  sector: string;
+  current_pct: number;
+  /** illustrative sector yield proxy — synthetic universe, never a real yield */
+  typical_yield_pct: number;
+  example_tickers: string[];
+}
+
+export interface GoalFit {
+  goal: PortfolioGoal;
+  income_orientation_pct: number;
+  growth_orientation_pct: number;
+  fit_score: number;
+  fit_band: FitBand;
+  income_yield_proxy_pct: number;
+  sector_suggestions: SectorSuggestion[];
+}
+
 export interface RiskReport {
   portfolio_name: string;
   as_of: string;
@@ -32,6 +56,8 @@ export interface RiskReport {
   facts: RiskFacts;
   explanation: RiskExplanation;
   disclaimer: string;
+  /** present only when the request named a portfolio goal */
+  goal_fit?: GoalFit | null;
 }
 
 // ── single-ticker search (mirrors schema.py TickerOption/TickerFacts/TickerReport) ──
